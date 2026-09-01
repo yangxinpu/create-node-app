@@ -1,0 +1,23 @@
+{
+  "name": "drizzle",
+  "type": "orm",
+  "version": "1.0.0",
+  "description": "Drizzle ORM template",
+  "dependencies": {
+    "drizzle-orm": "^0.38.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.30.0"
+  },
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+  "compatibility": {
+    "runtime": ["node", "bun"],
+    "language": ["typescript", "javascript"],
+    "database": ["mysql", "postgresql", "sqlite"]
+  }
+}

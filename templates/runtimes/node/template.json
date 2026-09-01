@@ -1,0 +1,9 @@
+{
+  "name": "node",
+  "type": "runtime",
+  "version": "1.0.0",
+  "description": "Node.js runtime template",
+  "compatibility": {
+    "runtime": ["node"]
+  }
+}

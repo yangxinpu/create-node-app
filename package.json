@@ -1,0 +1,56 @@
+{
+  "name": "create-node-app",
+  "version": "0.1.0",
+  "description": "Node.js project scaffolding generator — compose, don't stack templates",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "create-node-app": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "dev": "tsx src/cli/index.ts",
+    "build": "tsdown",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^7.2.0",
+    "commander": "^13.1.0",
+    "esbuild": "^0.28.2",
+    "execa": "^9.5.2",
+    "fs-extra": "^11.2.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.10.0",
+    "eslint": "^9.19.0",
+    "eslint-config-prettier": "^10.0.1",
+    "prettier": "^3.4.2",
+    "tsdown": "^0.12.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.22.0",
+    "vitest": "^3.0.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "cli",
+    "scaffolding",
+    "generator",
+    "node",
+    "typescript",
+    "elysia",
+    "create"
+  ]
+}

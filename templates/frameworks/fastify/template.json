@@ -1,0 +1,13 @@
+{
+  "name": "fastify",
+  "type": "framework",
+  "version": "1.0.0",
+  "description": "Fastify framework template",
+  "dependencies": {
+    "fastify": "^5.2.0"
+  },
+  "compatibility": {
+    "runtime": ["node"],
+    "language": ["typescript", "javascript"]
+  }
+}

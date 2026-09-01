@@ -1,0 +1,15 @@
+{
+  "name": "redis",
+  "type": "cache",
+  "version": "1.0.0",
+  "description": "Redis cache template",
+  "dependencies": {
+    "ioredis": "^5.4.0"
+  },
+  "env": {
+    "REDIS_URL": "redis://localhost:6379"
+  },
+  "compatibility": {
+    "runtime": ["node", "bun"]
+  }
+}

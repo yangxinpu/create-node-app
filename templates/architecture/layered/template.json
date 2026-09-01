@@ -1,0 +1,6 @@
+{
+  "name": "layered",
+  "type": "architecture",
+  "version": "1.0.0",
+  "description": "Layered project structure with controllers, services and repositories"
+}

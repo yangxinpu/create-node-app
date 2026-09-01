@@ -1,0 +1,12 @@
+{
+  "name": "prettier",
+  "type": "tooling",
+  "version": "1.0.0",
+  "description": "Prettier tooling template",
+  "devDependencies": {
+    "prettier": "^3.4.2"
+  },
+  "scripts": {
+    "format": "prettier --write ."
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "api",
+  "type": "architecture",
+  "version": "1.0.0",
+  "description": "API project structure with routes, services and schemas"
+}

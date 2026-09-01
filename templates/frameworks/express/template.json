@@ -1,0 +1,16 @@
+{
+  "name": "express",
+  "type": "framework",
+  "version": "1.0.0",
+  "description": "Express framework template",
+  "dependencies": {
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21"
+  },
+  "compatibility": {
+    "runtime": ["node"],
+    "language": ["typescript", "javascript"]
+  }
+}

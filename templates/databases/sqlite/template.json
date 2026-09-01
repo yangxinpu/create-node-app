@@ -1,0 +1,18 @@
+{
+  "name": "sqlite",
+  "type": "database",
+  "version": "1.0.0",
+  "description": "SQLite database template",
+  "dependencies": {
+    "better-sqlite3": "^11.8.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12"
+  },
+  "env": {
+    "DATABASE_URL": "file:./data.db"
+  },
+  "compatibility": {
+    "runtime": ["node", "bun"]
+  }
+}

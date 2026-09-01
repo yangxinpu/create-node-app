@@ -1,0 +1,15 @@
+{
+  "name": "mysql",
+  "type": "database",
+  "version": "1.0.0",
+  "description": "MySQL database template",
+  "dependencies": {
+    "mysql2": "^3.11.0"
+  },
+  "env": {
+    "DATABASE_URL": "mysql://user:password@localhost:3306/app"
+  },
+  "compatibility": {
+    "runtime": ["node", "bun"]
+  }
+}

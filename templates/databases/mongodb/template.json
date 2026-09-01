@@ -1,0 +1,15 @@
+{
+  "name": "mongodb",
+  "type": "database",
+  "version": "1.0.0",
+  "description": "MongoDB database template",
+  "dependencies": {
+    "mongodb": "^6.12.0"
+  },
+  "env": {
+    "DATABASE_URL": "mongodb://localhost:27017/app"
+  },
+  "compatibility": {
+    "runtime": ["node", "bun"]
+  }
+}

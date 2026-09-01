@@ -1,0 +1,16 @@
+{
+  "name": "vitest",
+  "type": "testing",
+  "version": "1.0.0",
+  "description": "Vitest testing template",
+  "devDependencies": {
+    "vitest": "^3.0.4"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "compatibility": {
+    "language": ["typescript", "javascript"]
+  }
+}

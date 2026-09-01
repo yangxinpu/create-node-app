@@ -1,0 +1,14 @@
+{
+  "name": "hono",
+  "type": "framework",
+  "version": "1.0.0",
+  "description": "Hono framework template",
+  "dependencies": {
+    "hono": "^4.6.0",
+    "@hono/node-server": "^1.13.0"
+  },
+  "compatibility": {
+    "runtime": ["node", "bun"],
+    "language": ["typescript", "javascript"]
+  }
+}

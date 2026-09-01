@@ -1,0 +1,12 @@
+{
+  "name": "bun",
+  "type": "runtime",
+  "version": "1.0.0",
+  "description": "Bun runtime template",
+  "scripts": {
+    "dev": "bun --watch src/index.ts"
+  },
+  "compatibility": {
+    "runtime": ["bun"]
+  }
+}
