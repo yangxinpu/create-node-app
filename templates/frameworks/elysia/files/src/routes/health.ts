@@ -1,6 +1,5 @@
 import { Elysia } from 'elysia'
 
-export const health = new Elysia().get('/health', () => ({
-  status: 'ok',
-  timestamp: new Date().toISOString(),
-}))
+import { getHealthStatus } from '../health.js'
+
+export const health = new Elysia().get('/health', getHealthStatus)

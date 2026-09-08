@@ -10,7 +10,6 @@ export interface TemplateMeta {
     | 'database'
     | 'orm'
     | 'cache'
-    | 'testing'
     | 'tooling'
     | 'architecture'
   version?: string

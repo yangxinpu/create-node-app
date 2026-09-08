@@ -80,4 +80,17 @@ describe('renderContent', () => {
     expect(result).not.toContain('import serve')
     expect(result).toContain('port: app')
   })
+
+  it('renders comment-wrapped conditionals without leaving directives', () => {
+    const template = [
+      '// {{#if language=typescript}}',
+      "import tseslint from 'typescript-eslint'",
+      '// {{/if}}',
+    ].join('\n')
+
+    expect(renderContent(template, { language: 'typescript' })).toBe(
+      "import tseslint from 'typescript-eslint'\n",
+    )
+    expect(renderContent(template, { language: 'javascript' })).toBe('')
+  })
 })

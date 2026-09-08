@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "description": "Bun runtime template",
   "scripts": {
-    "dev": "bun --watch src/index.ts"
+    "dev": "bun --watch src/index.{{extension}}",
+    "start": "bun src/index.{{extension}}"
   },
   "compatibility": {
     "runtime": ["bun"]

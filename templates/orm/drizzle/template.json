@@ -18,6 +18,6 @@
   "compatibility": {
     "runtime": ["node", "bun"],
     "language": ["typescript", "javascript"],
-    "database": ["mysql", "postgresql", "sqlite"]
+    "database": ["mysql", "postgresql"]
   }
 }

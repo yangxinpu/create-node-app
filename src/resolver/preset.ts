@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { pathExists, readFile } from 'fs-extra'
+import { pathExists } from 'fs-extra'
 import { execa } from 'execa'
 
 import type { ContextDefaults } from '../context/defaults.js'

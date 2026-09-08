@@ -7,7 +7,6 @@ import {
   FRAMEWORKS,
   ORMS,
   RUNTIMES,
-  TESTS,
 } from '../../config/options.js'
 
 /**
@@ -19,7 +18,6 @@ export function listCommand(): void {
   printGroup('Databases', DATABASES)
   printGroup('ORM', ORMS)
   printGroup('Cache', CACHES)
-  printGroup('Testing', TESTS)
   printGroup('Architecture', ARCHITECTURES)
 }
 

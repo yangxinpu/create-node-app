@@ -25,7 +25,6 @@ describe('presets', () => {
       expect(preset.database, `${name} missing database`).toBeDefined()
       expect(preset.orm, `${name} missing orm`).toBeDefined()
       expect(preset.cache, `${name} missing cache`).toBeDefined()
-      expect(preset.test, `${name} missing test`).toBeDefined()
       expect(preset.architecture, `${name} missing architecture`).toBeDefined()
     }
   })

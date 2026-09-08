@@ -15,7 +15,6 @@ export interface CreateCommandOptions {
   database?: string
   orm?: string
   cache?: string
-  test?: string
   architecture?: string
   preset?: string
   config?: string
@@ -59,7 +58,6 @@ export async function createCommand(
     database: options.database,
     orm: options.orm,
     cache: options.cache,
-    test: options.test,
     architecture: options.architecture,
     eslint: options.eslint,
     prettier: options.prettier,
@@ -92,7 +90,6 @@ export async function createCommand(
       database: mergedOptions.database as ProjectContext['database'],
       orm: mergedOptions.orm as ProjectContext['orm'],
       cache: mergedOptions.cache as ProjectContext['cache'],
-      test: mergedOptions.test as ProjectContext['test'],
       architecture: mergedOptions.architecture as ProjectContext['architecture'],
       eslint: mergedOptions.eslint,
       prettier: mergedOptions.prettier,
@@ -119,7 +116,6 @@ function hasFullOptions(opts: Record<string, unknown>): boolean {
       opts.database &&
       opts.orm &&
       opts.cache &&
-      opts.test &&
       opts.architecture,
   )
 }

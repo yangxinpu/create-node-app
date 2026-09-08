@@ -28,7 +28,6 @@ Framework
 Database
 ORM
 Cache
-Testing
 Tooling
 Architecture
 
@@ -123,7 +122,6 @@ npm create node-app@latest
 ? Select database:
 ❯ MySQL
   PostgreSQL
-  SQLite
   MongoDB
   None
 
@@ -134,10 +132,6 @@ npm create node-app@latest
 
 ? Select cache:
 ❯ Redis
-  None
-
-? Select testing:
-❯ Vitest
   None
 
 ? Use ESLint?
@@ -163,7 +157,6 @@ Framework: Elysia
 Database: MySQL
 ORM: Prisma
 Cache: Redis
-Testing: Vitest
 
 Next steps:
 
@@ -182,7 +175,6 @@ npm create node-app@latest my-server \
   --database mysql \
   --orm prisma \
   --cache redis \
-  --test vitest \
   --eslint \
   --prettier
 
@@ -204,7 +196,6 @@ Elysia
 None
 None
 None
-Vitest
 ESLint
 Prettier
 四、Preset 预设系统
@@ -241,7 +232,6 @@ presets/
   database: 'mysql',
   orm: 'prisma',
   cache: 'redis',
-  test: 'vitest',
   eslint: true,
   prettier: true
 }
@@ -274,7 +264,6 @@ export default {
   database: 'mysql',
   orm: 'prisma',
   cache: 'redis',
-  test: 'vitest',
   eslint: true,
   prettier: true,
   docker: true
@@ -325,7 +314,6 @@ export interface ProjectContext {
   database:
     | 'mysql'
     | 'postgresql'
-    | 'sqlite'
     | 'mongodb'
     | 'none'
 
@@ -336,10 +324,6 @@ export interface ProjectContext {
 
   cache:
     | 'redis'
-    | 'none'
-
-  test:
-    | 'vitest'
     | 'none'
 
   architecture:
@@ -545,7 +529,6 @@ templates/
 ├── databases/
 │   ├── mysql/
 │   ├── postgresql/
-│   ├── sqlite/
 │   └── mongodb/
 │
 ├── orm/
@@ -554,9 +537,6 @@ templates/
 │
 ├── cache/
 │   └── redis/
-│
-├── testing/
-│   └── vitest/
 │
 ├── tooling/
 │   ├── eslint/
@@ -610,12 +590,6 @@ function resolveTemplates(
     )
   }
 
-  if (context.test !== 'none') {
-    templates.push(
-      `testing/${context.test}`
-    )
-  }
-
   if (context.eslint) {
     templates.push('tooling/eslint')
   }
@@ -643,7 +617,6 @@ Elysia
 MySQL
 Prisma
 Redis
-Vitest
 ESLint
 Prettier
 
@@ -655,7 +628,6 @@ frameworks/elysia
 databases/mysql
 orm/prisma
 cache/redis
-testing/vitest
 tooling/eslint
 tooling/prettier
 architecture/api
@@ -896,7 +868,6 @@ Elysia
 MySQL
 Prisma
 Redis
-Vitest
 ESLint
 Prettier
 Docker
@@ -929,16 +900,12 @@ blog-api/
 ├── prisma/
 │   └── schema.prisma
 │
-├── tests/
-│   └── health.test.ts
-│
 ├── .env.example
 ├── .gitignore
 ├── Dockerfile
-├── eslint.config.ts
-├── prettier.config.ts
+├── eslint.config.js
+├── prettier.config.js
 ├── tsconfig.json
-├── vitest.config.ts
 ├── package.json
 └── README.md
 
@@ -983,7 +950,6 @@ README 不建议固定。
 - MySQL
 - Prisma
 - Redis
-- Vitest
 - ESLint
 - Prettier
 
@@ -995,9 +961,6 @@ npm run dev
 Database
 npx prisma generate
 npx prisma migrate dev
-Test
-npm test
-
 因此：
 
 ```text
@@ -1101,8 +1064,6 @@ Options：
 
 --cache <cache>
 
---test <test>
-
 --architecture <architecture>
 
 --preset <preset>
@@ -1146,7 +1107,6 @@ Databases
 
 ✓ MySQL
 ✓ PostgreSQL
-✓ SQLite
 ✓ MongoDB
 
 ORM
@@ -1403,7 +1363,6 @@ Phase 4：Database
 
 MySQL
 PostgreSQL
-SQLite
 MongoDB
 Phase 5：ORM
 
@@ -1432,7 +1391,6 @@ Phase 7：Tooling
 
 ESLint
 Prettier
-Vitest
 Docker
 Git
 Phase 8：Preset / Config
@@ -1454,7 +1412,6 @@ Phase 9：Non-Interactive
 --database
 --orm
 --cache
---test
 --eslint
 --prettier
 --docker
@@ -1471,7 +1428,6 @@ create-node-app api \
   --database mysql \
   --orm prisma \
   --cache redis \
-  --test vitest \
   --eslint \
   --prettier
 二十六、V1 最终目标
@@ -1484,7 +1440,7 @@ V1 不追求：
 
 而追求：
 
-生成的项目真的能够安装、启动、测试和开发。
+生成的项目真的能够安装、启动和开发。
 
 最终验证：
 
@@ -1499,6 +1455,5 @@ blog-api
 cd blog-api
 npm install
 npm run dev
-npm test
 
 都能正常工作。

@@ -1,2 +1,6 @@
 allowBuilds:
   esbuild: true
+
+overrides:
+  pretty-ms: 9.2.0
+  rolldown: 1.0.0-beta.19

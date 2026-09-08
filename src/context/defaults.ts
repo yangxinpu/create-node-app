@@ -4,7 +4,7 @@ export type ContextDefaults = Omit<ProjectContext, 'projectName' | 'projectPath'
 
 /**
  * `--yes` 等价配置：
- * node + typescript + elysia + none + none + none + vitest + eslint + prettier
+ * node + typescript + elysia + none + none + none + eslint + prettier
  */
 export const DEFAULT_CONTEXT: ContextDefaults = {
   runtime: 'node',
@@ -13,7 +13,6 @@ export const DEFAULT_CONTEXT: ContextDefaults = {
   database: 'none',
   orm: 'none',
   cache: 'none',
-  test: 'vitest',
   architecture: 'minimal',
   eslint: true,
   prettier: true,

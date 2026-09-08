@@ -1,8 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 
+import { getHealthStatus } from '../health.js'
+
 export async function health(app: FastifyInstance): Promise<void> {
-  app.get('/health', async () => ({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-  }))
+  app.get('/health', async () => getHealthStatus())
 }

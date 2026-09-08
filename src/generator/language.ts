@@ -37,8 +37,9 @@ export function shouldSkipFile(fileName: string, language: ProjectContext['langu
  * JS 模式：.ts → .js（.mts → .mjs, .cts → .cjs）；TS 模式原样返回。
  */
 export function mapFileName(fileName: string, language: ProjectContext['language']): string {
-  if (language !== 'javascript') return fileName
-  return fileName
+  const outputName = fileName.replace(/\.template$/, '')
+  if (language !== 'javascript') return outputName
+  return outputName
     .replace(/\.mts$/, '.mjs')
     .replace(/\.cts$/, '.cjs')
     .replace(/\.ts$/, '.js')

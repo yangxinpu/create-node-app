@@ -32,13 +32,6 @@ export const compatibilityRules: CompatibilityRule[] = [
     message: 'An ORM requires a database. Select a database or set ORM to none.',
   },
   {
-    name: 'prisma-sqlite-bun',
-    condition: (ctx) =>
-      ctx.orm === 'prisma' && ctx.database === 'sqlite' && ctx.runtime === 'bun',
-    level: 'warning',
-    message: 'Prisma with SQLite on Bun may have limited support.',
-  },
-  {
     name: 'drizzle-mongodb',
     condition: (ctx) => ctx.orm === 'drizzle' && ctx.database === 'mongodb',
     level: 'error',

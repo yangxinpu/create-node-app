@@ -12,7 +12,6 @@ export function resolveTemplates(ctx: ProjectContext): string[] {
   if (ctx.database !== 'none') t.push(`databases/${ctx.database}`)
   if (ctx.orm !== 'none') t.push(`orm/${ctx.orm}`)
   if (ctx.cache !== 'none') t.push(`cache/${ctx.cache}`)
-  if (ctx.test !== 'none') t.push(`testing/${ctx.test}`)
   if (ctx.eslint) t.push('tooling/eslint')
   if (ctx.prettier) t.push('tooling/prettier')
   if (ctx.docker) t.push('tooling/docker')

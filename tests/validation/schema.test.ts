@@ -43,6 +43,12 @@ describe('validateContext', () => {
     ).toThrow(/Invalid framework/)
   })
 
+  it('rejects SQLite because it is not supported', () => {
+    expect(() =>
+      validateContext(buildContext({ database: 'sqlite' as never })),
+    ).toThrow(/Invalid database/)
+  })
+
   it('rejects empty projectPath', () => {
     expect(() => validateContext(buildContext({ projectPath: '' }))).toThrow(
       /projectPath is required/,

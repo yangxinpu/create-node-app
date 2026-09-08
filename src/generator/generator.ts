@@ -37,9 +37,9 @@ export async function createProject(context: ProjectContext): Promise<void> {
 
   // 2. 解析
   const templatePaths = resolveTemplates(context)
-  const metas = await Promise.all(templatePaths.map((tp) => loadTemplateMeta(tp)))
-  const dependencies = resolveDependencies(metas)
   const variables = buildTemplateVariables(context)
+  const metas = await Promise.all(templatePaths.map((tp) => loadTemplateMeta(tp, variables)))
+  const dependencies = resolveDependencies(metas)
 
   // 3. 生成静态文件（按 resolver 顺序覆盖，文本内容经变量渲染）
   logger.step('Generating files')

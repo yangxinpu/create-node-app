@@ -12,10 +12,13 @@ import { renderContent, type TemplateVariables } from './render.js'
  * 读取单个模板模块的 template.json 元数据。
  * 依赖 / 脚本 / 环境变量都声明在这里，由 Dependency Resolver 统一合并。
  */
-export async function loadTemplateMeta(templatePath: string): Promise<TemplateMeta> {
+export async function loadTemplateMeta(
+  templatePath: string,
+  variables: TemplateVariables = {},
+): Promise<TemplateMeta> {
   const metaPath = path.join(getTemplatesRoot(), templatePath, 'template.json')
   const content = await readFile(metaPath, 'utf-8')
-  return JSON.parse(content) as TemplateMeta
+  return JSON.parse(renderContent(content, variables)) as TemplateMeta
 }
 
 /**

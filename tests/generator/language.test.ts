@@ -35,6 +35,11 @@ describe('mapFileName', () => {
     expect(mapFileName('package.json', 'javascript')).toBe('package.json')
     expect(mapFileName('.env.example', 'javascript')).toBe('.env.example')
   })
+
+  it('removes the template suffix from generated file names', () => {
+    expect(mapFileName('eslint.config.js.template', 'typescript')).toBe('eslint.config.js')
+    expect(mapFileName('eslint.config.js.template', 'javascript')).toBe('eslint.config.js')
+  })
 })
 
 describe('shouldSkipFile', () => {

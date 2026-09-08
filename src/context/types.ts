@@ -7,7 +7,6 @@ import type {
   Orm,
   PackageManagerName,
   Runtime,
-  Test,
 } from '../config/options.js'
 
 /**
@@ -27,7 +26,6 @@ export interface ProjectContext {
   database: Database
   orm: Orm
   cache: Cache
-  test: Test
   architecture: Architecture
 
   // ── 工程化 ──

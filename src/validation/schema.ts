@@ -7,7 +7,6 @@ import {
   ORMS,
   PACKAGE_MANAGERS,
   RUNTIMES,
-  TESTS,
 } from '../config/options.js'
 import type { ProjectContext } from '../context/types.js'
 
@@ -49,7 +48,6 @@ export function validateContext(context: ProjectContext): void {
   assertOneOf('database', context.database, DATABASES)
   assertOneOf('orm', context.orm, ORMS)
   assertOneOf('cache', context.cache, CACHES)
-  assertOneOf('test', context.test, TESTS)
   assertOneOf('architecture', context.architecture, ARCHITECTURES)
   assertOneOf('package-manager', context.packageManager, PACKAGE_MANAGERS)
 }

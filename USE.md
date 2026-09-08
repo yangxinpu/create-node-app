@@ -94,10 +94,9 @@ CLI 会依次询问以下选项：
 ? Select runtime:    ❯ Node / Bun
 ? Select language:   ❯ TypeScript / JavaScript
 ? Select framework:  ❯ Elysia / Hono / Express / Fastify / None
-? Select database:   ❯ MySQL / PostgreSQL / SQLite / MongoDB / None
+? Select database:   ❯ MySQL / PostgreSQL / MongoDB / None
 ? Select ORM:        ❯ Prisma / Drizzle / None
 ? Select cache:      ❯ Redis / None
-? Select testing:    ❯ Vitest / None
 ? Select architecture: ❯ minimal / api / layered
 ? Use ESLint?        ❯ Yes / No
 ? Use Prettier?      ❯ Yes / No
@@ -116,7 +115,6 @@ node dist/index.js my-server \
   --database mysql \
   --orm prisma \
   --cache redis \
-  --test vitest \
   --architecture api \
   --eslint \
   --prettier \
@@ -139,7 +137,6 @@ node dist/index.js my-server --yes
 | database     | none       |
 | orm          | none       |
 | cache        | none       |
-| test         | vitest     |
 | architecture | minimal    |
 | eslint       | true       |
 | prettier     | true       |
@@ -178,7 +175,6 @@ export default {
   database: 'mysql',
   orm: 'prisma',
   cache: 'redis',
-  test: 'vitest',
   eslint: true,
   prettier: true,
   docker: true,
@@ -204,10 +200,9 @@ Options:
   --runtime <runtime>          node | bun
   --language <language>        typescript | javascript
   --framework <framework>      elysia | hono | express | fastify | none
-  --database <database>        mysql | postgresql | sqlite | mongodb | none
+  --database <database>        mysql | postgresql | mongodb | none
   --orm <orm>                  prisma | drizzle | none
   --cache <cache>              redis | none
-  --test <test>                vitest | none
   --architecture <arch>        minimal | api | layered
   --preset <preset>            minimal | api | fullstack | microservice
   --config <path>              配置文件路径 (node-app.config.ts)
@@ -243,7 +238,6 @@ Frameworks
 Databases
   ✓ mysql
   ✓ postgresql
-  ✓ sqlite
   ✓ mongodb
   ✓ none
 
@@ -254,10 +248,6 @@ ORM
 
 Cache
   ✓ redis
-  ✓ none
-
-Testing
-  ✓ vitest
   ✓ none
 
 Architecture
@@ -287,15 +277,12 @@ my-server/
 │   ├── schemas/               # 数据验证 schema
 │   ├── app.ts                 # 应用入口
 │   └── index.ts               # 启动文件
-├── tests/
-│   └── health.test.ts         # 健康检查测试
 ├── .env.example               # 环境变量模板
 ├── .gitignore
 ├── Dockerfile                 # Docker 配置（--docker 时）
-├── eslint.config.ts           # ESLint 配置（--eslint 时）
-├── prettier.config.ts         # Prettier 配置（--prettier 时）
+├── eslint.config.js           # ESLint 配置（--eslint 时）
+├── prettier.config.js         # Prettier 配置（--prettier 时）
 ├── tsconfig.json
-├── vitest.config.ts           # 测试配置（--test vitest 时）
 ├── package.json
 └── README.md                  # 根据 Stack 动态生成
 ```
@@ -329,10 +316,7 @@ cp .env.example .env
 # 5. 启动开发服务器
 npm run dev
 
-# 6. 运行测试
-npm test
-
-# 7. 数据库迁移（如果使用了 Prisma）
+# 6. 数据库迁移（如果使用了 Prisma）
 npx prisma generate
 npx prisma migrate dev
 ```
@@ -348,7 +332,6 @@ npx prisma migrate dev
 | `orm-requires-database` | error   | 选了 ORM 但没有数据库                   |
 | `drizzle-mongodb`       | error   | Drizzle 不支持 MongoDB             |
 | `elysia-runtime`        | warning | Elysia 在 Node.js 上通过 adapter 运行 |
-| `prisma-sqlite-bun`     | warning | Prisma + SQLite + Bun 支持有限      |
 | `express-bun`           | warning | Express 在 Bun 上支持有限             |
 | `fastify-bun`           | warning | Fastify 在 Bun 上支持有限             |
 
@@ -427,8 +410,6 @@ node dist/index.js my-server --yes --package-manager pnpm
 
 * `postgresql` → `provider = "postgresql"`，同上
 
-* `sqlite` → `provider = "sqlite"`，同上
-
 * `mongodb` → `provider = "mongodb"`，`String @id @default(auto()) @db.ObjectId`
 
 ### Q: 生成的 Drizzle 文件怎么对应选的数据库？
@@ -438,6 +419,3 @@ node dist/index.js my-server --yes --package-manager pnpm
 * `mysql` → `drizzle-orm/mysql-core` + `mysql2/promise`
 
 * `postgresql` → `drizzle-orm/pg-core` + `pg`
-
-* `sqlite` → `drizzle-orm/sqlite-core` + `better-sqlite3`
-

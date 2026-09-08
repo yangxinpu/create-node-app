@@ -18,7 +18,6 @@ templates/
 ├── databases/
 │   ├── mysql/
 │   ├── postgresql/
-│   ├── sqlite/
 │   └── mongodb/
 │
 ├── orm/
@@ -27,9 +26,6 @@ templates/
 │
 ├── cache/
 │   └── redis/
-│
-├── testing/
-│   └── vitest/
 │
 ├── tooling/
 │   ├── eslint/
@@ -54,8 +50,6 @@ Database
 ORM
   +
 Cache
-  +
-Testing
   +
 Tooling
   +
@@ -297,11 +291,6 @@ templates/databases/
 │   ├── env.example
 │   └── files/
 │
-├── sqlite/
-│   ├── template.json
-│   ├── package.json
-│   └── files/
-│
 └── mongodb/
     ├── template.json
     ├── package.json
@@ -361,7 +350,6 @@ MySQL 本身
 
 MySQL + Prisma
 PostgreSQL + Prisma
-SQLite + Prisma
 
 都能够组合。
 
@@ -389,44 +377,20 @@ src/
 └── redis/
     ├── client.ts
     └── index.ts
-十一、Testing Template
-
-建议单独拆出来。
-
-templates/testing/
-│
-└── vitest/
-    ├── template.json
-    ├── package.json
-    ├── files/
-    │   ├── vitest.config.ts
-    │   └── tests/
-    │       └── health.test.ts
-    └── generator.ts
-
-以后可以继续：
-
-testing/
-├── vitest/
-├── jest/
-└── node-test/
-
-这样 testing 不需要和 Framework 耦合。
-
-十二、Tooling Template
+十一、Tooling Template
 templates/tooling/
 │
 ├── eslint/
 │   ├── template.json
 │   ├── package.json
 │   └── files/
-│       └── eslint.config.ts
+│       └── eslint.config.js.template
 │
 ├── prettier/
 │   ├── template.json
 │   ├── package.json
 │   └── files/
-│       └── prettier.config.ts
+│       └── prettier.config.js
 │
 └── docker/
     ├── template.json
@@ -452,7 +416,7 @@ Docker
 
 可以任意组合。
 
-十三、Architecture Template
+十二、Architecture Template
 
 这是我建议你增加的一层。
 
@@ -505,7 +469,7 @@ API
 
 这是两个不同维度。
 
-十四、最终完整 Template 目录
+十三、最终完整 Template 目录
 
 所以最终我推荐：
 
@@ -547,7 +511,6 @@ templates/
 ├── databases/
 │   ├── mysql/
 │   ├── postgresql/
-│   ├── sqlite/
 │   └── mongodb/
 │
 ├── orm/
@@ -556,9 +519,6 @@ templates/
 │
 ├── cache/
 │   └── redis/
-│
-├── testing/
-│   └── vitest/
 │
 ├── tooling/
 │   ├── eslint/
@@ -569,7 +529,7 @@ templates/
     ├── minimal/
     ├── api/
     └── layered/
-十五、一个完整 Template 的内部结构
+十四、一个完整 Template 的内部结构
 
 例如：
 
@@ -622,7 +582,7 @@ generator.ts
 
 负责无法通过静态文件完成的动态生成。
 
-十六、Template 的核心数据模型
+十五、Template 的核心数据模型
 
 对应你前面的 Generator 架构，我建议定义：
 
@@ -636,7 +596,6 @@ export interface TemplateModule {
     | 'database'
     | 'orm'
     | 'cache'
-    | 'testing'
     | 'tooling'
     | 'architecture'
 
@@ -673,7 +632,7 @@ export interface TemplateModule {
 升级成：
 
 可执行的模块
-十七、Resolver 最终如何工作
+十六、Resolver 最终如何工作
 
 假设用户选择：
 
@@ -683,7 +642,6 @@ Elysia
 MySQL
 Prisma
 Redis
-Vitest
 ESLint
 Prettier
 API
@@ -696,7 +654,6 @@ templates/frameworks/elysia
 templates/databases/mysql
 templates/orm/prisma
 templates/cache/redis
-templates/testing/vitest
 templates/tooling/eslint
 templates/tooling/prettier
 templates/architecture/api
@@ -713,9 +670,9 @@ templates/architecture/api
        ↓               ↓               ↓
      Runtime          ORM             Cache
        ↓               ↓               ↓
-    Testing         Tooling       Architecture
-       └───────────────┼───────────────┘
-                       ↓
+                    Tooling       Architecture
+                       └───────────────┘
+                               ↓
                 Template Modules
                        ↓
                  File Generator
@@ -723,7 +680,7 @@ templates/architecture/api
                   File Merger
                        ↓
                  Final Project
-十八、我建议特别注意一个原则
+十七、我建议特别注意一个原则
 
 Template 不应该互相依赖。
 
@@ -750,7 +707,6 @@ Compatibility Engine
 
 Prisma + MySQL
 Prisma + PostgreSQL
-Prisma + SQLite
 
 是否能够组合。
 
@@ -766,7 +722,7 @@ Resolver
 
 这样整个 Template 系统才能真正做到可组合。
 
-十九、最终你这个项目的 Template Engine
+十八、最终你这个项目的 Template Engine
 
 最终可以形成这样的架构：
 
@@ -784,9 +740,9 @@ Resolver
             ↓                 ↓                 ↓
          Runtime             ORM              Cache
             ↓                 ↓                 ↓
-        Testing            Tooling        Architecture
-            └─────────────────┼─────────────────┘
-                              ↓
+                             Tooling        Architecture
+                                └─────────────────┘
+                                          ↓
                      Template Module[]
                               ↓
                      Dependency Resolver

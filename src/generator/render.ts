@@ -25,14 +25,12 @@ const MONGO_USER_MODEL = [
 const PRISMA_DATASOURCE: Record<string, string> = {
   mysql: 'mysql',
   postgresql: 'postgresql',
-  sqlite: 'sqlite',
   mongodb: 'mongodb',
 }
 
 const PRISMA_USER_MODEL: Record<string, string> = {
   mysql: SQL_USER_MODEL,
   postgresql: SQL_USER_MODEL,
-  sqlite: SQL_USER_MODEL,
   mongodb: MONGO_USER_MODEL,
 }
 
@@ -69,17 +67,6 @@ const DRIZZLE: Record<string, DrizzleProfile> = {
     clientInit:
       'const pool = new Pool({ connectionString: process.env.DATABASE_URL })\n\nexport const db = drizzle(pool, { schema })',
   },
-  sqlite: {
-    dialect: 'sqlite',
-    coreModule: 'drizzle-orm/sqlite-core',
-    tableFn: 'sqliteTable',
-    idImport: 'integer',
-    idColumn: "integer('id').primaryKey()",
-    clientImports:
-      "import { drizzle } from 'drizzle-orm/better-sqlite3'\nimport Database from 'better-sqlite3'",
-    clientInit:
-      "const sqlite = new Database(process.env.DATABASE_URL!.replace('file:', ''))\n\nexport const db = drizzle(sqlite, { schema })",
-  },
 }
 
 /**
@@ -95,7 +82,6 @@ export function buildTemplateVariables(context: ProjectContext): TemplateVariabl
     database: context.database,
     orm: context.orm,
     cache: context.cache,
-    test: context.test,
     architecture: context.architecture,
   }
 
@@ -123,11 +109,22 @@ export function buildTemplateVariables(context: ProjectContext): TemplateVariabl
  * 支持条件块：{{#if name=value}}...{{/if}}，仅当变量等于给定值时保留块内容。
  */
 export function renderContent(content: string, variables: TemplateVariables): string {
-  const conditionalsRendered = content.replace(
+  const renderConditional = (
+    _match: string,
+    key: string,
+    value: string,
+    block: string,
+  ): string => {
+    return variables[key] === value ? block : ''
+  }
+
+  const commentConditionalsRendered = content.replace(
+    /^[ \t]*\/\/\s*\{\{#if\s+(\w+)=([\w-]+)\s*\}\}\r?\n([\s\S]*?)^[ \t]*\/\/\s*\{\{\/if\}\}[ \t]*(?:\r?\n|$)/gm,
+    renderConditional,
+  )
+  const conditionalsRendered = commentConditionalsRendered.replace(
     /\{\{#if\s+(\w+)=([\w-]+)\s*\}\}([\s\S]*?)\{\{\/if\}\}/g,
-    (_match, key: string, value: string, block: string) => {
-      return variables[key] === value ? block : ''
-    },
+    renderConditional,
   )
   return conditionalsRendered.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, key: string) => {
     return key in variables ? (variables[key] as string) : match

@@ -8,7 +8,6 @@ import {
   LANGUAGES,
   ORMS,
   RUNTIMES,
-  TESTS,
 } from '../config/options.js'
 import type { ProjectContext } from '../context/types.js'
 import type { RawContext } from '../context/normalize.js'
@@ -55,10 +54,6 @@ export async function runPrompts(
     (options.cache as ProjectContext['cache']) ??
     (await select({ message: 'Select cache:', choices: toChoices(CACHES) }))
 
-  const test =
-    (options.test as ProjectContext['test']) ??
-    (await select({ message: 'Select testing:', choices: toChoices(TESTS) }))
-
   const architecture =
     (options.architecture as ProjectContext['architecture']) ??
     (await select({ message: 'Select architecture:', choices: toChoices(ARCHITECTURES) }))
@@ -76,7 +71,6 @@ export async function runPrompts(
     database,
     orm,
     cache,
-    test,
     architecture,
     eslint,
     prettier,

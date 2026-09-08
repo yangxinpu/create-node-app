@@ -35,7 +35,6 @@ describe('resolveTemplates', () => {
         database: 'mysql',
         orm: 'prisma',
         cache: 'redis',
-        test: 'vitest',
         eslint: true,
         prettier: true,
         docker: true,
@@ -49,7 +48,6 @@ describe('resolveTemplates', () => {
       'databases/mysql',
       'orm/prisma',
       'cache/redis',
-      'testing/vitest',
       'tooling/eslint',
       'tooling/prettier',
       'tooling/docker',
@@ -58,10 +56,7 @@ describe('resolveTemplates', () => {
   })
 
   it('skips disabled tooling', () => {
-    const templates = resolveTemplates(
-      buildContext({ eslint: false, prettier: false, test: 'none' }),
-    )
+    const templates = resolveTemplates(buildContext({ eslint: false, prettier: false }))
     expect(templates.some((t) => t.startsWith('tooling/'))).toBe(false)
-    expect(templates.some((t) => t.startsWith('testing/'))).toBe(false)
   })
 })
