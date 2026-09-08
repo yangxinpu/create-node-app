@@ -506,6 +506,9 @@ interface TemplateModule {
 
 这比简单 Copy 文件强很多。
 
+模板源文件可以使用 `.template` 后缀。生成器复制文件时会移除该后缀，例如
+`eslint.config.js.template` 会输出为 `eslint.config.js`，从而避免 IDE 在模板渲染前误加载配置文件。
+
 十、Template 分类
 
 推荐目录：
@@ -877,24 +880,24 @@ Docker
 blog-api/
 
 ├── src/
-│   ├── config/
-│   │   ├── env.ts
-│   │   └── index.ts
-│   │
 │   ├── db/
+│   │   ├── client.ts
 │   │   └── prisma.ts
 │   │
 │   ├── redis/
 │   │   └── client.ts
 │   │
-│   ├── middleware/
-│   │
 │   ├── routes/
+│   │   └── health.ts
 │   │
 │   ├── services/
+│   │   └── health.ts
 │   │
 │   ├── schemas/
+│   │   └── health.ts
 │   │
+│   ├── app.ts
+│   ├── health.ts
 │   └── index.ts
 │
 ├── prisma/
@@ -909,6 +912,8 @@ blog-api/
 ├── package.json
 └── README.md
 
+生成项目不包含测试框架、测试脚本或测试文件；仓库根目录的 Vitest 仅用于脚手架自身回归测试。
+
 需要注意：
 
 不是所有项目都生成这些目录。
@@ -917,7 +922,7 @@ blog-api/
 
 Node + TypeScript + None
 
-只生成最基础结构。
+只生成基础入口和 `health.ts`。
 
 而：
 
@@ -928,7 +933,6 @@ architecture/api
 routes
 services
 schemas
-middleware
 
 这样 Generator 才真正做到“按配置生成”。
 
@@ -1128,99 +1132,54 @@ upgrade
 
 二十二、项目目录
 
-最终建议整个 CLI 项目采用：
+当前 CLI 项目结构：
 
 create-node-app/
-
 ├── src/
-│   │
 │   ├── cli/
 │   │   ├── index.ts
-│   │   │
 │   │   ├── commands/
 │   │   │   ├── create.ts
-│   │   │   ├── list.ts
-│   │   │   └── info.ts
-│   │   │
-│   │   ├── prompts/
-│   │   │   ├── project.ts
-│   │   │   ├── runtime.ts
-│   │   │   ├── framework.ts
-│   │   │   ├── database.ts
-│   │   │   ├── orm.ts
-│   │   │   ├── cache.ts
-│   │   │   └── tooling.ts
-│   │   │
+│   │   │   └── list.ts
+│   │   └── prompts.ts
+│   ├── config/
 │   │   └── options.ts
-│   │
 │   ├── context/
 │   │   ├── types.ts
 │   │   ├── defaults.ts
 │   │   └── normalize.ts
-│   │
 │   ├── validation/
 │   │   ├── schema.ts
-│   │   ├── context.ts
-│   │   └── compatibility/
-│   │       ├── runtime.ts
-│   │       ├── framework.ts
-│   │       ├── database.ts
-│   │       ├── orm.ts
-│   │       └── rules.ts
-│   │
+│   │   └── compatibility.ts
 │   ├── resolver/
 │   │   ├── template.ts
 │   │   ├── dependency.ts
-│   │   ├── feature.ts
 │   │   └── preset.ts
-│   │
 │   ├── generator/
 │   │   ├── generator.ts
 │   │   ├── files.ts
 │   │   ├── package.ts
 │   │   ├── readme.ts
-│   │   └── env.ts
-│   │
+│   │   ├── env.ts
+│   │   ├── render.ts
+│   │   └── language.ts
 │   ├── merger/
-│   │   ├── merger.ts
+│   │   ├── index.ts
 │   │   ├── json.ts
 │   │   ├── env.ts
-│   │   └── text.ts
-│   │
-│   ├── templates/
-│   │
+│   │   ├── json-strategy.ts
+│   │   └── env-strategy.ts
 │   ├── runtime/
 │   │   ├── installer.ts
 │   │   ├── git.ts
 │   │   └── package-manager.ts
-│   │
-│   ├── config/
-│   │   ├── frameworks.ts
-│   │   ├── databases.ts
-│   │   ├── orm.ts
-│   │   ├── cache.ts
-│   │   └── dependencies/
-│   │
 │   ├── presets/
-│   │   ├── minimal.ts
-│   │   ├── api.ts
-│   │   └── microservice.ts
-│   │
+│   │   └── index.ts
 │   └── utils/
-│       ├── fs.ts
-│       ├── process.ts
 │       ├── logger.ts
 │       └── paths.ts
-│
-├── templates/
-│
-├── tests/
-│   ├── cli/
-│   ├── resolver/
-│   ├── generator/
-│   ├── merger/
-│   └── compatibility/
-│
+├── templates/               # 八类可组合模板
+├── tests/                   # CLI 与核心模块测试
 ├── package.json
 ├── tsconfig.json
 ├── tsdown.config.ts

@@ -1,6 +1,6 @@
 # AGENTS.md — create-node-app AI 编码指南
 
-> 本文档专为 AI 编程助手设计。提炼自 READMD.md 与 Template.md 两份规格文档的核心内容。
+> 本文档专为 AI 编程助手设计。提炼自 README.md 与 Template.md 两份规格文档的核心内容。
 
 ---
 
@@ -168,6 +168,9 @@ template-module/
 └── generator.ts      # 可选 - 动态生成逻辑
 ```
 
+`files/` 中以 `.template` 结尾的文件会在生成时移除该后缀。例如
+`eslint.config.js.template` 最终生成 `eslint.config.js`。这可避免 IDE 将未渲染的模板误识别为项目配置。
+
 ### 4.2 template.json 字段
 
 ```json
@@ -211,11 +214,13 @@ templates/
 
 Architecture 描述**项目组织方式**，Framework 描述**技术栈**。这是两个正交维度：
 
-| Architecture | 生成的 src/ 目录 |
+| Architecture | 架构模板增加的文件 |
 |-------------|----------------|
-| `minimal` | `index.ts` |
-| `api` | `routes/` + `services/` + `schemas/` + `index.ts` |
-| `layered` | `controllers/` + `services/` + `repositories/` + `schemas/` + `index.ts` |
+| `minimal` | `health.ts` |
+| `api` | `health.ts` + `services/health.ts` + `schemas/health.ts` |
+| `layered` | `health.ts` + `controllers/` + `services/` + `repositories/` + `schemas/` |
+
+入口文件和框架路由由 Base、Framework 模板提供；Architecture 只负责项目组织方式。
 
 ---
 
@@ -348,12 +353,11 @@ create-node-app/
 │   ├── resolver/            # Template Resolver + Dependency Resolver + Preset
 │   ├── generator/           # 文件生成、package.json、README、env
 │   ├── merger/              # File Merge 策略（JSON/ENV/Text）
-│   ├── templates/           # 9 大类模板模块（运行时加载）
 │   ├── runtime/             # Installer、Git、PackageManager
 │   ├── config/              # framework/database/orm 配置与依赖表
 │   ├── presets/             # 预设定义
 │   └── utils/               # fs / process / logger / paths
-├── templates/               # 模板目录（独立于 src/templates/ 运行时模块）
+├── templates/               # 八类模板模块，由 Resolver / Generator 运行时加载
 ├── tests/                   # cli / resolver / generator / merger / compatibility
 └── ...（package.json, tsconfig.json 等工程配置）
 ```
@@ -385,7 +389,7 @@ cli → context → validation → resolver → generator → merger → runtime
 
 ## 12. V1 开发阶段
 
-> **V1 目标**：生成的项目能真正安装、启动、测试、开发。不追求覆盖所有组合。
+> **V1 目标**：生成的项目能真正安装、启动、开发。不追求覆盖所有组合。
 
 | Phase | 内容 | 交付标准 |
 |-------|------|---------|
@@ -410,6 +414,8 @@ cli → context → validation → resolver → generator → merger → runtime
 5. **File Merge 按类型分发** —— package.json 用 JSON Merge，.env 用 Environment Merge，而非一刀切的 Copy
 6. **Compatibility 规则可扩展** —— 用 `CompatibilityRule[]` 数据驱动，不要写死大量 if-else
 7. **V1 不追求全覆盖** —— 先让一条链路跑通（TS + Node + Elysia），再逐类扩展
+8. **生成项目不附带测试** —— Vitest 只用于脚手架仓库自身测试，不提供 testing 模板或 `--test` 参数
+9. **数据库范围固定** —— 仅支持 MySQL、PostgreSQL、MongoDB 和 none，不提供 SQLite 选项
 
 ---
 

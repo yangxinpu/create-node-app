@@ -272,10 +272,14 @@ my-server/
 │   │   └── prisma.ts          # Prisma 客户端实例
 │   ├── redis/
 │   │   └── client.ts          # Redis 客户端
-│   ├── routes/                # 路由目录
-│   ├── services/              # 业务逻辑层
-│   ├── schemas/               # 数据验证 schema
+│   ├── routes/
+│   │   └── health.ts          # 框架路由
+│   ├── services/
+│   │   └── health.ts          # 业务逻辑
+│   ├── schemas/
+│   │   └── health.ts          # 响应类型
 │   ├── app.ts                 # 应用入口
+│   ├── health.ts              # 架构统一出口
 │   └── index.ts               # 启动文件
 ├── .env.example               # 环境变量模板
 ├── .gitignore
@@ -289,11 +293,14 @@ my-server/
 
 ### 架构对比
 
-| Architecture | 生成的 src/ 目录                                                              |
-| ------------ | ------------------------------------------------------------------------ |
-| `minimal`    | `index.ts`                                                               |
-| `api`        | `routes/` + `services/` + `schemas/` + `index.ts`                        |
-| `layered`    | `controllers/` + `services/` + `repositories/` + `schemas/` + `index.ts` |
+| Architecture | 架构模板增加的文件 |
+| ------------ | ------------------ |
+| `minimal`    | `health.ts` |
+| `api`        | `health.ts` + `services/health.ts` + `schemas/health.ts` |
+| `layered`    | `health.ts` + `controllers/` + `services/` + `repositories/` + `schemas/` |
+
+`index.ts`、`app.ts` 和 `routes/` 由 Base、Framework 模板按所选技术栈生成。
+当前版本不会向生成项目添加测试框架、测试脚本或测试文件。
 
 ***
 

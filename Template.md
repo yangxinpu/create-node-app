@@ -37,6 +37,8 @@ templates/
     ├── api/
     └── layered/
 
+当前不提供 `testing` 模板，生成项目不会附带测试框架或测试文件；数据库模板不包含 SQLite。
+
 这里的核心关系是：
 
 Base
@@ -114,6 +116,16 @@ template-module/
 ├── package.json         # 依赖声明，可选
 ├── env.example          # 环境变量，可选
 └── generator.ts         # 动态生成逻辑，可选
+
+`files/` 内允许使用 `.template` 源文件后缀。复制时生成器会移除该后缀，例如
+`eslint.config.js.template` 会生成 `eslint.config.js`。条件指令应写在注释中，以保证模板源文件仍可被 IDE 正常解析：
+
+```javascript
+// {{#if language=typescript}}
+import tseslint from 'typescript-eslint'
+// {{/if}}
+```
+
 四、template.json
 
 这是每一个 Template Module 的核心描述文件。
@@ -426,26 +438,31 @@ templates/architecture/
 │   ├── template.json
 │   └── files/
 │       └── src/
-│           └── index.ts
+│           └── health.ts
 │
 ├── api/
 │   ├── template.json
 │   └── files/
 │       └── src/
-│           ├── routes/
+│           ├── health.ts
 │           ├── services/
-│           ├── schemas/
-│           └── index.ts
+│           │   └── health.ts
+│           └── schemas/
+│               └── health.ts
 │
 └── layered/
     ├── template.json
     └── files/
         └── src/
+            ├── health.ts
             ├── controllers/
+            │   └── health.controller.ts
             ├── services/
+            │   └── health.service.ts
             ├── repositories/
-            ├── schemas/
-            └── index.ts
+            │   └── health.repository.ts
+            └── schemas/
+                └── health.ts
 
 这样可以区分：
 
