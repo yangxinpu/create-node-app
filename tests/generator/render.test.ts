@@ -25,6 +25,14 @@ describe('buildTemplateVariables', () => {
     expect(vars.dockerVariant).toBe('node-typescript')
     expect(vars.runtimeEntry).toBe('dist/index.js')
     expect(vars.framework).toBe('express')
+    expect(vars.runtimeDisplay).toBe('Node.js 24 LTS')
+    expect(vars.languageDisplay).toBe('TypeScript')
+    expect(vars.frameworkDisplay).toBe('Express')
+    expect(vars.architectureDisplay).toBe('Minimal')
+    expect(vars.toolingDisplay).toBe('ESLint, Prettier')
+    expect(vars.selectedTemplates).toContain('base/common')
+    expect(vars.selectedTemplates).toContain('frameworks/express')
+    expect(vars.templateCount).toBe('7')
   })
 
   it('includes Bun-specific runtime variables', () => {
@@ -41,6 +49,7 @@ describe('buildTemplateVariables', () => {
     expect(vars.runtimeTypesName).toBe('bun')
     expect(vars.dockerVariant).toBe('bun-javascript')
     expect(vars.runtimeEntry).toBe('src/index.js')
+    expect(vars.runtimeDisplay).toBe('Bun 1.3 stable')
   })
 
   it('includes prisma variables when database is set', () => {

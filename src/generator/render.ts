@@ -1,4 +1,5 @@
 import type { ProjectContext } from '../context/types.js'
+import { resolveTemplates } from '../resolver/template.js'
 
 /**
  * 模板变量表。模板文件中的 {{variable}} 占位符会被这里的值替换。
@@ -34,6 +35,26 @@ const PRISMA_USER_MODEL: Record<string, string> = {
   mongodb: MONGO_USER_MODEL,
 }
 
+/** Welcome page labels for values that need more than title casing. */
+const DISPLAY_LABELS: Record<string, string> = {
+  typescript: 'TypeScript',
+  javascript: 'JavaScript',
+  express: 'Express',
+  elysia: 'Elysia',
+  hono: 'Hono',
+  fastify: 'Fastify',
+  mysql: 'MySQL',
+  postgresql: 'PostgreSQL',
+  mongodb: 'MongoDB',
+  prisma: 'Prisma',
+  drizzle: 'Drizzle',
+  redis: 'Redis',
+  minimal: 'Minimal',
+  api: 'API',
+  layered: 'Layered',
+  none: 'None',
+}
+
 interface DrizzleProfile {
   dialect: string
   coreModule: string
@@ -62,8 +83,7 @@ const DRIZZLE: Record<string, DrizzleProfile> = {
     tableFn: 'pgTable',
     idImport: 'serial',
     idColumn: "serial('id').primaryKey()",
-    clientImports:
-      "import { drizzle } from 'drizzle-orm/node-postgres'\nimport { Pool } from 'pg'",
+    clientImports: "import { drizzle } from 'drizzle-orm/node-postgres'\nimport { Pool } from 'pg'",
     clientInit:
       'const pool = new Pool({ connectionString: process.env.DATABASE_URL })\n\nexport const db = drizzle(pool, { schema })',
   },
@@ -73,10 +93,20 @@ const DRIZZLE: Record<string, DrizzleProfile> = {
  * 从 ProjectContext 计算模板变量。
  */
 export function buildTemplateVariables(context: ProjectContext): TemplateVariables {
+  const selectedTemplates = resolveTemplates(context)
+  const tooling = [
+    context.eslint ? 'ESLint' : '',
+    context.prettier ? 'Prettier' : '',
+    context.docker ? 'Docker' : '',
+  ].filter(Boolean)
   const vars: TemplateVariables = {
     projectName: context.projectName,
     runtime: context.runtime,
     runtimeVersion: context.runtimeVersion,
+    runtimeDisplay:
+      context.runtime === 'node'
+        ? `Node.js ${context.runtimeVersion} LTS`
+        : `Bun ${context.runtimeVersion} stable`,
     runtimeTypesPackage: context.runtime === 'node' ? '@types/node' : '@types/bun',
     runtimeTypesName: context.runtime === 'node' ? 'node' : 'bun',
     runtimeTypesRange:
@@ -89,12 +119,21 @@ export function buildTemplateVariables(context: ProjectContext): TemplateVariabl
         : `src/index.${context.language === 'typescript' ? 'ts' : 'js'}`,
     dockerVariant: `${context.runtime}-${context.language}`,
     language: context.language,
+    languageDisplay: getDisplayLabel(context.language),
     extension: context.language === 'typescript' ? 'ts' : 'js',
     framework: context.framework,
+    frameworkDisplay: getDisplayLabel(context.framework),
     database: context.database,
+    databaseDisplay: getDisplayLabel(context.database),
     orm: context.orm,
+    ormDisplay: getDisplayLabel(context.orm),
     cache: context.cache,
+    cacheDisplay: getDisplayLabel(context.cache),
     architecture: context.architecture,
+    architectureDisplay: getDisplayLabel(context.architecture),
+    toolingDisplay: tooling.length > 0 ? tooling.join(', ') : 'None',
+    selectedTemplates: selectedTemplates.join(' / '),
+    templateCount: String(selectedTemplates.length),
   }
 
   if (context.database !== 'none') {
@@ -116,17 +155,17 @@ export function buildTemplateVariables(context: ProjectContext): TemplateVariabl
   return vars
 }
 
+/** Return the user-facing label used by the generated welcome page. */
+function getDisplayLabel(value: string): string {
+  return DISPLAY_LABELS[value] ?? value
+}
+
 /**
  * 替换内容中的 {{variable}} 占位符。未知变量原样保留。
  * 支持条件块：{{#if name=value}}...{{/if}}，仅当变量等于给定值时保留块内容。
  */
 export function renderContent(content: string, variables: TemplateVariables): string {
-  const renderConditional = (
-    _match: string,
-    key: string,
-    value: string,
-    block: string,
-  ): string => {
+  const renderConditional = (_match: string, key: string, value: string, block: string): string => {
     return variables[key] === value ? block : ''
   }
 

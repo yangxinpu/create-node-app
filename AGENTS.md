@@ -1,6 +1,6 @@
 # AGENTS.md — create-node-app AI 编码指南
 
-> 本文档专为 AI 编程助手设计。提炼自 README.md 与 Template.md 两份规格文档的核心内容。
+> 本文档专为 AI 编程助手设计。提炼自 README.md 与 Architecture.md 两份文档的核心内容。
 
 ---
 
@@ -105,9 +105,7 @@ export interface ProjectContext {
 ```typescript
 export interface TemplateModule {
   name: string
-  type:
-    | 'base' | 'runtime' | 'framework' | 'database'
-    | 'orm' | 'cache' | 'tooling' | 'architecture'
+  type: 'base' | 'runtime' | 'framework' | 'database' | 'orm' | 'cache' | 'tooling' | 'architecture'
 
   files?: TemplateFile[]
   dependencies?: {
@@ -192,7 +190,7 @@ template-module/
 
 ```
 templates/
-├── base/           typescript | javascript
+├── base/           common | typescript | javascript
 ├── runtimes/       node | bun
 ├── frameworks/     express | elysia | hono | fastify
 ├── databases/      mysql | postgresql | mongodb
@@ -215,11 +213,11 @@ templates/
 
 Architecture 描述**项目组织方式**，Framework 描述**技术栈**。这是两个正交维度：
 
-| Architecture | 架构模板增加的文件 |
-|-------------|----------------|
-| `minimal` | `health.ts` |
-| `api` | `health.ts` + `services/health.ts` + `schemas/health.ts` |
-| `layered` | `health.ts` + `controllers/` + `services/` + `repositories/` + `schemas/` |
+| Architecture | 架构模板增加的文件                                                        |
+| ------------ | ------------------------------------------------------------------------- |
+| `minimal`    | `health.ts`                                                               |
+| `api`        | `health.ts` + `services/health.ts` + `schemas/health.ts`                  |
+| `layered`    | `health.ts` + `controllers/` + `services/` + `repositories/` + `schemas/` |
 
 入口文件和框架路由由 Base、Framework 模板提供；Architecture 只负责项目组织方式。
 
@@ -230,16 +228,16 @@ Architecture 描述**项目组织方式**，Framework 描述**技术栈**。这�
 ```typescript
 async function createProject(context: ProjectContext) {
   // 1. 校验
-  await validateContext(context)           // Schema 校验
-  await validateCompatibility(context)     // 兼容性规则引擎
+  await validateContext(context) // Schema 校验
+  await validateCompatibility(context) // 兼容性规则引擎
 
   // 2. 解析
   const templates = resolveTemplates(context)
   const dependencies = resolveDependencies(templates)
 
   // 3. 生成
-  await generateFiles(context, templates)   // 复制静态文件
-  await mergeFiles(context, templates)      // 按策略合并
+  await generateFiles(context, templates) // 复制静态文件
+  await mergeFiles(context, templates) // 按策略合并
 
   // 4. 组装
   await generatePackageJson(context, dependencies)
@@ -259,15 +257,16 @@ async function createProject(context: ProjectContext) {
 ```typescript
 function resolveTemplates(ctx: ProjectContext): string[] {
   const t = []
+  t.push('base/common')
   t.push(`base/${ctx.language}`)
   t.push(`runtimes/${ctx.runtime}`)
-  if (ctx.framework !== 'none')  t.push(`frameworks/${ctx.framework}`)
-  if (ctx.database !== 'none')   t.push(`databases/${ctx.database}`)
-  if (ctx.orm !== 'none')        t.push(`orm/${ctx.orm}`)
-  if (ctx.cache !== 'none')      t.push(`cache/${ctx.cache}`)
-  if (ctx.eslint)    t.push('tooling/eslint')
-  if (ctx.prettier)  t.push('tooling/prettier')
-  if (ctx.docker)    t.push('tooling/docker')
+  if (ctx.framework !== 'none') t.push(`frameworks/${ctx.framework}`)
+  if (ctx.database !== 'none') t.push(`databases/${ctx.database}`)
+  if (ctx.orm !== 'none') t.push(`orm/${ctx.orm}`)
+  if (ctx.cache !== 'none') t.push(`cache/${ctx.cache}`)
+  if (ctx.eslint) t.push('tooling/eslint')
+  if (ctx.prettier) t.push('tooling/prettier')
+  if (ctx.docker) t.push('tooling/docker')
   t.push(`architecture/${ctx.architecture}`)
   return t
 }
@@ -277,13 +276,13 @@ function resolveTemplates(ctx: ProjectContext): string[] {
 
 ## 7. File Merge 策略映射
 
-| 文件类型 | 策略 | 说明 |
-|---------|------|------|
-| `package.json` | JSON Merge | 合并 scripts / dependencies / devDependencies |
-| `tsconfig.json` 等 config | JSON Deep Merge | 深度合并配置项 |
-| `.env.example` | Environment Merge | 追加环境变量行 |
-| `README.md` | Template Rendering | 动态渲染而非合并 |
-| 其他静态文件 | Copy | 直接复制 |
+| 文件类型                  | 策略               | 说明                                          |
+| ------------------------- | ------------------ | --------------------------------------------- |
+| `package.json`            | JSON Merge         | 合并 scripts / dependencies / devDependencies |
+| `tsconfig.json` 等 config | JSON Deep Merge    | 深度合并配置项                                |
+| `.env.example`            | Environment Merge  | 追加环境变量行                                |
+| `README.md`               | Template Rendering | 动态渲染而非合并                              |
+| 其他静态文件              | Copy               | 直接复制                                      |
 
 MergeStrategy 接口见 §3.4，后续可扩展 YAML、TypeScript 等策略。
 
@@ -315,6 +314,7 @@ Options:
 ```
 
 **默认配置**（`--yes` 等价）：
+
 ```
 node 24 + typescript + express + none + none + none + eslint + prettier
 ```
@@ -369,6 +369,7 @@ create-node-app/
 ```
 
 **模块依赖方向（严格单向）**：
+
 ```
 cli → context → validation → resolver → generator → merger → runtime
                     ↑
@@ -379,17 +380,17 @@ cli → context → validation → resolver → generator → merger → runtime
 
 ## 11. 技术栈
 
-| 用途 | 技术 |
-|-----|------|
-| Language | TypeScript |
-| Runtime | Node.js |
-| CLI 解析 | Commander |
+| 用途          | 技术           |
+| ------------- | -------------- |
+| Language      | TypeScript     |
+| Runtime       | Node.js        |
+| CLI 解析      | Commander      |
 | 交互式 Prompt | @clack/prompts |
-| 终端着色 | picocolors |
-| 文件操作 | fs-extra |
-| 执行外部命令 | execa |
-| 构建 | tsdown |
-| 测试 | Vitest |
+| 终端着色      | picocolors     |
+| 文件操作      | fs-extra       |
+| 执行外部命令  | execa          |
+| 构建          | tsdown         |
+| 测试          | Vitest         |
 
 ---
 
@@ -397,17 +398,17 @@ cli → context → validation → resolver → generator → merger → runtime
 
 > **V1 目标**：生成的项目能真正安装、启动、开发。不追求覆盖所有组合。
 
-| Phase | 内容 | 交付标准 |
-|-------|------|---------|
-| **1. CLI 骨架** | Commander + Prompts + Arguments + Logger | `npm create node-app@latest api` 能运行并有交互输出 |
-| **2. Context 层** | ProjectContext + Normalize + Defaults + Schema Validation | 能从 CLI/Prompt 输入构建合法 Context |
+| Phase                        | 内容                                                                                              | 交付标准                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **1. CLI 骨架**              | Commander + Prompts + Arguments + Logger                                                          | `npm create node-app@latest api` 能运行并有交互输出                  |
+| **2. Context 层**            | ProjectContext + Normalize + Defaults + Schema Validation                                         | 能从 CLI/Prompt 输入构建合法 Context                                 |
 | **3. Template Engine (MVP)** | 只支持 TypeScript + Node.js + Elysia。Template Resolver + File Generator + package.json Generator | `npm create node-app@latest api && cd api && npm run dev` 真正跑起来 |
-| **4. Database** | MySQL / PostgreSQL / MongoDB 模板 | 生成含 db client 与 DATABASE_URL 的项目 |
-| **5. ORM** | Prisma + Drizzle + Dependency Resolver + File Merge System | 组合 Database + ORM 时依赖与文件正确合并 |
-| **6. Redis** | Redis 模板 + env.example | 生成 `src/redis/client.ts` |
-| **7. Tooling** | ESLint / Prettier / Docker / Git | 各工具可独立启用/禁用 |
-| **8. Preset + Config** | `--preset` + `node-app.config.ts` | 预设配置文件可驱动生成 |
-| **9. Non-Interactive** | 完善所有 `--flag` 参数，支持 CI/CD | 全参数非交互模式可用 |
+| **4. Database**              | MySQL / PostgreSQL / MongoDB 模板                                                                 | 生成含 db client 与 DATABASE_URL 的项目                              |
+| **5. ORM**                   | Prisma + Drizzle + Dependency Resolver + File Merge System                                        | 组合 Database + ORM 时依赖与文件正确合并                             |
+| **6. Redis**                 | Redis 模板 + env.example                                                                          | 生成 `src/redis/client.ts`                                           |
+| **7. Tooling**               | ESLint / Prettier / Docker / Git                                                                  | 各工具可独立启用/禁用                                                |
+| **8. Preset + Config**       | `--preset` + `node-app.config.ts`                                                                 | 预设配置文件可驱动生成                                               |
+| **9. Non-Interactive**       | 完善所有 `--flag` 参数，支持 CI/CD                                                                | 全参数非交互模式可用                                                 |
 
 ---
 
@@ -423,6 +424,7 @@ cli → context → validation → resolver → generator → merger → runtime
 8. **生成项目不附带测试** —— Vitest 只用于脚手架仓库自身测试，不提供 testing 模板或 `--test` 参数
 9. **数据库范围固定** —— 仅支持 MySQL、PostgreSQL、MongoDB 和 none，不提供 SQLite 选项
 10. **运行时版本一致** —— 所选版本必须同步到 engines、版本文件、类型依赖和 Docker 镜像；Bun 稳定版本不得标记为 LTS
+11. **欢迎页保持共享** —— `base/common` 统一生成 `index.html` 和 `src/home.*`；Framework 只负责提供根路由
 
 ---
 

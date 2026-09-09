@@ -1,9 +1,13 @@
 import Fastify from 'fastify'
 
+import { homePage } from './home.js'
 import { health } from './routes/health.js'
 
 export const app = Fastify({ logger: false })
 
+app.get('/', async (_request, reply) => {
+  return reply.type('text/html; charset=utf-8').send(homePage)
+})
 app.register(health)
 
 const port = Number(process.env.PORT ?? 3000)

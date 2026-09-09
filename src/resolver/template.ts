@@ -6,6 +6,7 @@ import type { ProjectContext } from '../context/types.js'
  */
 export function resolveTemplates(ctx: ProjectContext): string[] {
   const t: string[] = []
+  t.push('base/common')
   t.push(`base/${ctx.language}`)
   t.push(`runtimes/${ctx.runtime}`)
   if (ctx.framework !== 'none') t.push(`frameworks/${ctx.framework}`)

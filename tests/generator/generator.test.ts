@@ -61,9 +61,19 @@ describe('createProject', () => {
     expect(packageJson.engines).toEqual({ node: '>=22.0.0 <23.0.0' })
     expect(packageJson.devDependencies['@types/node']).toBe('^22.0.0')
     await expect(readFile(path.join(projectPath, '.nvmrc'), 'utf-8')).resolves.toBe('22\n')
-    await expect(readFile(path.join(projectPath, 'Dockerfile'), 'utf-8')).resolves.toContain(
-      'FROM node:22-alpine',
-    )
+    const dockerfile = await readFile(path.join(projectPath, 'Dockerfile'), 'utf-8')
+    expect(dockerfile).toContain('FROM node:22-alpine')
+    expect(dockerfile).toContain('COPY --from=builder /app/index.html ./index.html')
+    const welcomePage = await readFile(path.join(projectPath, 'index.html'), 'utf-8')
+    expect(welcomePage).toContain('<h1 id="project-title">generated-app</h1>')
+    expect(welcomePage).toContain('<strong>Node.js 22 LTS</strong>')
+    expect(welcomePage).toContain('<strong>Express</strong>')
+    expect(welcomePage).toContain('<strong>API</strong>')
+    expect(welcomePage).toContain('base/common / base/typescript / runtimes/node')
+    expect(welcomePage).not.toContain('{{')
+    const generatedReadme = await readFile(path.join(projectPath, 'README.md'), 'utf-8')
+    expect(generatedReadme).toContain('http://localhost:3000')
+    expect(generatedReadme).toContain('`GET /health`')
     await expect(access(path.join(projectPath, 'tests'))).rejects.toThrow()
     await expect(access(path.join(projectPath, 'vitest.config.ts'))).rejects.toThrow()
   })
@@ -97,6 +107,11 @@ describe('createProject', () => {
     expect(dockerfile).toContain('FROM oven/bun:1.3-alpine')
     expect(dockerfile).toContain('CMD ["bun", "src/index.js"]')
     expect(dockerfile).not.toContain('FROM node:')
+    const welcomePage = await readFile(path.join(projectPath, 'index.html'), 'utf-8')
+    expect(welcomePage).toContain('<strong>Bun 1.3 stable</strong>')
+    expect(welcomePage).toContain('<strong>Hono</strong>')
+    expect(welcomePage).toContain('<strong>Layered</strong>')
+    expect(welcomePage).toContain('<strong>None</strong>')
 
     await expect(
       access(path.join(projectPath, 'src/controllers/health.controller.js')),
@@ -146,5 +161,26 @@ describe('createProject', () => {
     const dockerfile = await readFile(path.join(projectPath, 'Dockerfile'), 'utf-8')
     expect(dockerfile).toContain('FROM oven/bun:1.4-alpine')
     expect(dockerfile).toContain('CMD ["bun", "src/index.ts"]')
+  })
+
+  it.each([
+    ['express', 'src/index.ts', "app.get('/',"],
+    ['elysia', 'src/app.ts', ".get('/',"],
+    ['hono', 'src/index.ts', "app.get('/',"],
+    ['fastify', 'src/index.ts', "app.get('/',"],
+    ['none', 'src/index.ts', 'createServer'],
+  ] as const)('serves the welcome page with the %s framework', async (framework, entry, marker) => {
+    const projectPath = await createTemporaryProject({
+      framework,
+      eslint: false,
+      prettier: false,
+    })
+
+    const source = await readFile(path.join(projectPath, entry), 'utf-8')
+    expect(source).toContain("import { homePage } from './home.js'")
+    expect(source).toContain(marker)
+    await expect(readFile(path.join(projectPath, 'index.html'), 'utf-8')).resolves.toContain(
+      'Your selected stack',
+    )
   })
 })

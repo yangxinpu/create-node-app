@@ -231,7 +231,7 @@ cli -> context -> validation -> resolver -> generator -> merger -> runtime
 
 ```text
 templates/
-├── base/           typescript | javascript
+├── base/           common | typescript | javascript
 ├── runtimes/       node | bun
 ├── frameworks/     express | elysia | hono | fastify
 ├── databases/      mysql | postgresql | mongodb
@@ -282,16 +282,17 @@ interface TemplateMeta {
 `resolveTemplates()` 按固定顺序返回模块：
 
 ```text
-1. base/{language}
-2. runtimes/{runtime}
-3. frameworks/{framework}
-4. databases/{database}
-5. orm/{orm}
-6. cache/{cache}
-7. tooling/eslint
-8. tooling/prettier
-9. tooling/docker
-10. architecture/{architecture}
+1. base/common
+2. base/{language}
+3. runtimes/{runtime}
+4. frameworks/{framework}
+5. databases/{database}
+6. orm/{orm}
+7. cache/{cache}
+8. tooling/eslint
+9. tooling/prettier
+10. tooling/docker
+11. architecture/{architecture}
 ```
 
 值为 `none` 或关闭的模块会被跳过。
@@ -321,17 +322,19 @@ interface TemplateMeta {
 
 常用变量包括：
 
-| 变量                  | 示例              | 用途                    |
-| --------------------- | ----------------- | ----------------------- |
-| `projectName`         | `my-server`       | 项目名称                |
-| `runtime`             | `node`            | Runtime 条件            |
-| `runtimeVersion`      | `24`              | engines、版本文件和镜像 |
-| `runtimeTypesPackage` | `@types/node`     | Runtime 类型包          |
-| `runtimeTypesName`    | `node`            | `tsconfig.json#types`   |
-| `runtimeEntry`        | `dist/index.js`   | Docker 启动入口         |
-| `dockerVariant`       | `node-typescript` | Docker 条件分支         |
-| `extension`           | `ts`              | 入口文件扩展名          |
-| `database`            | `postgresql`      | Database 条件和动态配置 |
+| 变量                  | 示例               | 用途                    |
+| --------------------- | ------------------ | ----------------------- |
+| `projectName`         | `my-server`        | 项目名称                |
+| `runtime`             | `node`             | Runtime 条件            |
+| `runtimeVersion`      | `24`               | engines、版本文件和镜像 |
+| `runtimeTypesPackage` | `@types/node`      | Runtime 类型包          |
+| `runtimeTypesName`    | `node`             | `tsconfig.json#types`   |
+| `runtimeEntry`        | `dist/index.js`    | Docker 启动入口         |
+| `dockerVariant`       | `node-typescript`  | Docker 条件分支         |
+| `extension`           | `ts`               | 入口文件扩展名          |
+| `database`            | `postgresql`       | Database 条件和动态配置 |
+| `selectedTemplates`   | `base/common / …`  | 欢迎页展示实际模板组合  |
+| `toolingDisplay`      | `ESLint, Prettier` | 欢迎页展示工程化配置    |
 
 Prisma 和 Drizzle 还会根据 Database 生成 provider、dialect、schema 和客户端代码。
 
@@ -607,6 +610,7 @@ Bun 没有正式 LTS 制度，代码、TUI 和文档中都应使用 `stable` 描
 
 | 输出                          | 主要负责模块      |
 | ----------------------------- | ----------------- |
+| `index.html`、`src/home.*`    | Base Common       |
 | `src/index.*`                 | Base 或 Framework |
 | `src/routes/*`                | Framework         |
 | `src/health.*` 和业务分层目录 | Architecture      |
@@ -624,13 +628,29 @@ Bun 没有正式 LTS 制度，代码、TUI 和文档中都应使用 `stable` 描
 这个表用于判断新文件应该归属哪个模板。Framework 不应生成 Repository，
 Architecture 不应写入 Framework 依赖。
 
+欢迎页请求链路：
+
+```text
+index.html
+    ^
+    |
+src/home.*
+    ^
+    |
+GET /  <- Express / Elysia / Hono / Fastify / built-in HTTP server
+```
+
+`base/common` 负责生成唯一的欢迎页和读取逻辑。Framework 模板只负责把 `/` 映射到
+该页面；选择 `framework=none` 时，Base 入口使用 Runtime 内置的 HTTP API 提供 `/`
+和 `/health`。这样页面内容与服务框架解耦，也不会在语言模板之间复制 HTML。
+
 ## 16. 扩展方式
 
 ### 16.1 新增 Framework
 
 1. 在 `src/config/options.ts` 的 `FRAMEWORKS` 中注册名称。
 2. 创建 `templates/frameworks/<name>/template.json`。
-3. 添加应用入口和 `/health` 路由文件。
+3. 添加应用入口，将 `/` 映射到 `homePage`，并提供 `/health` 路由。
 4. 在 Compatibility Engine 中添加必要规则。
 5. 补充 Resolver、Generator 和 CLI 测试。
 6. 更新 README 支持矩阵。

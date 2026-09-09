@@ -16,6 +16,7 @@ function buildContext(overrides: Partial<ProjectContext> = {}): ProjectContext {
 describe('resolveTemplates', () => {
   it('always includes base, runtime and architecture', () => {
     const templates = resolveTemplates(buildContext())
+    expect(templates).toContain('base/common')
     expect(templates).toContain('base/typescript')
     expect(templates).toContain('runtimes/node')
     expect(templates).toContain('architecture/minimal')
@@ -42,6 +43,7 @@ describe('resolveTemplates', () => {
       }),
     )
     expect(templates).toEqual([
+      'base/common',
       'base/typescript',
       'runtimes/node',
       'frameworks/elysia',

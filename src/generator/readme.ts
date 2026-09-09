@@ -24,10 +24,25 @@ export async function generateReadme(context: ProjectContext): Promise<void> {
     `${pm} run dev`,
     '```',
     '',
+    'Open [http://localhost:3000](http://localhost:3000) to view the generated project overview.',
+    '',
+    '## Endpoints',
+    '',
+    '- `GET /` - generated stack overview',
+    '- `GET /health` - service health status',
+    '',
   ]
 
   if (context.orm === 'prisma') {
-    lines.push('## Database', '', '```bash', 'npx prisma generate', 'npx prisma migrate dev', '```', '')
+    lines.push(
+      '## Database',
+      '',
+      '```bash',
+      'npx prisma generate',
+      'npx prisma migrate dev',
+      '```',
+      '',
+    )
   }
 
   await writeFile(path.join(context.projectPath, 'README.md'), lines.join('\n'))

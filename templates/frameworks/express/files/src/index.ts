@@ -1,10 +1,14 @@
 import express from 'express'
 
+import { homePage } from './home.js'
 import { health } from './routes/health.js'
 
 export const app = express()
 
 app.use(express.json())
+app.get('/', (_req, res) => {
+  res.type('html').send(homePage)
+})
 app.use(health)
 
 const port = Number(process.env.PORT ?? 3000)
