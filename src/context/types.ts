@@ -7,6 +7,7 @@ import type {
   Orm,
   PackageManagerName,
   Runtime,
+  RuntimeVersion,
 } from '../config/options.js'
 
 /**
@@ -21,6 +22,7 @@ export interface ProjectContext {
 
   // ── 技术选择 ──
   runtime: Runtime
+  runtimeVersion: RuntimeVersion
   language: Language
   framework: Framework
   database: Database

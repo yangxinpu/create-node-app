@@ -39,6 +39,11 @@ export function getPackageManager(name: PackageManagerName): PackageManagerInfo 
  * 检测环境中可用的包管理器，找不到时回退到 npm。
  */
 export async function detectPackageManager(): Promise<PackageManagerName> {
+  const invokedManager = process.env.npm_config_user_agent?.split('/')[0]
+  if (invokedManager && invokedManager in MANAGERS) {
+    return invokedManager as PackageManagerName
+  }
+
   const candidates: PackageManagerName[] = ['pnpm', 'yarn', 'bun', 'npm']
   for (const candidate of candidates) {
     try {

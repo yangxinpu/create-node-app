@@ -38,8 +38,10 @@ async function createTemporaryProject(overrides: Partial<ProjectContext>): Promi
 describe('createProject', () => {
   it('generates an API architecture with concrete service and schema files', async () => {
     const projectPath = await createTemporaryProject({
+      runtimeVersion: '22',
       architecture: 'api',
       framework: 'express',
+      docker: true,
       eslint: false,
       prettier: false,
     })
@@ -50,6 +52,18 @@ describe('createProject', () => {
     const route = await readFile(path.join(projectPath, 'src/routes/health.ts'), 'utf-8')
     expect(route).toContain("import { getHealthStatus } from '../health.js'")
     expect(route).toContain('res.json(getHealthStatus())')
+    const packageJson = JSON.parse(
+      await readFile(path.join(projectPath, 'package.json'), 'utf-8'),
+    ) as {
+      engines: Record<string, string>
+      devDependencies: Record<string, string>
+    }
+    expect(packageJson.engines).toEqual({ node: '>=22.0.0 <23.0.0' })
+    expect(packageJson.devDependencies['@types/node']).toBe('^22.0.0')
+    await expect(readFile(path.join(projectPath, '.nvmrc'), 'utf-8')).resolves.toBe('22\n')
+    await expect(readFile(path.join(projectPath, 'Dockerfile'), 'utf-8')).resolves.toContain(
+      'FROM node:22-alpine',
+    )
     await expect(access(path.join(projectPath, 'tests'))).rejects.toThrow()
     await expect(access(path.join(projectPath, 'vitest.config.ts'))).rejects.toThrow()
   })
@@ -57,9 +71,11 @@ describe('createProject', () => {
   it('generates valid Bun scripts and layered JavaScript files', async () => {
     const projectPath = await createTemporaryProject({
       runtime: 'bun',
+      runtimeVersion: '1.3',
       language: 'javascript',
       framework: 'hono',
       architecture: 'layered',
+      docker: true,
       eslint: false,
       prettier: false,
     })
@@ -67,13 +83,20 @@ describe('createProject', () => {
     const packageJson = JSON.parse(
       await readFile(path.join(projectPath, 'package.json'), 'utf-8'),
     ) as {
+      engines: Record<string, string>
       scripts: Record<string, string>
       devDependencies?: Record<string, string>
     }
 
+    expect(packageJson.engines).toEqual({ bun: '>=1.3.0 <1.4.0' })
     expect(packageJson.scripts.dev).toBe('bun --watch src/index.js')
     expect(packageJson.scripts.start).toBe('bun src/index.js')
     expect(packageJson.devDependencies).toBeUndefined()
+    await expect(readFile(path.join(projectPath, '.bun-version'), 'utf-8')).resolves.toBe('1.3\n')
+    const dockerfile = await readFile(path.join(projectPath, 'Dockerfile'), 'utf-8')
+    expect(dockerfile).toContain('FROM oven/bun:1.3-alpine')
+    expect(dockerfile).toContain('CMD ["bun", "src/index.js"]')
+    expect(dockerfile).not.toContain('FROM node:')
 
     await expect(
       access(path.join(projectPath, 'src/controllers/health.controller.js')),
@@ -89,5 +112,39 @@ describe('createProject', () => {
     )
     expect(controller).not.toContain('import type')
     expect(controller).not.toContain(': HealthStatus')
+  })
+
+  it('uses Bun-compatible types and Docker entrypoints for TypeScript', async () => {
+    const projectPath = await createTemporaryProject({
+      runtime: 'bun',
+      runtimeVersion: '1.4',
+      language: 'typescript',
+      framework: 'hono',
+      docker: true,
+      eslint: false,
+      prettier: false,
+    })
+
+    const packageJson = JSON.parse(
+      await readFile(path.join(projectPath, 'package.json'), 'utf-8'),
+    ) as {
+      engines: Record<string, string>
+      devDependencies: Record<string, string>
+    }
+    expect(packageJson.engines).toEqual({ bun: '>=1.4.0 <1.5.0' })
+    expect(packageJson.devDependencies['@types/bun']).toBe('~1.4.0')
+    expect(packageJson.devDependencies['@types/node']).toBeUndefined()
+    expect(packageJson.devDependencies.tsx).toBeUndefined()
+
+    const tsconfig = JSON.parse(
+      await readFile(path.join(projectPath, 'tsconfig.json'), 'utf-8'),
+    ) as {
+      compilerOptions: { types: string[] }
+    }
+    expect(tsconfig.compilerOptions.types).toEqual(['bun'])
+
+    const dockerfile = await readFile(path.join(projectPath, 'Dockerfile'), 'utf-8')
+    expect(dockerfile).toContain('FROM oven/bun:1.4-alpine')
+    expect(dockerfile).toContain('CMD ["bun", "src/index.ts"]')
   })
 })

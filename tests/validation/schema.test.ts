@@ -19,9 +19,7 @@ describe('validateContext', () => {
   })
 
   it('rejects invalid project names', () => {
-    expect(() => validateContext(buildContext({ projectName: 'My App!' }))).toThrow(
-      ValidationError,
-    )
+    expect(() => validateContext(buildContext({ projectName: 'My App!' }))).toThrow(ValidationError)
     expect(() => validateContext(buildContext({ projectName: '-leading-dash' }))).toThrow(
       ValidationError,
     )
@@ -32,21 +30,39 @@ describe('validateContext', () => {
   })
 
   it('rejects unknown runtime', () => {
+    expect(() => validateContext(buildContext({ runtime: 'deno' as never }))).toThrow(
+      /Invalid runtime/,
+    )
+  })
+
+  it('accepts supported runtime versions', () => {
     expect(() =>
-      validateContext(buildContext({ runtime: 'deno' as never })),
-    ).toThrow(/Invalid runtime/)
+      validateContext(buildContext({ runtime: 'node', runtimeVersion: '22' })),
+    ).not.toThrow()
+    expect(() =>
+      validateContext(buildContext({ runtime: 'bun', runtimeVersion: '1.4' })),
+    ).not.toThrow()
+  })
+
+  it('rejects versions from another runtime', () => {
+    expect(() => validateContext(buildContext({ runtime: 'node', runtimeVersion: '1.3' }))).toThrow(
+      /Invalid node version/,
+    )
+    expect(() => validateContext(buildContext({ runtime: 'bun', runtimeVersion: '24' }))).toThrow(
+      /Invalid bun version/,
+    )
   })
 
   it('rejects unknown framework', () => {
-    expect(() =>
-      validateContext(buildContext({ framework: 'koa' as never })),
-    ).toThrow(/Invalid framework/)
+    expect(() => validateContext(buildContext({ framework: 'koa' as never }))).toThrow(
+      /Invalid framework/,
+    )
   })
 
   it('rejects SQLite because it is not supported', () => {
-    expect(() =>
-      validateContext(buildContext({ database: 'sqlite' as never })),
-    ).toThrow(/Invalid database/)
+    expect(() => validateContext(buildContext({ database: 'sqlite' as never }))).toThrow(
+      /Invalid database/,
+    )
   })
 
   it('rejects empty projectPath', () => {

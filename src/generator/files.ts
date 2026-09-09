@@ -63,6 +63,9 @@ async function copyDir(
       await copyDir(sourcePath, targetPath, variables, language)
     } else if (entry.isFile()) {
       let rendered = renderContent(await readFile(sourcePath, 'utf-8'), variables)
+      if (entry.name.endsWith('.template')) {
+        rendered = `${rendered.trim()}\n`
+      }
 
       // JS 模式：把 TS 源码剥离为 JS
       if (language === 'javascript' && entry.name.endsWith('.ts')) {

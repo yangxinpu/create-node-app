@@ -98,70 +98,59 @@ Generated Project
 
 npm create node-app@latest
 
-首先询问：
+交互界面参考 Vite，使用连续的 Clack 流程：
 
-◇ create-node-app
+```text
+┌  create-node-app
+│
+◇  Project name
+│  my-server
+│
+◇  Runtime
+│  Node.js
+│
+◇  Node.js LTS version
+│  Node.js 24
+│
+◇  Language
+│  TypeScript
+│
+◇  Framework
+│  Express
+│
+◇  Database
+│  None
+│
+◇  Cache
+│  None
+│
+◇  Project structure
+│  Minimal
+│
+◇  Tooling
+│  ESLint, Prettier
+│
+◇  Project files generated
+│
+◆  Project created in /path/to/my-server
+│
+◇  Next steps
+│  cd my-server
+│  npm run dev
+│
+└  Done
+```
 
-? Project name: my-server
+ORM 仅在选择数据库后询问；ESLint、Prettier 和 Docker 合并为一个多选步骤。
+各组技术选项使用不同字体颜色，便于在终端中快速辨识。
 
-? Select runtime:
-❯ Node
-  Bun
+运行时版本会贯穿生成结果：
 
-? Select language:
-❯ TypeScript
-  JavaScript
+- Node.js 提供 24、22 两个 LTS 分支。
+- Bun 没有正式 LTS 通道，因此提供 1.4、1.3 两个稳定版本线。
+- `package.json#engines`、`.nvmrc` / `.bun-version`、运行时类型依赖和
+  Docker 基础镜像会使用同一版本线。
 
-? Select framework:
-❯ Elysia
-  Hono
-  Express
-  Fastify
-  None
-
-? Select database:
-❯ MySQL
-  PostgreSQL
-  MongoDB
-  None
-
-? Select ORM:
-❯ Prisma
-  Drizzle
-  None
-
-? Select cache:
-❯ Redis
-  None
-
-? Use ESLint?
-❯ Yes
-  No
-
-? Use Prettier?
-❯ Yes
-  No
-
-? Use Docker?
-❯ Yes
-  No
-
-最后显示：
-
-✔ Project created
-
-Project: my-server
-Runtime: Node.js
-Language: TypeScript
-Framework: Elysia
-Database: MySQL
-ORM: Prisma
-Cache: Redis
-
-Next steps:
-
-cd my-server
-npm run dev
 三、非交互式 CLI
 
 脚手架必须支持 CI/CD、自动化脚本和 AI Agent，因此不能只支持交互式模式。
@@ -170,6 +159,7 @@ npm run dev
 
 npm create node-app@latest my-server \
   --runtime node \
+  --runtime-version 24 \
   --language typescript \
   --framework elysia \
   --database mysql \
@@ -190,9 +180,9 @@ npm create node-app@latest my-server --yes
 
 等价于：
 
-Node.js
+Node.js 24 LTS
 TypeScript
-Elysia
+Express
 None
 None
 None
@@ -227,6 +217,7 @@ presets/
 
 {
   runtime: 'node',
+  runtimeVersion: '24',
   language: 'typescript',
   framework: 'elysia',
   database: 'mysql',
@@ -259,6 +250,7 @@ node-app.config.ts
 
 export default {
   runtime: 'node',
+  runtimeVersion: '24',
   language: 'typescript',
   framework: 'elysia',
   database: 'mysql',
@@ -300,14 +292,20 @@ export interface ProjectContext {
     | 'node'
     | 'bun'
 
+  runtimeVersion:
+    | '24'
+    | '22'
+    | '1.4'
+    | '1.3'
+
   language:
     | 'typescript'
     | 'javascript'
 
   framework:
+    | 'express'
     | 'elysia'
     | 'hono'
-    | 'express'
     | 'fastify'
     | 'none'
 
@@ -524,9 +522,9 @@ templates/
 │   └── bun/
 │
 ├── frameworks/
+│   ├── express/
 │   ├── elysia/
 │   ├── hono/
-│   ├── express/
 │   └── fastify/
 │
 ├── databases/
@@ -865,7 +863,7 @@ async function createProject(
 
 例如用户选择：
 
-Node.js
+Node.js 24 LTS
 TypeScript
 Elysia
 MySQL
@@ -905,6 +903,7 @@ blog-api/
 │
 ├── .env.example
 ├── .gitignore
+├── .nvmrc # Bun 项目对应 .bun-version
 ├── Dockerfile
 ├── eslint.config.js
 ├── prettier.config.js
@@ -948,7 +947,7 @@ README 不建议固定。
 
 ## Stack
 
-- Node.js
+- Node.js 24 LTS
 - TypeScript
 - Elysia
 - MySQL
@@ -990,15 +989,8 @@ bun
 
 create-node-app my-server
 
-可以检测：
-
-用户当前环境
-
-例如：
-
-pnpm available
-
-则可以优先使用：
+CLI 会优先从启动命令的 user agent 识别包管理器；无法识别时再检测本机环境。
+例如通过 `pnpm create` 启动时，后续安装和提示命令会自动使用：
 
 pnpm install
 
@@ -1019,28 +1011,18 @@ type PackageManager =
 
 生成完成后：
 
-✔ Creating project
-✔ Generating files
-✔ Configuring Elysia
-✔ Configuring Prisma
-✔ Configuring MySQL
-✔ Configuring Redis
-✔ Installing dependencies
-✔ Initializing Git
-✔ Generating README
-
-Success!
-
-Project created at:
-
-./blog-api
-
-然后：
-
-Next steps:
-
-cd blog-api
-npm run dev
+```text
+◇  Project files generated
+◇  Dependencies installed
+◇  Git repository initialized
+◆  Project created in /path/to/blog-api
+│
+◇  Next steps
+│  cd blog-api
+│  npm run dev
+│
+└  Done
+```
 
 Git 可以通过：
 
@@ -1057,6 +1039,8 @@ create-node-app <project-name>
 Options：
 
 --runtime <runtime>
+
+--runtime-version <version>
 
 --language <language>
 
@@ -1260,7 +1244,7 @@ CLI 本身：
 Language	TypeScript	CLI 开发
 Runtime	Node.js	CLI 运行
 CLI	Commander	参数解析
-Prompt	@inquirer/prompts	交互式命令
+Prompt	@clack/prompts	交互式终端界面
 Color	picocolors	终端样式
 File	fs-extra	文件操作
 Process	execa	执行外部命令
@@ -1268,7 +1252,7 @@ Build	tsdown	CLI 构建
 Test	Vitest	测试
 Distribution	npm	发布
 
-你原方案里使用 TypeScript + Commander + @inquirer/prompts + picocolors + fs-extra + execa + tsdown + Vitest 的组合，本身是合理的。
+当前使用 TypeScript + Commander + @clack/prompts + picocolors + fs-extra + execa + tsdown + Vitest。
 
 二十五、V1 开发阶段
 
@@ -1367,6 +1351,7 @@ Phase 9：Non-Interactive
 完善：
 
 --runtime
+--runtime-version
 --framework
 --database
 --orm
@@ -1382,6 +1367,7 @@ Phase 9：Non-Interactive
 
 create-node-app api \
   --runtime node \
+  --runtime-version 24 \
   --language typescript \
   --framework elysia \
   --database mysql \

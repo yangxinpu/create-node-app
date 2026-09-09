@@ -80,8 +80,9 @@ export interface ProjectContext {
 
   // ── 技术选择 ──
   runtime: 'node' | 'bun'
+  runtimeVersion: '24' | '22' | '1.4' | '1.3'
   language: 'typescript' | 'javascript'
-  framework: 'elysia' | 'hono' | 'express' | 'fastify' | 'none'
+  framework: 'express' | 'elysia' | 'hono' | 'fastify' | 'none'
   database: 'mysql' | 'postgresql' | 'mongodb' | 'none'
   orm: 'prisma' | 'drizzle' | 'none'
   cache: 'redis' | 'none'
@@ -193,7 +194,7 @@ template-module/
 templates/
 ├── base/           typescript | javascript
 ├── runtimes/       node | bun
-├── frameworks/     elysia | hono | express | fastify
+├── frameworks/     express | elysia | hono | fastify
 ├── databases/      mysql | postgresql | mongodb
 ├── orm/            prisma | drizzle
 ├── cache/          redis
@@ -295,8 +296,9 @@ create-node-app <project-name> [options]
 
 Options:
   --runtime <runtime>          node | bun
+  --runtime-version <version>  Node: 24 | 22; Bun: 1.4 | 1.3
   --language <language>        typescript | javascript
-  --framework <framework>     elysia | hono | express | fastify | none
+  --framework <framework>     express | elysia | hono | fastify | none
   --database <database>        mysql | postgresql | mongodb | none
   --orm <orm>                 prisma | drizzle | none
   --cache <cache>             redis | none
@@ -314,8 +316,11 @@ Options:
 
 **默认配置**（`--yes` 等价）：
 ```
-node + typescript + elysia + none + none + none + eslint + prettier
+node 24 + typescript + express + none + none + none + eslint + prettier
 ```
+
+Node 仅提供当前受支持的 LTS 分支 24、22；Bun 没有正式 LTS 制度，因此提供稳定版本线 1.4、1.3。
+版本会同步到 `package.json#engines`、`.nvmrc` / `.bun-version`、运行时类型依赖和 Docker 镜像。
 
 ---
 
@@ -327,6 +332,7 @@ Preset 是 ProjectContext 的预设快照，不是独立的生成逻辑。
 // presets/api.ts
 export default {
   runtime: 'node',
+  runtimeVersion: '24',
   language: 'typescript',
   framework: 'elysia',
   database: 'mysql',
@@ -378,7 +384,7 @@ cli → context → validation → resolver → generator → merger → runtime
 | Language | TypeScript |
 | Runtime | Node.js |
 | CLI 解析 | Commander |
-| 交互式 Prompt | @inquirer/prompts |
+| 交互式 Prompt | @clack/prompts |
 | 终端着色 | picocolors |
 | 文件操作 | fs-extra |
 | 执行外部命令 | execa |
@@ -416,6 +422,7 @@ cli → context → validation → resolver → generator → merger → runtime
 7. **V1 不追求全覆盖** —— 先让一条链路跑通（TS + Node + Elysia），再逐类扩展
 8. **生成项目不附带测试** —— Vitest 只用于脚手架仓库自身测试，不提供 testing 模板或 `--test` 参数
 9. **数据库范围固定** —— 仅支持 MySQL、PostgreSQL、MongoDB 和 none，不提供 SQLite 选项
+10. **运行时版本一致** —— 所选版本必须同步到 engines、版本文件、类型依赖和 Docker 镜像；Bun 稳定版本不得标记为 LTS
 
 ---
 

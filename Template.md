@@ -10,9 +10,9 @@ templates/
 │   └── bun/
 │
 ├── frameworks/
+│   ├── express/
 │   ├── elysia/
 │   ├── hono/
-│   ├── express/
 │   └── fastify/
 │
 ├── databases/
@@ -126,6 +126,9 @@ import tseslint from 'typescript-eslint'
 // {{/if}}
 ```
 
+特殊目标文件可以在源模板前加下划线，例如 `_Dockerfile.template` 最终生成
+`Dockerfile`，避免 IDE 在模板渲染前按 Dockerfile 语法检查占位符。
+
 四、template.json
 
 这是每一个 Template Module 的核心描述文件。
@@ -214,12 +217,12 @@ templates/runtimes/
 ├── node/
 │   ├── template.json
 │   └── files/
-│       └── ...
+│       └── .nvmrc
 │
 └── bun/
     ├── template.json
     └── files/
-        └── ...
+        └── .bun-version
 
 Runtime 主要处理：
 
@@ -238,8 +241,14 @@ Bun
 runtime-specific config
 runtime-specific script
 runtime-specific package manager behavior
+runtime version constraints
 七、Framework Template
 templates/frameworks/
+│
+├── express/
+│   ├── template.json
+│   ├── package.json
+│   └── files/
 │
 ├── elysia/
 │   ├── template.json
@@ -252,11 +261,6 @@ templates/frameworks/
 │   └── generator.ts
 │
 ├── hono/
-│   ├── template.json
-│   ├── package.json
-│   └── files/
-│
-├── express/
 │   ├── template.json
 │   ├── package.json
 │   └── files/
@@ -407,7 +411,7 @@ templates/tooling/
 └── docker/
     ├── template.json
     └── files/
-        ├── Dockerfile
+        ├── _Dockerfile.template
         └── .dockerignore
 
 它们的特点是：
@@ -427,6 +431,16 @@ Prettier
 Docker
 
 可以任意组合。
+
+Runtime 模板还会生成版本约束文件：
+
+```text
+runtimes/node/files/.nvmrc          # Node.js 24 或 22 LTS
+runtimes/bun/files/.bun-version     # Bun 1.4 或 1.3 稳定版本线
+```
+
+同一版本会用于 `package.json#engines`、TypeScript 运行时类型和 Docker 镜像。
+Bun 当前没有正式 LTS 通道，不应在模板或文档中标记为 LTS。
 
 十二、Architecture Template
 
@@ -515,6 +529,11 @@ templates/
 │       └── files/
 │
 ├── frameworks/
+│   ├── express/
+│   │   ├── template.json
+│   │   ├── package.json
+│   │   └── files/
+│   │
 │   ├── elysia/
 │   │   ├── template.json
 │   │   ├── package.json
@@ -522,7 +541,6 @@ templates/
 │   │   └── generator.ts
 │   │
 │   ├── hono/
-│   ├── express/
 │   └── fastify/
 │
 ├── databases/

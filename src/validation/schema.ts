@@ -7,6 +7,7 @@ import {
   ORMS,
   PACKAGE_MANAGERS,
   RUNTIMES,
+  getRuntimeVersions,
 } from '../config/options.js'
 import type { ProjectContext } from '../context/types.js'
 
@@ -28,9 +29,7 @@ export function assertOneOf<T extends string>(
   allowed: readonly T[],
 ): asserts value is T {
   if (!allowed.includes(value as T)) {
-    throw new ValidationError(
-      `Invalid ${field} "${value}". Expected one of: ${allowed.join(', ')}`,
-    )
+    throw new ValidationError(`Invalid ${field} "${value}". Expected one of: ${allowed.join(', ')}`)
   }
 }
 
@@ -43,6 +42,11 @@ export function validateContext(context: ProjectContext): void {
     throw new ValidationError('projectPath is required')
   }
   assertOneOf('runtime', context.runtime, RUNTIMES)
+  assertOneOf(
+    `${context.runtime} version`,
+    context.runtimeVersion,
+    getRuntimeVersions(context.runtime),
+  )
   assertOneOf('language', context.language, LANGUAGES)
   assertOneOf('framework', context.framework, FRAMEWORKS)
   assertOneOf('database', context.database, DATABASES)

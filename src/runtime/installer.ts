@@ -10,6 +10,5 @@ export async function installDependencies(context: ProjectContext): Promise<void
   const pm = getPackageManager(context.packageManager)
   await execa(pm.name, pm.installCommand, {
     cwd: context.projectPath,
-    stdio: 'inherit',
   })
 }

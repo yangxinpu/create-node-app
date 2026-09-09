@@ -18,7 +18,29 @@ describe('buildTemplateVariables', () => {
     const vars = buildTemplateVariables(buildContext())
     expect(vars.projectName).toBe('my-app')
     expect(vars.runtime).toBe('node')
-    expect(vars.framework).toBe('elysia')
+    expect(vars.runtimeVersion).toBe('24')
+    expect(vars.runtimeTypesPackage).toBe('@types/node')
+    expect(vars.runtimeTypesRange).toBe('^24.0.0')
+    expect(vars.runtimeTypesName).toBe('node')
+    expect(vars.dockerVariant).toBe('node-typescript')
+    expect(vars.runtimeEntry).toBe('dist/index.js')
+    expect(vars.framework).toBe('express')
+  })
+
+  it('includes Bun-specific runtime variables', () => {
+    const vars = buildTemplateVariables(
+      buildContext({
+        runtime: 'bun',
+        runtimeVersion: '1.3',
+        language: 'javascript',
+      }),
+    )
+
+    expect(vars.runtimeTypesPackage).toBe('@types/bun')
+    expect(vars.runtimeTypesRange).toBe('~1.3.0')
+    expect(vars.runtimeTypesName).toBe('bun')
+    expect(vars.dockerVariant).toBe('bun-javascript')
+    expect(vars.runtimeEntry).toBe('src/index.js')
   })
 
   it('includes prisma variables when database is set', () => {

@@ -87,29 +87,32 @@ npx tsx src/cli/index.ts
 
 CLI 会依次询问以下选项：
 
+```text
+┌  create-node-app
+│
+◇  Project name
+◇  Runtime
+◇  Node.js LTS version / Bun stable version
+◇  Language
+◇  Framework
+◇  Database
+◇  ORM
+◇  Cache
+◇  Project structure
+◇  Tooling
+└  Done
 ```
-◇ create-node-app
 
-? Project name: my-server
-? Select runtime:    ❯ Node / Bun
-? Select language:   ❯ TypeScript / JavaScript
-? Select framework:  ❯ Elysia / Hono / Express / Fastify / None
-? Select database:   ❯ MySQL / PostgreSQL / MongoDB / None
-? Select ORM:        ❯ Prisma / Drizzle / None
-? Select cache:      ❯ Redis / None
-? Select architecture: ❯ minimal / api / layered
-? Use ESLint?        ❯ Yes / No
-? Use Prettier?      ❯ Yes / No
-? Use Docker?        ❯ Yes / No
-```
-
-已通过命令行参数提供的选项会自动跳过。
+界面使用与 Vite 相近的连续交互样式。Tooling 是 ESLint、Prettier 和 Docker
+的多选步骤；每组技术选项使用不同字体颜色。未选择数据库时自动跳过 ORM。
+已通过命令行参数提供的选项也会自动跳过。
 
 ### 方式二：非交互式 — 全参数指定
 
 ```bash
 node dist/index.js my-server \
   --runtime node \
+  --runtime-version 24 \
   --language typescript \
   --framework elysia \
   --database mysql \
@@ -129,18 +132,19 @@ node dist/index.js my-server --yes
 
 `--yes` 等价于以下默认配置：
 
-| 选项           | 默认值        |
+| 选项           | 默认值     |
 | ------------ | ---------- |
-| runtime      | node       |
-| language     | typescript |
-| framework    | elysia     |
-| database     | none       |
-| orm          | none       |
-| cache        | none       |
-| architecture | minimal    |
-| eslint       | true       |
-| prettier     | true       |
-| docker       | false      |
+| runtime        | node       |
+| runtimeVersion | 24         |
+| language       | typescript |
+| framework      | express    |
+| database       | none       |
+| orm            | none       |
+| cache          | none       |
+| architecture   | minimal    |
+| eslint         | true       |
+| prettier       | true       |
+| docker         | false      |
 
 ### 方式四：使用 Preset 预设
 
@@ -150,12 +154,12 @@ node dist/index.js blog-api --preset api
 
 内置四套预设：
 
-| Preset         | runtime | framework | database   | orm     | cache | architecture | docker |
-| -------------- | ------- | --------- | ---------- | ------- | ----- | ------------ | ------ |
-| `minimal`      | node    | elysia    | none       | none    | none  | minimal      | false  |
-| `api`          | node    | elysia    | mysql      | prisma  | redis | api          | true   |
-| `fullstack`    | node    | elysia    | postgresql | prisma  | redis | layered      | true   |
-| `microservice` | node    | fastify   | postgresql | drizzle | redis | layered      | true   |
+| Preset         | runtime | version | framework | database   | orm     | cache | architecture | docker |
+| -------------- | ------- | ------- | --------- | ---------- | ------- | ----- | ------------ | ------ |
+| `minimal`      | node    | 24      | express   | none       | none    | none  | minimal      | false  |
+| `api`          | node    | 24      | elysia    | mysql      | prisma  | redis | api          | true   |
+| `fullstack`    | node    | 24      | elysia    | postgresql | prisma  | redis | layered      | true   |
+| `microservice` | node    | 24      | fastify   | postgresql | drizzle | redis | layered      | true   |
 
 Preset 可与 CLI 参数组合使用，CLI 参数覆盖 Preset：
 
@@ -170,6 +174,7 @@ node dist/index.js my-api --preset api --database postgresql
 ```typescript
 export default {
   runtime: 'node',
+  runtimeVersion: '24',
   language: 'typescript',
   framework: 'elysia',
   database: 'mysql',
@@ -198,8 +203,9 @@ create-node-app <project-name> [options]
 
 Options:
   --runtime <runtime>          node | bun
+  --runtime-version <version>  Node: 24 | 22; Bun: 1.4 | 1.3
   --language <language>        typescript | javascript
-  --framework <framework>      elysia | hono | express | fastify | none
+  --framework <framework>      express | elysia | hono | fastify | none
   --database <database>        mysql | postgresql | mongodb | none
   --orm <orm>                  prisma | drizzle | none
   --cache <cache>              redis | none
@@ -221,6 +227,13 @@ Options:
 node dist/index.js list
 ```
 
+### 运行时版本兼容
+
+- Node.js 可选 24、22，均为 LTS 分支。
+- Bun 当前没有正式 LTS 通道，因此可选 1.4、1.3 稳定版本线。
+- 生成器会同步更新 `package.json#engines`、`.nvmrc` / `.bun-version`、
+  TypeScript 运行时类型和 Docker 基础镜像。
+
 输出示例：
 
 ```
@@ -228,10 +241,18 @@ Runtimes
   ✓ node
   ✓ bun
 
+Node.js LTS
+  ✓ 24
+  ✓ 22
+
+Bun stable
+  ✓ 1.4
+  ✓ 1.3
+
 Frameworks
+  ✓ express
   ✓ elysia
   ✓ hono
-  ✓ express
   ✓ fastify
   ✓ none
 
@@ -283,6 +304,7 @@ my-server/
 │   └── index.ts               # 启动文件
 ├── .env.example               # 环境变量模板
 ├── .gitignore
+├── .nvmrc                     # Bun 项目对应 .bun-version
 ├── Dockerfile                 # Docker 配置（--docker 时）
 ├── eslint.config.js           # ESLint 配置（--eslint 时）
 ├── prettier.config.js         # Prettier 配置（--prettier 时）
@@ -404,6 +426,8 @@ node dist/index.js my-server --yes --no-install --no-git
 ```
 
 ### Q: 如何指定包管理器？
+
+默认会识别启动 CLI 时使用的包管理器，也可以显式覆盖：
 
 ```bash
 node dist/index.js my-server --yes --package-manager pnpm

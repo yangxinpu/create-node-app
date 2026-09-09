@@ -1,4 +1,7 @@
+import path from 'node:path'
+
 import { ensureDir, pathExists } from 'fs-extra'
+import pc from 'picocolors'
 
 import type { ProjectContext } from '../context/types.js'
 import { resolveDependencies } from '../resolver/dependency.js'
@@ -35,37 +38,46 @@ export async function createProject(context: ProjectContext): Promise<void> {
   }
   await ensureDir(context.projectPath)
 
-  // 2. 解析
-  const templatePaths = resolveTemplates(context)
-  const variables = buildTemplateVariables(context)
-  const metas = await Promise.all(templatePaths.map((tp) => loadTemplateMeta(tp, variables)))
-  const dependencies = resolveDependencies(metas)
+  const relativePath = path.relative(process.cwd(), context.projectPath) || '.'
+  const scaffoldSpinner = logger.spinner()
+  scaffoldSpinner.start(`Scaffolding project in ${pc.cyan(relativePath)}`)
 
-  // 3. 生成静态文件（按 resolver 顺序覆盖，文本内容经变量渲染）
-  logger.step('Generating files')
-  for (const tp of templatePaths) {
-    await copyTemplateFiles(tp, context.projectPath, variables)
+  try {
+    // 2. 解析
+    const templatePaths = resolveTemplates(context)
+    const variables = buildTemplateVariables(context)
+    const metas = await Promise.all(templatePaths.map((tp) => loadTemplateMeta(tp, variables)))
+    const dependencies = resolveDependencies(metas)
+
+    // 3. 生成静态文件（按 resolver 顺序覆盖，文本内容经变量渲染）
+    for (const tp of templatePaths) {
+      await copyTemplateFiles(tp, context.projectPath, variables)
+    }
+
+    // 4. 组装
+    await generatePackageJson(context, dependencies)
+    await generateEnv(context, dependencies)
+    await generateReadme(context)
+
+    scaffoldSpinner.stop('Project files generated')
+  } catch (error) {
+    scaffoldSpinner.stop('Failed to generate project files', 1)
+    throw error
   }
-
-  // 4. 组装
-  logger.step('Generating package.json')
-  await generatePackageJson(context, dependencies)
-
-  logger.step('Generating .env.example')
-  await generateEnv(context, dependencies)
-
-  logger.step('Generating README.md')
-  await generateReadme(context)
 
   // 5. 安装依赖 + Git
   if (!context.noInstall) {
-    logger.step(`Installing dependencies with ${context.packageManager}`)
-    await installDependencies(context)
+    await runTask(
+      `Installing dependencies with ${context.packageManager}`,
+      'Dependencies installed',
+      () => installDependencies(context),
+    )
   }
 
   if (!context.noGit) {
-    logger.step('Initializing Git')
-    await initGit(context)
+    await runTask('Initializing Git repository', 'Git repository initialized', () =>
+      initGit(context),
+    )
   }
 
   // 6. 输出
@@ -74,17 +86,28 @@ export async function createProject(context: ProjectContext): Promise<void> {
 
 function printNextSteps(context: ProjectContext): void {
   const pm = context.packageManager
-  logger.success('Project created')
-  console.log('')
-  console.log(`  Project: ${context.projectName}`)
-  console.log(`  Runtime: ${context.runtime}`)
-  console.log(`  Language: ${context.language}`)
-  console.log(`  Framework: ${context.framework}`)
-  console.log('')
-  console.log('  Next steps:')
-  console.log('')
-  console.log(`    cd ${context.projectName}`)
-  if (context.noInstall) console.log(`    ${pm} install`)
-  console.log(`    ${pm} run dev`)
-  console.log('')
+  const commands = [`cd ${context.projectName}`]
+  if (context.noInstall) commands.push(`${pm} install`)
+  commands.push(`${pm} run dev`)
+
+  logger.success(`Project created in ${pc.cyan(context.projectPath)}`)
+  logger.note(commands.map((command) => pc.cyan(command)).join('\n'), 'Next steps')
+  logger.outro('Done')
+}
+
+/** 使用统一的终端进度展示执行耗时任务。 */
+async function runTask(
+  pendingMessage: string,
+  successMessage: string,
+  task: () => Promise<void>,
+): Promise<void> {
+  const spinner = logger.spinner()
+  spinner.start(pendingMessage)
+  try {
+    await task()
+    spinner.stop(successMessage)
+  } catch (error) {
+    spinner.stop(`Failed: ${pendingMessage}`, 1)
+    throw error
+  }
 }

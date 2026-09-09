@@ -24,6 +24,15 @@ describe('normalizeContext', () => {
     expect(context.runtime).toBe('node')
   })
 
+  it('uses the recommended version for the selected runtime', () => {
+    const context = normalizeContext({
+      projectName: 'bun-api',
+      runtime: 'bun',
+    })
+
+    expect(context.runtimeVersion).toBe('1.4')
+  })
+
   it('ignores undefined values instead of overriding defaults', () => {
     const context = normalizeContext({
       projectName: 'api',

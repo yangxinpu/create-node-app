@@ -5,7 +5,7 @@
   "description": "TypeScript base template",
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "^22.10.0",
+    "{{runtimeTypesPackage}}": "{{runtimeTypesRange}}",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   },

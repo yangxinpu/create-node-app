@@ -4,3 +4,6 @@ dist/
 .DS_Store
 .env
 coverage/
+
+# 测试生成的临时文件
+temp/

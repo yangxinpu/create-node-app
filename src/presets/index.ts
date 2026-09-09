@@ -8,8 +8,9 @@ import type { PresetName } from '../config/options.js'
 export const PRESETS: Record<PresetName, Partial<ContextDefaults>> = {
   minimal: {
     runtime: 'node',
+    runtimeVersion: '24',
     language: 'typescript',
-    framework: 'elysia',
+    framework: 'express',
     database: 'none',
     orm: 'none',
     cache: 'none',
@@ -20,6 +21,7 @@ export const PRESETS: Record<PresetName, Partial<ContextDefaults>> = {
   },
   api: {
     runtime: 'node',
+    runtimeVersion: '24',
     language: 'typescript',
     framework: 'elysia',
     database: 'mysql',
@@ -32,6 +34,7 @@ export const PRESETS: Record<PresetName, Partial<ContextDefaults>> = {
   },
   fullstack: {
     runtime: 'node',
+    runtimeVersion: '24',
     language: 'typescript',
     framework: 'elysia',
     database: 'postgresql',
@@ -44,6 +47,7 @@ export const PRESETS: Record<PresetName, Partial<ContextDefaults>> = {
   },
   microservice: {
     runtime: 'node',
+    runtimeVersion: '24',
     language: 'typescript',
     framework: 'fastify',
     database: 'postgresql',

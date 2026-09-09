@@ -31,6 +31,8 @@ describe('create CLI', () => {
         'cli-app',
         '--runtime',
         'bun',
+        '--runtime-version',
+        '1.3',
         '--language',
         'javascript',
         '--framework',
@@ -57,18 +59,18 @@ describe('create CLI', () => {
     const packageJson = JSON.parse(
       await readFile(path.join(projectPath, 'package.json'), 'utf-8'),
     ) as {
+      engines: Record<string, string>
       scripts: Record<string, string>
       devDependencies?: Record<string, string>
     }
 
+    expect(packageJson.engines).toEqual({ bun: '>=1.3.0 <1.4.0' })
     expect(packageJson.scripts.dev).toBe('bun --watch src/index.js')
     expect(packageJson.scripts.start).toBe('bun src/index.js')
     expect(packageJson.scripts.test).toBeUndefined()
     expect(packageJson.devDependencies?.vitest).toBeUndefined()
-    const eslintConfig = await readFile(
-      path.join(projectPath, 'eslint.config.js'),
-      'utf-8',
-    )
+    await expect(readFile(path.join(projectPath, '.bun-version'), 'utf-8')).resolves.toBe('1.3\n')
+    const eslintConfig = await readFile(path.join(projectPath, 'eslint.config.js'), 'utf-8')
     expect(eslintConfig).not.toContain('typescript-eslint')
     await expect(
       readFile(path.join(projectPath, 'prettier.config.js'), 'utf-8'),

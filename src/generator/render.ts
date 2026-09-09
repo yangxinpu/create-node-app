@@ -62,8 +62,7 @@ const DRIZZLE: Record<string, DrizzleProfile> = {
     tableFn: 'pgTable',
     idImport: 'serial',
     idColumn: "serial('id').primaryKey()",
-    clientImports:
-      "import { drizzle } from 'drizzle-orm/node-postgres'\nimport { Pool } from 'pg'",
+    clientImports: "import { drizzle } from 'drizzle-orm/node-postgres'\nimport { Pool } from 'pg'",
     clientInit:
       'const pool = new Pool({ connectionString: process.env.DATABASE_URL })\n\nexport const db = drizzle(pool, { schema })',
   },
@@ -76,6 +75,18 @@ export function buildTemplateVariables(context: ProjectContext): TemplateVariabl
   const vars: TemplateVariables = {
     projectName: context.projectName,
     runtime: context.runtime,
+    runtimeVersion: context.runtimeVersion,
+    runtimeTypesPackage: context.runtime === 'node' ? '@types/node' : '@types/bun',
+    runtimeTypesName: context.runtime === 'node' ? 'node' : 'bun',
+    runtimeTypesRange:
+      context.runtime === 'node'
+        ? `^${context.runtimeVersion}.0.0`
+        : `~${context.runtimeVersion}.0`,
+    runtimeEntry:
+      context.language === 'typescript' && context.runtime === 'node'
+        ? 'dist/index.js'
+        : `src/index.${context.language === 'typescript' ? 'ts' : 'js'}`,
+    dockerVariant: `${context.runtime}-${context.language}`,
     language: context.language,
     extension: context.language === 'typescript' ? 'ts' : 'js',
     framework: context.framework,
@@ -109,12 +120,7 @@ export function buildTemplateVariables(context: ProjectContext): TemplateVariabl
  * 支持条件块：{{#if name=value}}...{{/if}}，仅当变量等于给定值时保留块内容。
  */
 export function renderContent(content: string, variables: TemplateVariables): string {
-  const renderConditional = (
-    _match: string,
-    key: string,
-    value: string,
-    block: string,
-  ): string => {
+  const renderConditional = (_match: string, key: string, value: string, block: string): string => {
     return variables[key] === value ? block : ''
   }
 

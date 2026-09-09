@@ -1,3 +1,4 @@
+import { getDefaultRuntimeVersion } from '../config/options.js'
 import { DEFAULT_CONTEXT } from './defaults.js'
 import type { ProjectContext } from './types.js'
 
@@ -12,10 +13,14 @@ export function normalizeContext(raw: RawContext): ProjectContext {
   const cleaned = Object.fromEntries(
     Object.entries(raw).filter(([, value]) => value !== undefined),
   ) as RawContext
+  const runtime = cleaned.runtime ?? DEFAULT_CONTEXT.runtime
+  const runtimeVersion = cleaned.runtimeVersion ?? getDefaultRuntimeVersion(runtime)
 
   return {
     ...DEFAULT_CONTEXT,
     ...cleaned,
+    runtime,
+    runtimeVersion,
     projectName: raw.projectName,
     projectPath: raw.projectPath ?? raw.projectName,
   }

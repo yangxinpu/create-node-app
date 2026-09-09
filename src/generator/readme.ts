@@ -27,7 +27,15 @@ export async function generateReadme(context: ProjectContext): Promise<void> {
   ]
 
   if (context.orm === 'prisma') {
-    lines.push('## Database', '', '```bash', 'npx prisma generate', 'npx prisma migrate dev', '```', '')
+    lines.push(
+      '## Database',
+      '',
+      '```bash',
+      'npx prisma generate',
+      'npx prisma migrate dev',
+      '```',
+      '',
+    )
   }
 
   await writeFile(path.join(context.projectPath, 'README.md'), lines.join('\n'))
@@ -35,7 +43,11 @@ export async function generateReadme(context: ProjectContext): Promise<void> {
 
 function buildStackList(context: ProjectContext): string[] {
   const stack: string[] = []
-  stack.push(context.runtime === 'node' ? 'Node.js' : 'Bun')
+  stack.push(
+    context.runtime === 'node'
+      ? `Node.js ${context.runtimeVersion} LTS`
+      : `Bun ${context.runtimeVersion}`,
+  )
   stack.push(context.language === 'typescript' ? 'TypeScript' : 'JavaScript')
   if (context.framework !== 'none') stack.push(capitalize(context.framework))
   if (context.database !== 'none') stack.push(capitalize(context.database))

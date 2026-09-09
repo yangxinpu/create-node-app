@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import { isTsOnlyPackage, mapFileName, shouldSkipFile, stripTypes } from '../../src/generator/language.js'
+import {
+  isTsOnlyPackage,
+  mapFileName,
+  shouldSkipFile,
+  stripTypes,
+} from '../../src/generator/language.js'
 
 describe('isTsOnlyPackage', () => {
   it('identifies TS toolchain packages', () => {
@@ -39,6 +44,7 @@ describe('mapFileName', () => {
   it('removes the template suffix from generated file names', () => {
     expect(mapFileName('eslint.config.js.template', 'typescript')).toBe('eslint.config.js')
     expect(mapFileName('eslint.config.js.template', 'javascript')).toBe('eslint.config.js')
+    expect(mapFileName('_Dockerfile.template', 'typescript')).toBe('Dockerfile')
   })
 })
 
