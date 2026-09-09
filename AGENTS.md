@@ -1,4 +1,4 @@
-# AGENTS.md — create-node-app AI 编码指南
+# AGENTS.md — create-node-web AI 编码指南
 
 > 本文档专为 AI 编程助手设计。提炼自 README.md 与 Architecture.md 两份文档的核心内容。
 
@@ -9,8 +9,8 @@
 **一句话**：一个 Node.js 项目脚手架生成器，通过动态组合模板模块生成完整后端项目。
 
 ```bash
-npm create node-app@latest my-server          # 非交互式
-npm create node-app@latest                     # 交互式
+npm create node-web@latest my-server          # 非交互式
+npm create node-web@latest                     # 交互式
 ```
 
 **核心原则**：组合而非堆积模板。Base + Framework + Database + ORM + Cache + Tooling + Architecture → 生成项目。严禁预组合模板目录（如 `elysia-mysql-prisma`），会导致 M×N 组合爆炸。
@@ -291,7 +291,7 @@ MergeStrategy 接口见 §3.4，后续可扩展 YAML、TypeScript 等策略。
 ## 8. CLI 参数完整表
 
 ```
-create-node-app <project-name> [options]
+create-node-web <project-name> [options]
 
 Options:
   --runtime <runtime>          node | bun
@@ -351,7 +351,7 @@ export default {
 ## 10. 项目目录结构
 
 ```
-create-node-app/
+create-node-web/
 ├── src/
 │   ├── cli/                 # CLI 入口、命令、prompts
 │   ├── context/             # ProjectContext 定义、默认值、normalize
@@ -400,14 +400,14 @@ cli → context → validation → resolver → generator → merger → runtime
 
 | Phase                        | 内容                                                                                              | 交付标准                                                             |
 | ---------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| **1. CLI 骨架**              | Commander + Prompts + Arguments + Logger                                                          | `npm create node-app@latest api` 能运行并有交互输出                  |
+| **1. CLI 骨架**              | Commander + Prompts + Arguments + Logger                                                          | `npm create node-web@latest api` 能运行并有交互输出                  |
 | **2. Context 层**            | ProjectContext + Normalize + Defaults + Schema Validation                                         | 能从 CLI/Prompt 输入构建合法 Context                                 |
-| **3. Template Engine (MVP)** | 只支持 TypeScript + Node.js + Elysia。Template Resolver + File Generator + package.json Generator | `npm create node-app@latest api && cd api && npm run dev` 真正跑起来 |
+| **3. Template Engine (MVP)** | 只支持 TypeScript + Node.js + Elysia。Template Resolver + File Generator + package.json Generator | `npm create node-web@latest api && cd api && npm run dev` 真正跑起来 |
 | **4. Database**              | MySQL / PostgreSQL / MongoDB 模板                                                                 | 生成含 db client 与 DATABASE_URL 的项目                              |
 | **5. ORM**                   | Prisma + Drizzle + Dependency Resolver + File Merge System                                        | 组合 Database + ORM 时依赖与文件正确合并                             |
 | **6. Redis**                 | Redis 模板 + env.example                                                                          | 生成 `src/redis/client.ts`                                           |
 | **7. Tooling**               | ESLint / Prettier / Docker / Git                                                                  | 各工具可独立启用/禁用                                                |
-| **8. Preset + Config**       | `--preset` + `node-app.config.ts`                                                                 | 预设配置文件可驱动生成                                               |
+| **8. Preset + Config**       | `--preset` + `node-web.config.ts`                                                                 | 预设配置文件可驱动生成                                               |
 | **9. Non-Interactive**       | 完善所有 `--flag` 参数，支持 CI/CD                                                                | 全参数非交互模式可用                                                 |
 
 ---
@@ -434,7 +434,7 @@ cli → context → validation → resolver → generator → merger → runtime
 ## 14. 验收标准
 
 ```bash
-npm create node-app@latest blog-api   # 交互式创建
+npm create node-web@latest blog-api   # 交互式创建
 cd blog-api
 npm install
 npm run dev                           # 启动成功

@@ -19,7 +19,7 @@ afterEach(async () => {
 })
 
 async function createTemporaryProject(overrides: Partial<ProjectContext>): Promise<string> {
-  const root = await mkdtemp(path.join(tmpdir(), 'create-node-app-generator-'))
+  const root = await mkdtemp(path.join(tmpdir(), 'create-node-web-generator-'))
   const projectPath = path.join(root, 'generated-app')
   temporaryDirectories.push(root)
 

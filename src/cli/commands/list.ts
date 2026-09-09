@@ -19,7 +19,7 @@ import { logger } from '../../utils/logger.js'
  * list 命令：展示当前支持的所有选项。
  */
 export function listCommand(): void {
-  logger.intro('create-node-app')
+  logger.intro('create-node-web')
   logger.note(
     [
       formatGroup('Runtime', RUNTIMES),
@@ -36,7 +36,7 @@ export function listCommand(): void {
     ].join('\n'),
     'Supported options',
   )
-  logger.outro(`Run ${pc.cyan('create-node-app --help')} for usage`)
+  logger.outro(`Run ${pc.cyan('create-node-web --help')} for usage`)
 }
 
 /** 将选项组格式化为紧凑的单行列表。 */

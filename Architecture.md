@@ -1,13 +1,13 @@
-# create-node-app 架构设计
+# create-node-web 架构设计
 
-本文面向项目维护者，描述 `create-node-app` 当前已经实现的系统架构、模块职责、
+本文面向项目维护者，描述 `create-node-web` 当前已经实现的系统架构、模块职责、
 数据流、模板协议和扩展方式。
 
 用户安装和使用说明请查看 [README.md](./README.md)。
 
 ## 1. 设计目标
 
-`create-node-app` 是一个组合式 Node.js 后端项目生成器。它将用户选择规范化为统一
+`create-node-web` 是一个组合式 Node.js 后端项目生成器。它将用户选择规范化为统一
 上下文，再按维度加载独立模板模块，最终生成可安装、可运行、可继续开发的项目。
 
 核心目标：
@@ -157,7 +157,7 @@ export interface ProjectContext {
 | Interactive   | `src/cli/prompts.ts`          | 逐步选择缺失配置     |
 | CLI Arguments | `src/cli/index.ts`            | 自动化和 CI 场景     |
 | Preset        | `src/presets/index.ts`        | 使用预定义组合       |
-| Config File   | `node-app.config.ts` 或 `.js` | 保存可复用的项目配置 |
+| Config File   | `node-web.config.ts` 或 `.js` | 保存可复用的项目配置 |
 
 ### 5.2 配置优先级
 

@@ -9,7 +9,7 @@ import { getPreset } from '../presets/index.js'
 import { logger } from '../utils/logger.js'
 
 /**
- * 加载 node-app.config.ts / .js 配置文件。
+ * 加载 node-web.config.ts / .js 配置文件。
  * 使用 tsx 动态导入 TS 配置，失败时回退到直接 import。
  */
 export async function loadConfigFile(

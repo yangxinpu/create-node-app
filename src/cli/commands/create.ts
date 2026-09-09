@@ -41,7 +41,7 @@ export async function createCommand(
   projectName: string | undefined,
   options: CreateCommandOptions,
 ): Promise<void> {
-  logger.intro('create-node-app')
+  logger.intro('create-node-web')
 
   try {
     const context = await resolveContext(projectName, options)

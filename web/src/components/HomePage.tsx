@@ -40,7 +40,7 @@ function HeroSection({ copy, onCopyCommand }: HomePageProps) {
       <aside className="runtime-card" aria-label={copy.home.stackTitle}>
         <div className="runtime-card-header">
           <span>{copy.home.stackTitle}</span>
-          <code>node-app</code>
+          <code>node-web</code>
         </div>
         <p>{copy.home.stackText}</p>
         <div className="stack-grid">

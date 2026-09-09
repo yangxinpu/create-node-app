@@ -8,7 +8,7 @@ import type { ProjectContext } from '../context/types.js'
 export async function initGit(context: ProjectContext): Promise<void> {
   await execa('git', ['init'], { cwd: context.projectPath })
   await execa('git', ['add', '.'], { cwd: context.projectPath })
-  await execa('git', ['commit', '-m', 'Initial commit from create-node-app'], {
+  await execa('git', ['commit', '-m', 'Initial commit from create-node-web'], {
     cwd: context.projectPath,
   })
 }

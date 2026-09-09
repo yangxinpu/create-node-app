@@ -7,7 +7,7 @@ import { listCommand } from './commands/list.js'
 const program = new Command()
 
 program
-  .name('create-node-app')
+  .name('create-node-web')
   .description("Node.js project scaffolding generator — compose, don't stack templates")
   .version('0.1.0')
 
@@ -24,7 +24,7 @@ program
   .option('--cache <cache>', 'redis | none')
   .option('--architecture <architecture>', 'minimal | api | layered')
   .option('--preset <preset>', 'minimal | api | fullstack | microservice')
-  .option('--config <path>', 'path to config file (node-app.config.ts)')
+  .option('--config <path>', 'path to config file (node-web.config.ts)')
   .option('--eslint', 'enable ESLint')
   .option('--prettier', 'enable Prettier')
   .option('--docker', 'enable Docker')

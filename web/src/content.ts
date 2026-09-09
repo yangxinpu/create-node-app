@@ -9,10 +9,10 @@ export const content: Record<Language, Content> = {
     },
     home: {
       eyebrow: 'Node.js 后端脚手架生成器',
-      title: 'node-app',
+      title: 'node-web',
       intro:
         '通过可组合模板快速生成 Node.js 后端项目。选择运行时、框架、数据库、ORM、缓存、工程化和目录结构，即可得到可以安装、启动和继续开发的项目。',
-      install: 'npm create node-app@latest my-server',
+      install: 'npm create node-web@latest my-server',
       copy: '复制命令',
       meta: ['Node.js 24 / 22', 'Bun 1.4 / 1.3', 'RESTful API', 'Docker Ready'],
       highlights: [
@@ -41,19 +41,19 @@ export const content: Record<Language, Content> = {
           id: 'interactive',
           title: '交互式创建',
           body: '不传完整参数时，CLI 会依次询问项目名、运行时、框架、数据库和工程化选项。',
-          code: 'npm create node-app@latest',
+          code: 'npm create node-web@latest',
         },
         {
           id: 'quick-start',
           title: '创建并启动',
           body: '生成项目后进入目录，安装依赖并启动开发服务器。',
-          code: 'npm create node-app@latest my-server\ncd my-server\nnpm install\nnpm run dev',
+          code: 'npm create node-web@latest my-server\ncd my-server\nnpm install\nnpm run dev',
         },
         {
           id: 'non-interactive',
           title: '非交互式创建',
           body: '在脚本或 CI/CD 中通过 CLI 参数一次性指定技术栈。',
-          code: 'npm create node-app@latest my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
+          code: 'npm create node-web@latest my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
         },
       ],
     },
@@ -66,10 +66,10 @@ export const content: Record<Language, Content> = {
     },
     home: {
       eyebrow: 'Node.js backend project generator',
-      title: 'node-app',
+      title: 'node-web',
       intro:
         'Generate Node.js backend projects from composable templates. Choose runtime, framework, database, ORM, cache, tooling, and structure to get a project that can install, run, and grow.',
-      install: 'npm create node-app@latest my-server',
+      install: 'npm create node-web@latest my-server',
       copy: 'Copy command',
       meta: ['Node.js 24 / 22', 'Bun 1.4 / 1.3', 'RESTful API', 'Docker Ready'],
       highlights: [
@@ -98,19 +98,19 @@ export const content: Record<Language, Content> = {
           id: 'interactive',
           title: 'Interactive creation',
           body: 'Without full flags, the CLI prompts for project name, runtime, framework, database, and tooling.',
-          code: 'npm create node-app@latest',
+          code: 'npm create node-web@latest',
         },
         {
           id: 'quick-start',
           title: 'Create and run',
           body: 'After generation, enter the project, install dependencies, and start the dev server.',
-          code: 'npm create node-app@latest my-server\ncd my-server\nnpm install\nnpm run dev',
+          code: 'npm create node-web@latest my-server\ncd my-server\nnpm install\nnpm run dev',
         },
         {
           id: 'non-interactive',
           title: 'Non-interactive creation',
           body: 'Use explicit flags in scripts or CI/CD workflows.',
-          code: 'npm create node-app@latest my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
+          code: 'npm create node-web@latest my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
         },
       ],
     },

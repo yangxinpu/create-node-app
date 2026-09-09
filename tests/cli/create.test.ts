@@ -20,7 +20,7 @@ afterEach(async () => {
 
 describe('create CLI', () => {
   it('creates a project non-interactively from command-line options', async () => {
-    const workingDirectory = await mkdtemp(path.join(tmpdir(), 'create-node-app-cli-'))
+    const workingDirectory = await mkdtemp(path.join(tmpdir(), 'create-node-web-cli-'))
     temporaryDirectories.push(workingDirectory)
 
     const { stdout } = await execFileAsync(

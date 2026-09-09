@@ -1,4 +1,4 @@
-# create-node-app
+# create-node-web
 
 <p align="center">
   <a href="#简体中文">简体中文</a> |
@@ -32,19 +32,19 @@
 #### 交互式创建
 
 ```bash
-npm create node-app@latest
+npm create node-web@latest
 ```
 
 也可以直接指定项目名称：
 
 ```bash
-npm create node-app@latest my-server
+npm create node-web@latest my-server
 ```
 
 CLI 会通过接近 Vite 的连续式 TUI 引导完成配置：
 
 ```text
-┌  create-node-app
+┌  create-node-web
 │
 ◇  Project name
 ◇  Runtime
@@ -66,7 +66,7 @@ CLI 会通过接近 Vite 的连续式 TUI 引导完成配置：
 #### 使用默认配置
 
 ```bash
-npm create node-app@latest my-server -- --yes
+npm create node-web@latest my-server -- --yes
 ```
 
 默认生成以下组合：
@@ -78,7 +78,7 @@ Node.js 24 LTS + TypeScript + Express + Minimal + ESLint + Prettier
 #### 完整参数创建
 
 ```bash
-npm create node-app@latest my-server -- \
+npm create node-web@latest my-server -- \
   --runtime node \
   --runtime-version 24 \
   --language typescript \
@@ -128,7 +128,7 @@ Architecture 只决定项目的代码组织方式，不绑定具体 Framework。
 Preset 是一份预设配置，仍然使用相同的生成流程。
 
 ```bash
-npm create node-app@latest blog-api -- --preset api
+npm create node-web@latest blog-api -- --preset api
 ```
 
 | Preset         | Runtime    | Framework | Database   | ORM     | Cache | Architecture | Docker |
@@ -141,7 +141,7 @@ npm create node-app@latest blog-api -- --preset api
 CLI 参数可以覆盖 Preset 中的字段：
 
 ```bash
-npm create node-app@latest my-api -- \
+npm create node-web@latest my-api -- \
   --preset api \
   --database postgresql
 ```
@@ -151,7 +151,7 @@ npm create node-app@latest my-api -- \
 项目支持 JavaScript 或 TypeScript 配置文件：
 
 ```typescript
-// node-app.config.ts
+// node-web.config.ts
 export default {
   runtime: 'node',
   runtimeVersion: '24',
@@ -169,7 +169,7 @@ export default {
 ```
 
 ```bash
-npm create node-app@latest my-server -- --config node-app.config.ts
+npm create node-web@latest my-server -- --config node-web.config.ts
 ```
 
 配置优先级：
@@ -181,7 +181,7 @@ CLI 参数 > Config 文件 > Preset > 默认配置
 ### CLI 参数
 
 ```text
-create-node-app <project-name> [options]
+create-node-web <project-name> [options]
 
 Options:
   --runtime <runtime>          node | bun
@@ -193,7 +193,7 @@ Options:
   --cache <cache>              redis | none
   --architecture <arch>        minimal | api | layered
   --preset <preset>            minimal | api | fullstack | microservice
-  --config <path>              path to node-app.config.ts or .js
+  --config <path>              path to node-web.config.ts or .js
   --eslint                     enable ESLint
   --prettier                   enable Prettier
   --docker                     enable Docker
@@ -206,7 +206,7 @@ Options:
 查看当前支持的全部选项：
 
 ```bash
-npm create node-app@latest -- list
+npm create node-web@latest -- list
 ```
 
 ### 生成结果
@@ -277,8 +277,8 @@ my-server/
 - pnpm
 
 ```bash
-git clone https://github.com/yangxinpu/create-node-app.git
-cd create-node-app
+git clone https://github.com/yangxinpu/create-node-web.git
+cd create-node-web
 pnpm install
 pnpm dev
 ```
@@ -344,19 +344,19 @@ interactive TUI, CLI arguments, presets, or a configuration file.
 #### Interactive
 
 ```bash
-npm create node-app@latest
+npm create node-web@latest
 ```
 
 You can also provide the project name directly:
 
 ```bash
-npm create node-app@latest my-server
+npm create node-web@latest my-server
 ```
 
 The Vite-inspired TUI guides you through the available options:
 
 ```text
-┌  create-node-app
+┌  create-node-web
 │
 ◇  Project name
 ◇  Runtime
@@ -378,7 +378,7 @@ into a single Tooling step.
 #### Default Configuration
 
 ```bash
-npm create node-app@latest my-server -- --yes
+npm create node-web@latest my-server -- --yes
 ```
 
 This generates the following stack:
@@ -390,7 +390,7 @@ Node.js 24 LTS + TypeScript + Express + Minimal + ESLint + Prettier
 #### Full CLI Configuration
 
 ```bash
-npm create node-app@latest my-server -- \
+npm create node-web@latest my-server -- \
   --runtime node \
   --runtime-version 24 \
   --language typescript \
@@ -442,7 +442,7 @@ A preset is a predefined configuration that uses the same generation pipeline as
 method.
 
 ```bash
-npm create node-app@latest blog-api -- --preset api
+npm create node-web@latest blog-api -- --preset api
 ```
 
 | Preset         | Runtime    | Framework | Database   | ORM     | Cache | Architecture | Docker |
@@ -455,7 +455,7 @@ npm create node-app@latest blog-api -- --preset api
 CLI arguments can override individual preset fields:
 
 ```bash
-npm create node-app@latest my-api -- \
+npm create node-web@latest my-api -- \
   --preset api \
   --database postgresql
 ```
@@ -465,7 +465,7 @@ npm create node-app@latest my-api -- \
 JavaScript and TypeScript configuration files are supported:
 
 ```typescript
-// node-app.config.ts
+// node-web.config.ts
 export default {
   runtime: 'node',
   runtimeVersion: '24',
@@ -483,7 +483,7 @@ export default {
 ```
 
 ```bash
-npm create node-app@latest my-server -- --config node-app.config.ts
+npm create node-web@latest my-server -- --config node-web.config.ts
 ```
 
 Configuration precedence:
@@ -495,7 +495,7 @@ CLI arguments > Config file > Preset > Defaults
 ### CLI Reference
 
 ```text
-create-node-app <project-name> [options]
+create-node-web <project-name> [options]
 
 Options:
   --runtime <runtime>          node | bun
@@ -507,7 +507,7 @@ Options:
   --cache <cache>              redis | none
   --architecture <arch>        minimal | api | layered
   --preset <preset>            minimal | api | fullstack | microservice
-  --config <path>              path to node-app.config.ts or .js
+  --config <path>              path to node-web.config.ts or .js
   --eslint                     enable ESLint
   --prettier                   enable Prettier
   --docker                     enable Docker
@@ -520,7 +520,7 @@ Options:
 List all currently supported options:
 
 ```bash
-npm create node-app@latest -- list
+npm create node-web@latest -- list
 ```
 
 ### Generated Project
@@ -593,8 +593,8 @@ Requirements:
 - pnpm
 
 ```bash
-git clone https://github.com/yangxinpu/create-node-app.git
-cd create-node-app
+git clone https://github.com/yangxinpu/create-node-web.git
+cd create-node-web
 pnpm install
 pnpm dev
 ```
