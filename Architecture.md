@@ -525,16 +525,11 @@ Architecture 只提供业务代码组织方式，应用入口和框架路由由 
 ### 13.1 Minimal
 
 ```text
-route -> health.ts
+route -> inline health handler
 ```
 
-生成：
-
-```text
-src/health.ts
-```
-
-适合 Demo、小工具和简单服务。
+不增加额外业务文件，健康检查逻辑直接渲染到 Framework 路由中。适合 Demo、小工具
+和简单服务。
 
 ### 13.2 API
 
@@ -545,7 +540,6 @@ route -> service -> schema
 生成：
 
 ```text
-src/health.ts
 src/services/health.ts
 src/schemas/health.ts
 src/routes/.gitkeep
@@ -565,7 +559,6 @@ route -> controller -> service -> repository
 生成：
 
 ```text
-src/health.ts
 src/controllers/health.controller.ts
 src/services/health.service.ts
 src/repositories/health.repository.ts
@@ -619,22 +612,22 @@ Bun 没有正式 LTS 制度，代码、TUI 和文档中都应使用 `stable` 描
 
 ## 15. 输出职责
 
-| 输出                           | 主要负责模块      |
-| ------------------------------ | ----------------- |
-| `web/index.html`、`src/home.*` | Base Common       |
-| `src/index.*`                  | Base 或 Framework |
-| `src/routes/*`                 | Framework         |
-| `src/health.*` 和业务分层目录  | Architecture      |
-| `src/db/*`                     | Database 或 ORM   |
-| `prisma/schema.prisma`         | Prisma            |
-| `src/redis/client.*`           | Redis             |
-| `eslint.config.js`             | ESLint            |
-| `prettier.config.js`           | Prettier          |
-| `Dockerfile`                   | Docker            |
-| `.nvmrc` / `.bun-version`      | Runtime           |
-| `package.json`                 | Package Generator |
-| `.env.example`                 | Env Generator     |
-| `README.md`                    | README Generator  |
+| 输出                      | 主要负责模块      |
+| ------------------------- | ----------------- |
+| `web/index.html`          | Base Common       |
+| `src/index.*`             | Base 或 Framework |
+| `src/routes/*`            | Framework         |
+| 业务分层目录              | Architecture      |
+| `src/db/*`                | Database 或 ORM   |
+| `prisma/schema.prisma`    | Prisma            |
+| `src/redis/client.*`      | Redis             |
+| `eslint.config.js`        | ESLint            |
+| `prettier.config.js`      | Prettier          |
+| `Dockerfile`              | Docker            |
+| `.nvmrc` / `.bun-version` | Runtime           |
+| `package.json`            | Package Generator |
+| `.env.example`            | Env Generator     |
+| `README.md`               | README Generator  |
 
 这个表用于判断新文件应该归属哪个模板。Framework 不应生成 Repository，
 Architecture 不应写入 Framework 依赖。
@@ -645,16 +638,12 @@ Architecture 不应写入 Framework 依赖。
 web/index.html
     ^
     |
-src/home.*
-    ^
-    |
 GET /  <- Express / Elysia / Hono / Fastify / built-in HTTP server
 ```
 
-`base/common` 负责生成唯一的欢迎页和读取逻辑。Framework 模板只负责把 `/` 映射到
-该页面，并提供 `/api/hello` 示例接口；选择 `framework=none` 时，Base 入口使用
-Runtime 内置的 HTTP API 提供 `/`、`/api/hello` 和 `/health`。这样页面内容与服务
-框架解耦，也不会在语言模板之间复制 HTML。
+`base/common` 只负责生成唯一的欢迎页。Framework 入口直接读取该文件并把 `/`
+映射到页面，同时提供 `/api/hello` 示例接口；选择 `framework=none` 时，Base
+入口使用 Runtime 内置的 HTTP API 提供 `/`、`/api/hello` 和 `/health`。
 
 ## 16. 扩展方式
 
@@ -697,7 +686,7 @@ Runtime 内置的 HTTP API 提供 `/`、`/api/hello` 和 `/health`。这样页�
 1. 在 `ARCHITECTURES` 中注册名称。
 2. 创建 `templates/architecture/<name>`。
 3. 只添加业务组织文件，不复制 Framework 入口或路由实现。
-4. 保证所有支持的 Framework 都能通过统一 `src/health.*` 出口调用。
+4. 为健康路由使用 `healthRouteHandlerSource`，由 Renderer 接入所选 Architecture。
 
 ## 17. 测试策略
 

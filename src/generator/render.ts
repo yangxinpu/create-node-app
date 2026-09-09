@@ -130,6 +130,8 @@ export function buildTemplateVariables(context: ProjectContext): TemplateVariabl
     architecture: context.architecture,
     architectureDisplay: getDisplayLabel(context.architecture),
     toolingDisplay: tooling.length > 0 ? tooling.join(', ') : 'None',
+    healthEntryHandlerSource: buildHealthHandlerSource(context, '.'),
+    healthRouteHandlerSource: buildHealthHandlerSource(context, '..'),
   }
 
   if (context.database !== 'none') {
@@ -156,6 +158,25 @@ function getDisplayLabel(value: string): string {
   return DISPLAY_LABELS[value] ?? value
 }
 
+/** Build the health handler used directly by an entry point or framework route. */
+function buildHealthHandlerSource(context: ProjectContext, parentPath: '.' | '..'): string {
+  const extension = context.language === 'typescript' ? 'ts' : 'js'
+
+  if (context.architecture === 'api') {
+    return `import { getHealthStatus } from '${parentPath}/services/health.${extension}'`
+  }
+
+  if (context.architecture === 'layered') {
+    return `import { getHealthStatus } from '${parentPath}/controllers/health.controller.${extension}'`
+  }
+
+  return [
+    'function getHealthStatus() {',
+    "  return { status: 'ok', timestamp: new Date().toISOString() }",
+    '}',
+  ].join('\n')
+}
+
 /**
  * 替换内容中的 {{variable}} 占位符。未知变量原样保留。
  * 支持条件块：{{#if name=value}}...{{/if}}，仅当变量等于给定值时保留块内容。
@@ -173,7 +194,13 @@ export function renderContent(content: string, variables: TemplateVariables): st
     /\{\{#if\s+(\w+)=([\w-]+)\s*\}\}([\s\S]*?)\{\{\/if\}\}/g,
     renderConditional,
   )
-  return conditionalsRendered.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, key: string) => {
+  const codeBlocksRendered = conditionalsRendered.replace(
+    /\/\*\s*\{\{(\w+)\}\}\s*\*\//g,
+    (match, key: string) => {
+      return key in variables ? (variables[key] as string) : match
+    },
+  )
+  return codeBlocksRendered.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, key: string) => {
     return key in variables ? (variables[key] as string) : match
   })
 }

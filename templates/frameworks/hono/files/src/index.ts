@@ -1,12 +1,14 @@
+import { readFileSync } from 'node:fs'
+
 import { Hono } from 'hono'
 {{#if runtime=node}}
 import { serve } from '@hono/node-server'
 {{/if}}
 
-import { homePage } from './home.{{extension}}'
 import { health } from './routes/health.{{extension}}'
 
 export const app = new Hono()
+const homePage = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8')
 
 app.get('/', (context) => context.html(homePage))
 app.get('/api/hello', (context) => context.json({ message: 'Hello Node App' }))

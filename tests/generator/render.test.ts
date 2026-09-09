@@ -30,6 +30,8 @@ describe('buildTemplateVariables', () => {
     expect(vars.frameworkDisplay).toBe('Express')
     expect(vars.architectureDisplay).toBe('Minimal')
     expect(vars.toolingDisplay).toBe('ESLint, Prettier')
+    expect(vars.healthEntryHandlerSource).toContain('function getHealthStatus')
+    expect(vars.healthRouteHandlerSource).toContain('function getHealthStatus')
   })
 
   it('includes Bun-specific runtime variables', () => {
@@ -71,6 +73,16 @@ describe('buildTemplateVariables', () => {
   it('does not include drizzle variables when database is none', () => {
     const vars = buildTemplateVariables(buildContext({ database: 'none' }))
     expect(vars.drizzleDialect).toBeUndefined()
+  })
+
+  it('targets the selected architecture health layer', () => {
+    const api = buildTemplateVariables(buildContext({ architecture: 'api' }))
+    const layered = buildTemplateVariables(buildContext({ architecture: 'layered' }))
+
+    expect(api.healthEntryHandlerSource).toContain('./services/health.ts')
+    expect(api.healthRouteHandlerSource).toContain('../services/health.ts')
+    expect(layered.healthEntryHandlerSource).toContain('./controllers/health.controller.ts')
+    expect(layered.healthRouteHandlerSource).toContain('../controllers/health.controller.ts')
   })
 })
 
@@ -120,5 +132,13 @@ describe('renderContent', () => {
       "import tseslint from 'typescript-eslint'\n",
     )
     expect(renderContent(template, { language: 'javascript' })).toBe('')
+  })
+
+  it('renders comment-wrapped code variables without leaving comments', () => {
+    const result = renderContent('/* {{healthHandlerSource}} */', {
+      healthHandlerSource: "import { getHealthStatus } from '../services/health.ts'",
+    })
+
+    expect(result).toBe("import { getHealthStatus } from '../services/health.ts'")
   })
 })

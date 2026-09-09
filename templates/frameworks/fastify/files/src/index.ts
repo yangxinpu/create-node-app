@@ -1,9 +1,11 @@
+import { readFileSync } from 'node:fs'
+
 import Fastify from 'fastify'
 
-import { homePage } from './home.{{extension}}'
 import { health } from './routes/health.{{extension}}'
 
 export const app = Fastify({ logger: false })
+const homePage = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8')
 
 app.get('/', async (_request, reply) => {
   return reply.type('text/html; charset=utf-8').send(homePage)

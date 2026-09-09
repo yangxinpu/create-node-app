@@ -76,12 +76,15 @@ describe('create CLI', () => {
     expect(welcomePage).not.toContain('{{')
     const eslintConfig = await readFile(path.join(projectPath, 'eslint.config.js'), 'utf-8')
     expect(eslintConfig).not.toContain('typescript-eslint')
-    await expect(
-      readFile(path.join(projectPath, 'prettier.config.js'), 'utf-8'),
-    ).resolves.toContain("@type {import('prettier').Config}")
+    const prettierConfig = await readFile(path.join(projectPath, 'prettier.config.js'), 'utf-8')
+    expect(prettierConfig).toContain('export default')
+    expect(prettierConfig).not.toMatch(/^\s*(?:\/\/|\/\*)/m)
 
     const route = await readFile(path.join(projectPath, 'src/routes/health.js'), 'utf-8')
     expect(route).toContain('getHealthStatus')
+    expect(route).not.toMatch(/^\s*(?:\/\/|\/\*)/m)
+    await expect(readFile(path.join(projectPath, 'src/home.js'), 'utf-8')).rejects.toThrow()
+    await expect(readFile(path.join(projectPath, 'src/health.js'), 'utf-8')).rejects.toThrow()
 
     const controller = await readFile(
       path.join(projectPath, 'src/controllers/health.controller.js'),
@@ -89,5 +92,19 @@ describe('create CLI', () => {
     )
     expect(controller).not.toContain('import type')
     expect(controller).not.toContain(': HealthStatus')
+
+    for (const relativePath of [
+      'eslint.config.js',
+      'prettier.config.js',
+      'src/index.js',
+      'src/routes/health.js',
+      'src/controllers/health.controller.js',
+      'src/services/health.service.js',
+      'src/repositories/health.repository.js',
+      'src/schemas/health.js',
+    ]) {
+      const source = await readFile(path.join(projectPath, relativePath), 'utf-8')
+      expect(source, relativePath).not.toMatch(/^\s*(?:\/\/|\/\*)/m)
+    }
   })
 })

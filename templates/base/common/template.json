@@ -2,7 +2,7 @@
   "name": "common",
   "type": "base",
   "version": "1.0.0",
-  "description": "Shared welcome page and runtime helpers",
+  "description": "Shared welcome page",
   "compatibility": {
     "runtime": ["node", "bun"],
     "language": ["typescript", "javascript"]

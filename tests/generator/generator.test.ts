@@ -50,8 +50,9 @@ describe('createProject', () => {
     await expect(access(path.join(projectPath, 'src/schemas/health.ts'))).resolves.toBeUndefined()
 
     const route = await readFile(path.join(projectPath, 'src/routes/health.ts'), 'utf-8')
-    expect(route).toContain("import { getHealthStatus } from '../health.ts'")
+    expect(route).toContain("import { getHealthStatus } from '../services/health.ts'")
     expect(route).toContain('res.json(getHealthStatus())')
+    expect(route).not.toContain('/*')
     const packageJson = JSON.parse(
       await readFile(path.join(projectPath, 'package.json'), 'utf-8'),
     ) as {
@@ -79,9 +80,8 @@ describe('createProject', () => {
     expect(welcomePage).toContain('data-language="zh"')
     expect(welcomePage).not.toContain('Resolved template modules')
     expect(welcomePage).not.toContain('{{')
-    await expect(readFile(path.join(projectPath, 'src/home.ts'), 'utf-8')).resolves.toContain(
-      '../web/index.html',
-    )
+    await expect(access(path.join(projectPath, 'src/home.ts'))).rejects.toThrow()
+    await expect(access(path.join(projectPath, 'src/health.ts'))).rejects.toThrow()
     const generatedReadme = await readFile(path.join(projectPath, 'README.md'), 'utf-8')
     expect(generatedReadme).toContain('http://localhost:3000')
     expect(generatedReadme).toContain('`GET /health`')
@@ -131,8 +131,10 @@ describe('createProject', () => {
       access(path.join(projectPath, 'src/repositories/health.repository.js')),
     ).resolves.toBeUndefined()
     await expect(access(path.join(projectPath, 'src/index.ts'))).rejects.toThrow()
+    await expect(access(path.join(projectPath, 'src/home.js'))).rejects.toThrow()
+    await expect(access(path.join(projectPath, 'src/health.js'))).rejects.toThrow()
     const entry = await readFile(path.join(projectPath, 'src/index.js'), 'utf-8')
-    expect(entry).toContain('./home.js')
+    expect(entry).toContain('../web/index.html')
     expect(entry).not.toContain('{{extension}}')
 
     const controller = await readFile(
@@ -141,6 +143,8 @@ describe('createProject', () => {
     )
     expect(controller).not.toContain('import type')
     expect(controller).not.toContain(': HealthStatus')
+    const route = await readFile(path.join(projectPath, 'src/routes/health.js'), 'utf-8')
+    expect(route).toContain('../controllers/health.controller.js')
   })
 
   it('uses Bun-compatible types and Docker entrypoints for TypeScript', async () => {
@@ -191,7 +195,7 @@ describe('createProject', () => {
     })
 
     const source = await readFile(path.join(projectPath, entry), 'utf-8')
-    expect(source).toContain("import { homePage } from './home.ts'")
+    expect(source).toContain('../web/index.html')
     expect(source).toContain(marker)
     expect(source).toContain('/api/hello')
     expect(source).toContain('Hello Node App')

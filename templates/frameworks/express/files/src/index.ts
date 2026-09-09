@@ -1,9 +1,11 @@
+import { readFileSync } from 'node:fs'
+
 import express from 'express'
 
-import { homePage } from './home.{{extension}}'
 import { health } from './routes/health.{{extension}}'
 
 export const app = express()
+const homePage = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8')
 
 app.use(express.json())
 app.get('/', (_req, res) => {

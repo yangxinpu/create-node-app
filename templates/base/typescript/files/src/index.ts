@@ -1,9 +1,10 @@
+import { readFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 
-import { getHealthStatus } from './health.{{extension}}'
-import { homePage } from './home.{{extension}}'
+/* {{healthEntryHandlerSource}} */
 
 const port = Number(process.env.PORT ?? 3000)
+const homePage = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8')
 
 export const server = createServer((request, response) => {
   const pathname = request.url?.split('?')[0]

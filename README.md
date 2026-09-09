@@ -115,8 +115,8 @@ Architecture 只决定项目的代码组织方式，不绑定具体 Framework。
 
 | 选项      | 结构                                                        | 适用场景               |
 | --------- | ----------------------------------------------------------- | ---------------------- |
-| `minimal` | `health.ts`                                                 | Demo、小工具和简单服务 |
-| `api`     | `health.ts` + `services/` + `schemas/`                      | 常规后端 API           |
+| `minimal` | 健康检查直接位于 Framework 路由                             | Demo、小工具和简单服务 |
+| `api`     | `services/` + `schemas/`                                    | 常规后端 API           |
 | `layered` | `controllers/` + `services/` + `repositories/` + `schemas/` | 复杂业务和长期维护项目 |
 
 框架负责入口与路由，Architecture 负责业务代码分层，两者可以独立组合。详细设计见
@@ -425,8 +425,8 @@ framework.
 
 | Option    | Structure                                                   | Recommended for                      |
 | --------- | ----------------------------------------------------------- | ------------------------------------ |
-| `minimal` | `health.ts`                                                 | Demos, utilities, and small services |
-| `api`     | `health.ts` + `services/` + `schemas/`                      | Typical backend APIs                 |
+| `minimal` | Health logic directly in the Framework route                | Demos, utilities, and small services |
+| `api`     | `services/` + `schemas/`                                    | Typical backend APIs                 |
 | `layered` | `controllers/` + `services/` + `repositories/` + `schemas/` | Complex, long-lived applications     |
 
 Framework templates provide the application entry point and routes. Architecture templates provide

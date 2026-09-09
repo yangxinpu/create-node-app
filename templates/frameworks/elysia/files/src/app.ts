@@ -1,10 +1,13 @@
+import { readFileSync } from 'node:fs'
+
 import { Elysia } from 'elysia'
 {{#if runtime=node}}
 import { node } from '@elysiajs/node'
 {{/if}}
 
-import { homePage } from './home.{{extension}}'
 import { health } from './routes/health.{{extension}}'
+
+const homePage = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8')
 
 {{#if runtime=node}}
 export const app = new Elysia({ adapter: node() })
