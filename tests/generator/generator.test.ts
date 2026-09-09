@@ -48,6 +48,9 @@ describe('createProject', () => {
 
     await expect(access(path.join(projectPath, 'src/services/health.ts'))).resolves.toBeUndefined()
     await expect(access(path.join(projectPath, 'src/schemas/health.ts'))).resolves.toBeUndefined()
+    await expect(
+      access(path.join(projectPath, 'src/middleware/logger.ts')),
+    ).resolves.toBeUndefined()
 
     const route = await readFile(path.join(projectPath, 'src/routes/health.ts'), 'utf-8')
     expect(route).toContain("import { getHealthStatus } from '../services/health.ts'")
@@ -76,7 +79,8 @@ describe('createProject', () => {
     expect(welcomePage).toContain('<strong>Node.js 22 LTS</strong>')
     expect(welcomePage).toContain('<strong>Express</strong>')
     expect(welcomePage).toContain('<strong>API</strong>')
-    expect(welcomePage).toContain("fetch('/api/hello'")
+    expect(welcomePage).toContain("fetch('/api/greetings'")
+    expect(welcomePage).toContain('data.data.message')
     expect(welcomePage).toContain('data-language="zh"')
     expect(welcomePage).not.toContain('Resolved template modules')
     expect(welcomePage).not.toContain('{{')
@@ -84,6 +88,7 @@ describe('createProject', () => {
     await expect(access(path.join(projectPath, 'src/health.ts'))).rejects.toThrow()
     const generatedReadme = await readFile(path.join(projectPath, 'README.md'), 'utf-8')
     expect(generatedReadme).toContain('http://localhost:3000')
+    expect(generatedReadme).toContain('`GET /api/greetings`')
     expect(generatedReadme).toContain('`GET /health`')
     await expect(access(path.join(projectPath, 'tests'))).rejects.toThrow()
     await expect(access(path.join(projectPath, 'vitest.config.ts'))).rejects.toThrow()
@@ -130,6 +135,9 @@ describe('createProject', () => {
     await expect(
       access(path.join(projectPath, 'src/repositories/health.repository.js')),
     ).resolves.toBeUndefined()
+    await expect(
+      access(path.join(projectPath, 'src/middleware/logger.js')),
+    ).resolves.toBeUndefined()
     await expect(access(path.join(projectPath, 'src/index.ts'))).rejects.toThrow()
     await expect(access(path.join(projectPath, 'src/home.js'))).rejects.toThrow()
     await expect(access(path.join(projectPath, 'src/health.js'))).rejects.toThrow()
@@ -145,6 +153,10 @@ describe('createProject', () => {
     expect(controller).not.toContain(': HealthStatus')
     const route = await readFile(path.join(projectPath, 'src/routes/health.js'), 'utf-8')
     expect(route).toContain('../controllers/health.controller.js')
+    const logger = await readFile(path.join(projectPath, 'src/middleware/logger.js'), 'utf-8')
+    expect(logger).toContain('honoRequestLogger')
+    expect(logger).toContain('colors.cyan')
+    expect(logger).not.toContain('expressRequestLogger')
   })
 
   it('uses Bun-compatible types and Docker entrypoints for TypeScript', async () => {
@@ -195,10 +207,18 @@ describe('createProject', () => {
     })
 
     const source = await readFile(path.join(projectPath, entry), 'utf-8')
+    const logger = await readFile(path.join(projectPath, 'src/middleware/logger.ts'), 'utf-8')
     expect(source).toContain('../web/index.html')
     expect(source).toContain(marker)
-    expect(source).toContain('/api/hello')
+    expect(source).toContain("data: { message: 'Hello Node App' }")
     expect(source).toContain('Hello Node App')
+    expect(source).toContain('./middleware/logger.ts')
+    expect(logger).toContain('logRequest')
+    expect(logger).toContain('HTTP')
+    expect(logger).toContain('colors.cyan')
+    expect(logger).toContain('colors.green')
+    expect(logger).toContain('getStatusColor')
+    expect(logger).toContain('duration')
     await expect(readFile(path.join(projectPath, 'web/index.html'), 'utf-8')).resolves.toContain(
       'Your selected stack',
     )

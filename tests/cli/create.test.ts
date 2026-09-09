@@ -83,6 +83,11 @@ describe('create CLI', () => {
     const route = await readFile(path.join(projectPath, 'src/routes/health.js'), 'utf-8')
     expect(route).toContain('getHealthStatus')
     expect(route).not.toMatch(/^\s*(?:\/\/|\/\*)/m)
+    const logger = await readFile(path.join(projectPath, 'src/middleware/logger.js'), 'utf-8')
+    expect(logger).toContain('honoRequestLogger')
+    expect(logger).toContain('colors.cyan')
+    expect(logger).not.toContain('expressRequestLogger')
+    expect(logger).not.toMatch(/^\s*(?:\/\/|\/\*)/m)
     await expect(readFile(path.join(projectPath, 'src/home.js'), 'utf-8')).rejects.toThrow()
     await expect(readFile(path.join(projectPath, 'src/health.js'), 'utf-8')).rejects.toThrow()
 
@@ -97,6 +102,7 @@ describe('create CLI', () => {
       'eslint.config.js',
       'prettier.config.js',
       'src/index.js',
+      'src/middleware/logger.js',
       'src/routes/health.js',
       'src/controllers/health.controller.js',
       'src/services/health.service.js',

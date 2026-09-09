@@ -1,29 +1,32 @@
 import { readFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 
+import { createNodeRequestLogger } from './middleware/logger.{{extension}}'
+
 /* {{healthEntryHandlerSource}} */
 
 const port = Number(process.env.PORT ?? 3000)
 const homePage = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8')
 
 export const server = createServer((request, response) => {
-  const pathname = request.url?.split('?')[0]
+  const pathname = request.url?.split('?')[0] ?? '/'
+  createNodeRequestLogger(request, response, pathname)
 
-  if (pathname === '/') {
+  if (request.method === 'GET' && pathname === '/') {
     response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
     response.end(homePage)
     return
   }
 
-  if (pathname === '/health') {
+  if (request.method === 'GET' && pathname === '/health') {
     response.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
     response.end(JSON.stringify(getHealthStatus()))
     return
   }
 
-  if (pathname === '/api/hello') {
+  if (request.method === 'GET' && pathname === '/api/greetings') {
     response.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
-    response.end(JSON.stringify({ message: 'Hello Node App' }))
+    response.end(JSON.stringify({ data: { message: 'Hello Node App' } }))
     return
   }
 

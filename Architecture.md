@@ -528,8 +528,13 @@ Architecture 只提供业务代码组织方式，应用入口和框架路由由 
 route -> inline health handler
 ```
 
-不增加额外业务文件，健康检查逻辑直接渲染到 Framework 路由中。适合 Demo、小工具
-和简单服务。
+生成：
+
+```text
+src/middleware/logger.ts
+```
+
+健康检查逻辑直接渲染到 Framework 路由中。适合 Demo、小工具和简单服务。
 
 ### 13.2 API
 
@@ -542,6 +547,7 @@ route -> service -> schema
 ```text
 src/services/health.ts
 src/schemas/health.ts
+src/middleware/logger.ts
 src/routes/.gitkeep
 ```
 
@@ -563,6 +569,7 @@ src/controllers/health.controller.ts
 src/services/health.service.ts
 src/repositories/health.repository.ts
 src/schemas/health.ts
+src/middleware/logger.ts
 ```
 
 适合复杂业务和需要明确职责边界的长期维护项目。
@@ -615,6 +622,7 @@ Bun 没有正式 LTS 制度，代码、TUI 和文档中都应使用 `stable` 描
 | 输出                      | 主要负责模块      |
 | ------------------------- | ----------------- |
 | `web/index.html`          | Base Common       |
+| `src/middleware/logger.*` | Base Common       |
 | `src/index.*`             | Base 或 Framework |
 | `src/routes/*`            | Framework         |
 | 业务分层目录              | Architecture      |
@@ -642,8 +650,16 @@ GET /  <- Express / Elysia / Hono / Fastify / built-in HTTP server
 ```
 
 `base/common` 只负责生成唯一的欢迎页。Framework 入口直接读取该文件并把 `/`
-映射到页面，同时提供 `/api/hello` 示例接口；选择 `framework=none` 时，Base
-入口使用 Runtime 内置的 HTTP API 提供 `/`、`/api/hello` 和 `/health`。
+映射到页面，同时提供 RESTful `GET /api/greetings` 示例资源；选择
+`framework=none` 时，Base 入口使用 Runtime 内置的 HTTP API 提供 `/`、
+`/api/greetings` 和 `/health`。
+
+`src/middleware/logger.*` 按所选 Framework 条件渲染，只包含当前运行时需要的日志
+中间件。所有入口都使用各框架原生中间件或生命周期记录请求，日志格式统一为：
+
+```text
+HTTP GET     /api/greetings 200 2ms
+```
 
 ## 16. 扩展方式
 

@@ -5,13 +5,15 @@ import { Hono } from 'hono'
 import { serve } from '@hono/node-server'
 {{/if}}
 
+import { honoRequestLogger } from './middleware/logger.{{extension}}'
 import { health } from './routes/health.{{extension}}'
 
 export const app = new Hono()
 const homePage = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8')
 
+app.use('*', (context, next) => honoRequestLogger(context, next))
 app.get('/', (context) => context.html(homePage))
-app.get('/api/hello', (context) => context.json({ message: 'Hello Node App' }))
+app.get('/api/greetings', (context) => context.json({ data: { message: 'Hello Node App' } }))
 app.route('/', health)
 
 const port = Number(process.env.PORT ?? 3000)

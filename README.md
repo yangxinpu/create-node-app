@@ -25,6 +25,7 @@
 - **多种输入方式**：支持交互式 TUI、完整 CLI 参数、Preset 和配置文件。
 - **版本一致性**：运行时版本会同步到 engines、版本文件、类型依赖和 Docker 镜像。
 - **启动欢迎页**：运行后查看所选技术栈、切换中英文，并测试前后端请求。
+- **请求日志**：生成 `src/middleware/logger.*`，使用框架原生中间件记录方法、路径、状态码和耗时。
 
 ### 快速开始
 
@@ -113,11 +114,11 @@ LTS。
 
 Architecture 只决定项目的代码组织方式，不绑定具体 Framework。
 
-| 选项      | 结构                                                        | 适用场景               |
-| --------- | ----------------------------------------------------------- | ---------------------- |
-| `minimal` | 健康检查直接位于 Framework 路由                             | Demo、小工具和简单服务 |
-| `api`     | `services/` + `schemas/`                                    | 常规后端 API           |
-| `layered` | `controllers/` + `services/` + `repositories/` + `schemas/` | 复杂业务和长期维护项目 |
+| 选项      | 结构                                                                        | 适用场景               |
+| --------- | --------------------------------------------------------------------------- | ---------------------- |
+| `minimal` | `middleware/`；健康检查直接位于 Framework 路由                              | Demo、小工具和简单服务 |
+| `api`     | `middleware/` + `services/` + `schemas/`                                    | 常规后端 API           |
+| `layered` | `middleware/` + `controllers/` + `services/` + `repositories/` + `schemas/` | 复杂业务和长期维护项目 |
 
 框架负责入口与路由，Architecture 负责业务代码分层，两者可以独立组合。详细设计见
 [Architecture.md](./Architecture.md)。
@@ -244,7 +245,8 @@ my-server/
 
 实际文件由所选模块共同决定。生成项目不会附带测试框架、测试脚本或测试文件。
 启动开发服务器后，访问 [http://localhost:3000](http://localhost:3000) 可查看欢迎页；
-页面支持中英文切换，并可请求 `GET /api/hello` 显示 `Hello Node App`。
+页面支持中英文切换，并可请求 RESTful 资源 `GET /api/greetings` 显示
+`Hello Node App`。所有请求会输出方法、路径、状态码和耗时日志；
 `GET /health` 继续提供服务健康状态。
 
 运行时版本会应用到：
@@ -334,6 +336,8 @@ interactive TUI, CLI arguments, presets, or a configuration file.
   aligned.
 - **Built-in welcome page**: View the selected stack, switch languages, and test a frontend-backend
   request after starting the generated project.
+- **Request logging**: Generate `src/middleware/logger.*` and use framework-native middleware to log
+  method, path, status code, and duration.
 
 ### Quick Start
 
@@ -423,11 +427,11 @@ stable release lines rather than LTS releases.
 Architecture controls how application code is organized and remains independent from the selected
 framework.
 
-| Option    | Structure                                                   | Recommended for                      |
-| --------- | ----------------------------------------------------------- | ------------------------------------ |
-| `minimal` | Health logic directly in the Framework route                | Demos, utilities, and small services |
-| `api`     | `services/` + `schemas/`                                    | Typical backend APIs                 |
-| `layered` | `controllers/` + `services/` + `repositories/` + `schemas/` | Complex, long-lived applications     |
+| Option    | Structure                                                                   | Recommended for                      |
+| --------- | --------------------------------------------------------------------------- | ------------------------------------ |
+| `minimal` | `middleware/`; health logic directly in the Framework route                 | Demos, utilities, and small services |
+| `api`     | `middleware/` + `services/` + `schemas/`                                    | Typical backend APIs                 |
+| `layered` | `middleware/` + `controllers/` + `services/` + `repositories/` + `schemas/` | Complex, long-lived applications     |
 
 Framework templates provide the application entry point and routes. Architecture templates provide
 the business-layer organization. See [Architecture.md](./Architecture.md) for the complete design.
@@ -557,8 +561,9 @@ The exact output depends on the selected modules. Generated projects do not incl
 framework, test scripts, or test files.
 After starting the development server, open
 [http://localhost:3000](http://localhost:3000) to view the welcome page. It supports English/Chinese
-switching and can call `GET /api/hello` to display `Hello Node App`. The service health status
-remains available from `GET /health`.
+switching and can call the RESTful `GET /api/greetings` resource to display `Hello Node App`.
+Every request logs its method, path, status code, and duration. The service health status remains
+available from `GET /health`.
 
 The selected runtime version is applied to:
 
