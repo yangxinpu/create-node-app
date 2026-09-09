@@ -1,0 +1,97 @@
+:root {
+  --page: #f3fbfa;
+  --surface: #ffffff;
+  --surface-soft: #eefbf9;
+  --heading: #0f172a;
+  --text: #263238;
+  --muted: #53656d;
+  --subtle: #7b8b93;
+  --meta-text: #34464d;
+  --border: #d4e7e4;
+  --accent: #14c7b5;
+  --accent-strong: #0f9f92;
+  --accent-soft: rgba(20, 199, 181, 0.11);
+  --accent-border: rgba(20, 199, 181, 0.28);
+  --accent-ring: rgba(20, 199, 181, 0.18);
+  --hero-tint: rgba(20, 199, 181, 0.13);
+  --topbar: #050607;
+  --topbar-text: #f6f8fa;
+  --topbar-muted: #9aa7a6;
+  --topbar-field: #101817;
+  --topbar-border: #1f3331;
+  --code-bg: #0d1117;
+  --code-border: #30363d;
+  --code-text: #d1d9e0;
+  --block-shadow: 16px 16px 0 rgba(20, 199, 181, 0.13);
+  --soft-shadow: 0 14px 34px rgba(15, 23, 42, 0.07);
+  --sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --mono:
+    'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+
+  color: var(--text);
+  background: var(--page);
+  font-family: var(--sans);
+  font-size: 16px;
+  font-synthesis: none;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[data-theme='dark'] {
+  --page: #050607;
+  --surface: #0d1114;
+  --surface-soft: #081a18;
+  --heading: #f8fafc;
+  --text: #d1d9e0;
+  --muted: #a7b0b8;
+  --subtle: #77818a;
+  --meta-text: #d1d9e0;
+  --border: #1e3835;
+  --accent: #18d3c0;
+  --accent-strong: #12b3a3;
+  --accent-soft: rgba(24, 211, 192, 0.13);
+  --accent-border: rgba(24, 211, 192, 0.3);
+  --accent-ring: rgba(24, 211, 192, 0.18);
+  --hero-tint: rgba(24, 211, 192, 0.11);
+  --topbar: #000000;
+  --topbar-text: #f0f6fc;
+  --topbar-muted: #829492;
+  --topbar-field: #07110f;
+  --topbar-border: #1e3835;
+  --code-bg: #0d1117;
+  --code-border: #1e3835;
+  --code-text: #d9fffb;
+  --block-shadow: 16px 16px 0 rgba(24, 211, 192, 0.1);
+  --soft-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  letter-spacing: 0;
+}
+
+#root {
+  min-height: 100vh;
+}
