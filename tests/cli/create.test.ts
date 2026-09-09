@@ -70,7 +70,7 @@ describe('create CLI', () => {
     expect(packageJson.scripts.test).toBeUndefined()
     expect(packageJson.devDependencies?.vitest).toBeUndefined()
     await expect(readFile(path.join(projectPath, '.bun-version'), 'utf-8')).resolves.toBe('1.3\n')
-    const welcomePage = await readFile(path.join(projectPath, 'index.html'), 'utf-8')
+    const welcomePage = await readFile(path.join(projectPath, 'web/index.html'), 'utf-8')
     expect(welcomePage).toContain('<h1 id="project-title">cli-app</h1>')
     expect(welcomePage).toContain('<strong>Bun 1.3 stable</strong>')
     expect(welcomePage).not.toContain('{{')

@@ -1,1 +1,1 @@
-export { getHealthStatus } from './services/health.js'
+export { getHealthStatus } from './services/health.{{extension}}'

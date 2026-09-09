@@ -424,7 +424,8 @@ cli → context → validation → resolver → generator → merger → runtime
 8. **生成项目不附带测试** —— Vitest 只用于脚手架仓库自身测试，不提供 testing 模板或 `--test` 参数
 9. **数据库范围固定** —— 仅支持 MySQL、PostgreSQL、MongoDB 和 none，不提供 SQLite 选项
 10. **运行时版本一致** —— 所选版本必须同步到 engines、版本文件、类型依赖和 Docker 镜像；Bun 稳定版本不得标记为 LTS
-11. **欢迎页保持共享** —— `base/common` 统一生成 `index.html` 和 `src/home.*`；Framework 只负责提供根路由
+11. **欢迎页保持共享** —— `base/common` 统一生成 `web/index.html` 和 `src/home.*`；Framework 只负责提供根路由和 `/api/hello`
+12. **TypeScript 源码可直接运行** —— 相对导入使用 `.ts` 后缀，并通过 `rewriteRelativeImportExtensions` 在构建时改写为 `.js`；JavaScript 模板通过 `{{extension}}` 生成 `.js` 导入
 
 ---
 

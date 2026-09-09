@@ -20,6 +20,12 @@ export const server = createServer((request, response) => {
     return
   }
 
+  if (pathname === '/api/hello') {
+    response.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
+    response.end(JSON.stringify({ message: 'Hello Node App' }))
+    return
+  }
+
   response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' })
   response.end('Not found')
 })

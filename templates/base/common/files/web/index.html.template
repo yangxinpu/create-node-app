@@ -33,8 +33,10 @@
         background: #f5f7f8;
       }
 
+      button,
       a {
         color: inherit;
+        font: inherit;
       }
 
       .shell {
@@ -44,7 +46,7 @@
 
       .topbar {
         border-bottom: 1px solid #d7dde2;
-        background: rgba(245, 247, 248, 0.94);
+        background: rgba(245, 247, 248, 0.96);
       }
 
       .topbar-inner {
@@ -75,10 +77,38 @@
         font-size: 12px;
       }
 
-      .topbar-meta {
+      .language-switch {
+        display: inline-flex;
+        height: 34px;
+        align-items: center;
+        border: 1px solid #cbd2d9;
+        border-radius: 6px;
+        padding: 3px;
+        background: #ffffff;
+      }
+
+      .language-switch button {
+        min-width: 42px;
+        height: 26px;
+        border: 0;
+        border-radius: 4px;
+        padding: 0 9px;
+        background: transparent;
         color: #667085;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        font-size: 13px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .language-switch button[aria-pressed='true'] {
+        background: #e8edf0;
+        color: #17191d;
+      }
+
+      .language-switch button:focus-visible,
+      .action:focus-visible {
+        outline: 3px solid rgba(8, 145, 178, 0.3);
+        outline-offset: 2px;
       }
 
       main {
@@ -91,25 +121,6 @@
         gap: 64px;
         align-items: center;
         padding-bottom: 64px;
-      }
-
-      .eyebrow {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        margin: 0 0 18px;
-        color: #166534;
-        font-size: 13px;
-        font-weight: 750;
-        text-transform: uppercase;
-      }
-
-      .status-dot {
-        width: 9px;
-        height: 9px;
-        border-radius: 50%;
-        background: #16a34a;
-        box-shadow: 0 0 0 4px #dcfce7;
       }
 
       h1,
@@ -146,11 +157,13 @@
         min-height: 42px;
         align-items: center;
         justify-content: center;
+        gap: 9px;
         border: 1px solid #c7ced6;
         border-radius: 6px;
         padding: 0 16px;
         background: #ffffff;
         color: #25282d;
+        cursor: pointer;
         font-size: 14px;
         font-weight: 700;
         text-decoration: none;
@@ -161,18 +174,67 @@
       }
 
       .action:hover {
-        border-color: #18181b;
+        border-color: #64748b;
         background: #f9fafb;
       }
 
-      .action.primary {
-        border-color: #18181b;
-        background: #18181b;
+      .action.request {
+        border-color: #047857;
+        background: #047857;
         color: #ffffff;
       }
 
-      .action.primary:hover {
-        background: #303238;
+      .action.request:hover {
+        border-color: #065f46;
+        background: #065f46;
+      }
+
+      .action:disabled {
+        cursor: wait;
+        opacity: 0.65;
+      }
+
+      .action svg {
+        width: 18px;
+        height: 18px;
+        flex: none;
+        stroke-width: 2;
+      }
+
+      .response-box {
+        display: grid;
+        min-height: 62px;
+        grid-template-columns: 120px minmax(0, 1fr);
+        align-items: center;
+        gap: 16px;
+        margin-top: 16px;
+        border: 1px solid #d2d8de;
+        border-radius: 6px;
+        padding: 12px 16px;
+        background: #ffffff;
+      }
+
+      .response-box span {
+        color: #78828e;
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .response-box output {
+        color: #1e2024;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+
+      .response-box output[data-state='success'] {
+        color: #047857;
+        font-weight: 750;
+      }
+
+      .response-box output[data-state='error'] {
+        color: #b91c1c;
       }
 
       .runtime-panel {
@@ -251,32 +313,13 @@
       }
 
       .section-heading {
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        gap: 24px;
         margin-bottom: 20px;
-      }
-
-      .section-label {
-        margin-bottom: 7px;
-        color: #7c3aed;
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
       }
 
       h2 {
         margin-bottom: 0;
         font-size: 26px;
         line-height: 1.25;
-      }
-
-      .module-count {
-        flex: none;
-        color: #667085;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        font-size: 13px;
       }
 
       .stack-grid {
@@ -308,44 +351,6 @@
         color: #1e2024;
         font-size: 17px;
         line-height: 1.35;
-        overflow-wrap: anywhere;
-      }
-
-      .stack-item:nth-child(4n + 1) {
-        border-top: 3px solid #16a34a;
-      }
-
-      .stack-item:nth-child(4n + 2) {
-        border-top: 3px solid #0891b2;
-      }
-
-      .stack-item:nth-child(4n + 3) {
-        border-top: 3px solid #d97706;
-      }
-
-      .stack-item:nth-child(4n + 4) {
-        border-top: 3px solid #c026d3;
-      }
-
-      .modules {
-        margin-top: 28px;
-        border-left: 3px solid #18181b;
-        padding: 4px 0 4px 18px;
-      }
-
-      .modules span {
-        display: block;
-        margin-bottom: 8px;
-        color: #667085;
-        font-size: 13px;
-        font-weight: 700;
-      }
-
-      .modules code {
-        color: #333840;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        font-size: 13px;
-        line-height: 1.8;
         overflow-wrap: anywhere;
       }
 
@@ -393,10 +398,6 @@
           min-height: 58px;
         }
 
-        .topbar-meta {
-          display: none;
-        }
-
         main {
           padding-top: 36px;
         }
@@ -417,10 +418,9 @@
           width: 100%;
         }
 
-        .section-heading {
-          align-items: start;
-          flex-direction: column;
-          gap: 8px;
+        .response-box {
+          grid-template-columns: 1fr;
+          gap: 6px;
         }
 
         .stack-grid {
@@ -445,29 +445,63 @@
           <span class="brand-mark" aria-hidden="true">CNA</span>
           <span>create-node-app</span>
         </div>
-        <span class="topbar-meta">{{architectureDisplay}} architecture</span>
+        <div class="language-switch" role="group" aria-label="Language / 语言">
+          <button type="button" data-language="en" aria-pressed="true">EN</button>
+          <button type="button" data-language="zh" aria-pressed="false">中文</button>
+        </div>
       </div>
     </header>
 
     <main class="shell">
       <section class="intro" aria-labelledby="project-title">
         <div>
-          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>Server ready</p>
           <h1 id="project-title">{{projectName}}</h1>
-          <p class="lede">
+          <p class="lede" data-i18n="intro">
             Your generated backend is running. The selected stack is wired together and ready for
             application code.
           </p>
           <div class="actions">
-            <a class="action primary" href="/health">Open health endpoint</a>
+            <button id="hello-button" class="action request" type="button">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m22 2-7 20-4-9-9-4Z"></path>
+                <path d="M22 2 11 13"></path>
+              </svg>
+              <span data-i18n="requestGreeting">Request greeting</span>
+            </button>
             <a
               class="action"
               href="https://github.com/yangxinpu/create-node-app"
               target="_blank"
               rel="noreferrer"
             >
-              View generator
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4 5 5 0 0 0 19.3.5S18.2.1 15 1.8a13.4 13.4 0 0 0-7 0C4.8.1 3.7.5 3.7.5A5 5 0 0 0 3.6 4a5.4 5.4 0 0 0-1.4 3.7c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4"
+                ></path>
+                <path d="M8 19c-3 .9-3-1.5-4-2"></path>
+              </svg>
+              <span data-i18n="viewGenerator">View on GitHub</span>
             </a>
+          </div>
+          <div class="response-box" aria-live="polite">
+            <span data-i18n="responseLabel">Backend response</span>
+            <output id="hello-output" data-state="idle" data-i18n="responseIdle">
+              Waiting for a request
+            </output>
           </div>
         </div>
 
@@ -477,72 +511,178 @@
             <span></span>
             <span></span>
           </div>
-          <p class="terminal-label">Runtime</p>
+          <p class="terminal-label" data-i18n="runtime">Runtime</p>
           <p class="runtime-value">{{runtimeDisplay}}</p>
-          <div id="health-state" class="health-state" aria-live="polite">Checking /health</div>
+          <div id="health-state" class="health-state" aria-live="polite" data-state="loading">
+            <span data-i18n="healthChecking">Checking /health</span>
+          </div>
         </aside>
       </section>
 
       <section aria-labelledby="stack-title">
         <div class="section-heading">
-          <div>
-            <p class="section-label">Configuration</p>
-            <h2 id="stack-title">Your selected stack</h2>
-          </div>
-          <span class="module-count">{{templateCount}} template modules</span>
+          <h2 id="stack-title" data-i18n="selectedStack">Your selected stack</h2>
         </div>
 
         <div class="stack-grid">
           <article class="stack-item">
-            <span>Runtime</span>
+            <span data-i18n="runtime">Runtime</span>
             <strong>{{runtimeDisplay}}</strong>
           </article>
           <article class="stack-item">
-            <span>Language</span>
+            <span data-i18n="language">Language</span>
             <strong>{{languageDisplay}}</strong>
           </article>
           <article class="stack-item">
-            <span>Framework</span>
+            <span data-i18n="framework">Framework</span>
             <strong>{{frameworkDisplay}}</strong>
           </article>
           <article class="stack-item">
-            <span>Architecture</span>
+            <span data-i18n="architecture">Architecture</span>
             <strong>{{architectureDisplay}}</strong>
           </article>
           <article class="stack-item">
-            <span>Database</span>
+            <span data-i18n="database">Database</span>
             <strong>{{databaseDisplay}}</strong>
           </article>
           <article class="stack-item">
-            <span>ORM</span>
+            <span data-i18n="orm">ORM</span>
             <strong>{{ormDisplay}}</strong>
           </article>
           <article class="stack-item">
-            <span>Cache</span>
+            <span data-i18n="cache">Cache</span>
             <strong>{{cacheDisplay}}</strong>
           </article>
           <article class="stack-item">
-            <span>Tooling</span>
+            <span data-i18n="tooling">Tooling</span>
             <strong>{{toolingDisplay}}</strong>
           </article>
-        </div>
-
-        <div class="modules">
-          <span>Resolved template modules</span>
-          <code>{{selectedTemplates}}</code>
         </div>
       </section>
     </main>
 
     <footer>
       <div class="shell">
-        Generated with
+        <span data-i18n="generatedWith">Generated with</span>
         <a href="https://github.com/yangxinpu/create-node-app">create-node-app</a>.
       </div>
     </footer>
 
     <script>
+      const messages = {
+        en: {
+          intro:
+            'Your generated backend is running. The selected stack is wired together and ready for application code.',
+          requestGreeting: 'Request greeting',
+          viewGenerator: 'View on GitHub',
+          responseLabel: 'Backend response',
+          responseIdle: 'Waiting for a request',
+          responseLoading: 'Requesting...',
+          responseError: 'Request failed',
+          runtime: 'Runtime',
+          healthChecking: 'Checking /health',
+          healthHealthy: 'Healthy /health endpoint',
+          healthResponded: 'Health endpoint responded',
+          healthUnavailable: 'Health endpoint unavailable',
+          selectedStack: 'Your selected stack',
+          language: 'Language',
+          framework: 'Framework',
+          architecture: 'Architecture',
+          database: 'Database',
+          orm: 'ORM',
+          cache: 'Cache',
+          tooling: 'Tooling',
+          generatedWith: 'Generated with',
+        },
+        zh: {
+          intro: '生成的后端服务已启动，所选技术栈已完成组合，可以开始编写应用代码。',
+          requestGreeting: '请求后端',
+          viewGenerator: '查看 GitHub',
+          responseLabel: '后端响应',
+          responseIdle: '等待发起请求',
+          responseLoading: '请求中...',
+          responseError: '请求失败',
+          runtime: '运行时',
+          healthChecking: '正在检查 /health',
+          healthHealthy: '/health 运行正常',
+          healthResponded: '健康检查已响应',
+          healthUnavailable: '健康检查不可用',
+          selectedStack: '已选择的技术栈',
+          language: '语言',
+          framework: '框架',
+          architecture: '项目结构',
+          database: '数据库',
+          orm: 'ORM',
+          cache: '缓存',
+          tooling: '工程工具',
+          generatedWith: '生成工具',
+        },
+      }
+
+      const languageButtons = document.querySelectorAll('[data-language]')
+      const helloButton = document.querySelector('#hello-button')
+      const helloOutput = document.querySelector('#hello-output')
       const healthState = document.querySelector('#health-state')
+      let currentLanguage = navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en'
+      let healthResult = 'healthChecking'
+      let responseState = 'idle'
+
+      function translatePage(language) {
+        currentLanguage = language
+        document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en'
+
+        document.querySelectorAll('[data-i18n]').forEach((element) => {
+          const key = element.dataset.i18n
+          if (key && messages[language][key]) {
+            element.textContent = messages[language][key]
+          }
+        })
+
+        languageButtons.forEach((button) => {
+          button.setAttribute('aria-pressed', String(button.dataset.language === language))
+        })
+
+        healthState.querySelector('span').textContent = messages[language][healthResult]
+        if (responseState !== 'success') {
+          const responseKey =
+            responseState === 'loading'
+              ? 'responseLoading'
+              : responseState === 'error'
+                ? 'responseError'
+                : 'responseIdle'
+          helloOutput.textContent = messages[language][responseKey]
+        }
+      }
+
+      languageButtons.forEach((button) => {
+        button.addEventListener('click', () => translatePage(button.dataset.language))
+      })
+
+      helloButton.addEventListener('click', () => {
+        responseState = 'loading'
+        helloButton.disabled = true
+        helloOutput.dataset.state = 'loading'
+        helloOutput.textContent = messages[currentLanguage].responseLoading
+
+        fetch('/api/hello', { headers: { accept: 'application/json' } })
+          .then((response) => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`)
+            return response.json()
+          })
+          .then((data) => {
+            responseState = 'success'
+            helloOutput.dataset.state = 'success'
+            helloOutput.textContent = data.message
+          })
+          .catch(() => {
+            responseState = 'error'
+            helloOutput.dataset.state = 'error'
+            helloOutput.textContent = messages[currentLanguage].responseError
+          })
+          .finally(() => {
+            helloButton.disabled = false
+          })
+      })
 
       fetch('/health', { headers: { accept: 'application/json' } })
         .then((response) => {
@@ -550,13 +690,17 @@
           return response.json()
         })
         .then((health) => {
-          healthState.textContent =
-            health.status === 'ok' ? 'Healthy /health endpoint' : 'Health endpoint responded'
+          healthResult = health.status === 'ok' ? 'healthHealthy' : 'healthResponded'
+          healthState.querySelector('span').textContent = messages[currentLanguage][healthResult]
+          healthState.dataset.state = 'success'
         })
         .catch(() => {
+          healthResult = 'healthUnavailable'
+          healthState.querySelector('span').textContent = messages[currentLanguage][healthResult]
           healthState.dataset.state = 'error'
-          healthState.textContent = 'Health endpoint unavailable'
         })
+
+      translatePage(currentLanguage)
     </script>
   </body>
 </html>

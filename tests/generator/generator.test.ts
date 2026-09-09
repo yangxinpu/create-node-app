@@ -50,7 +50,7 @@ describe('createProject', () => {
     await expect(access(path.join(projectPath, 'src/schemas/health.ts'))).resolves.toBeUndefined()
 
     const route = await readFile(path.join(projectPath, 'src/routes/health.ts'), 'utf-8')
-    expect(route).toContain("import { getHealthStatus } from '../health.js'")
+    expect(route).toContain("import { getHealthStatus } from '../health.ts'")
     expect(route).toContain('res.json(getHealthStatus())')
     const packageJson = JSON.parse(
       await readFile(path.join(projectPath, 'package.json'), 'utf-8'),
@@ -60,17 +60,28 @@ describe('createProject', () => {
     }
     expect(packageJson.engines).toEqual({ node: '>=22.0.0 <23.0.0' })
     expect(packageJson.devDependencies['@types/node']).toBe('^22.0.0')
+    const tsconfig = JSON.parse(
+      await readFile(path.join(projectPath, 'tsconfig.json'), 'utf-8'),
+    ) as {
+      compilerOptions: { rewriteRelativeImportExtensions: boolean }
+    }
+    expect(tsconfig.compilerOptions.rewriteRelativeImportExtensions).toBe(true)
     await expect(readFile(path.join(projectPath, '.nvmrc'), 'utf-8')).resolves.toBe('22\n')
     const dockerfile = await readFile(path.join(projectPath, 'Dockerfile'), 'utf-8')
     expect(dockerfile).toContain('FROM node:22-alpine')
-    expect(dockerfile).toContain('COPY --from=builder /app/index.html ./index.html')
-    const welcomePage = await readFile(path.join(projectPath, 'index.html'), 'utf-8')
+    expect(dockerfile).toContain('COPY --from=builder /app/web ./web')
+    const welcomePage = await readFile(path.join(projectPath, 'web/index.html'), 'utf-8')
     expect(welcomePage).toContain('<h1 id="project-title">generated-app</h1>')
     expect(welcomePage).toContain('<strong>Node.js 22 LTS</strong>')
     expect(welcomePage).toContain('<strong>Express</strong>')
     expect(welcomePage).toContain('<strong>API</strong>')
-    expect(welcomePage).toContain('base/common / base/typescript / runtimes/node')
+    expect(welcomePage).toContain("fetch('/api/hello'")
+    expect(welcomePage).toContain('data-language="zh"')
+    expect(welcomePage).not.toContain('Resolved template modules')
     expect(welcomePage).not.toContain('{{')
+    await expect(readFile(path.join(projectPath, 'src/home.ts'), 'utf-8')).resolves.toContain(
+      '../web/index.html',
+    )
     const generatedReadme = await readFile(path.join(projectPath, 'README.md'), 'utf-8')
     expect(generatedReadme).toContain('http://localhost:3000')
     expect(generatedReadme).toContain('`GET /health`')
@@ -107,7 +118,7 @@ describe('createProject', () => {
     expect(dockerfile).toContain('FROM oven/bun:1.3-alpine')
     expect(dockerfile).toContain('CMD ["bun", "src/index.js"]')
     expect(dockerfile).not.toContain('FROM node:')
-    const welcomePage = await readFile(path.join(projectPath, 'index.html'), 'utf-8')
+    const welcomePage = await readFile(path.join(projectPath, 'web/index.html'), 'utf-8')
     expect(welcomePage).toContain('<strong>Bun 1.3 stable</strong>')
     expect(welcomePage).toContain('<strong>Hono</strong>')
     expect(welcomePage).toContain('<strong>Layered</strong>')
@@ -120,6 +131,9 @@ describe('createProject', () => {
       access(path.join(projectPath, 'src/repositories/health.repository.js')),
     ).resolves.toBeUndefined()
     await expect(access(path.join(projectPath, 'src/index.ts'))).rejects.toThrow()
+    const entry = await readFile(path.join(projectPath, 'src/index.js'), 'utf-8')
+    expect(entry).toContain('./home.js')
+    expect(entry).not.toContain('{{extension}}')
 
     const controller = await readFile(
       path.join(projectPath, 'src/controllers/health.controller.js'),
@@ -177,9 +191,11 @@ describe('createProject', () => {
     })
 
     const source = await readFile(path.join(projectPath, entry), 'utf-8')
-    expect(source).toContain("import { homePage } from './home.js'")
+    expect(source).toContain("import { homePage } from './home.ts'")
     expect(source).toContain(marker)
-    await expect(readFile(path.join(projectPath, 'index.html'), 'utf-8')).resolves.toContain(
+    expect(source).toContain('/api/hello')
+    expect(source).toContain('Hello Node App')
+    await expect(readFile(path.join(projectPath, 'web/index.html'), 'utf-8')).resolves.toContain(
       'Your selected stack',
     )
   })

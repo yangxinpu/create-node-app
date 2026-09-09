@@ -1,1 +1,1 @@
-export { getHealthStatus } from './controllers/health.controller.js'
+export { getHealthStatus } from './controllers/health.controller.{{extension}}'

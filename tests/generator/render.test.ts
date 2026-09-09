@@ -30,9 +30,6 @@ describe('buildTemplateVariables', () => {
     expect(vars.frameworkDisplay).toBe('Express')
     expect(vars.architectureDisplay).toBe('Minimal')
     expect(vars.toolingDisplay).toBe('ESLint, Prettier')
-    expect(vars.selectedTemplates).toContain('base/common')
-    expect(vars.selectedTemplates).toContain('frameworks/express')
-    expect(vars.templateCount).toBe('7')
   })
 
   it('includes Bun-specific runtime variables', () => {

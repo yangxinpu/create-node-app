@@ -1,4 +1,4 @@
 {{drizzleClientImports}}
-import * as schema from './schema.js'
+import * as schema from './schema.{{extension}}'
 
 {{drizzleClientInit}}

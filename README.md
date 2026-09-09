@@ -24,7 +24,7 @@
 - **工程化配置**：可选 ESLint、Prettier、Docker、依赖安装和 Git 初始化。
 - **多种输入方式**：支持交互式 TUI、完整 CLI 参数、Preset 和配置文件。
 - **版本一致性**：运行时版本会同步到 engines、版本文件、类型依赖和 Docker 镜像。
-- **启动欢迎页**：运行生成项目后，在浏览器中查看所选技术栈和模板模块。
+- **启动欢迎页**：运行后查看所选技术栈、切换中英文，并测试前后端请求。
 
 ### 快速开始
 
@@ -231,7 +231,8 @@ my-server/
 ├── .env.example
 ├── .gitignore
 ├── .nvmrc
-├── index.html                  # 项目欢迎页与技术栈概览
+├── web/
+│   └── index.html              # 项目欢迎页与技术栈概览
 ├── Dockerfile
 ├── drizzle.config.ts
 ├── eslint.config.js
@@ -243,6 +244,7 @@ my-server/
 
 实际文件由所选模块共同决定。生成项目不会附带测试框架、测试脚本或测试文件。
 启动开发服务器后，访问 [http://localhost:3000](http://localhost:3000) 可查看欢迎页；
+页面支持中英文切换，并可请求 `GET /api/hello` 显示 `Hello Node App`。
 `GET /health` 继续提供服务健康状态。
 
 运行时版本会应用到：
@@ -330,8 +332,8 @@ interactive TUI, CLI arguments, presets, or a configuration file.
   configuration file.
 - **Consistent runtime versions**: Keeps engines, version files, runtime types, and Docker images
   aligned.
-- **Built-in welcome page**: View the selected stack and resolved template modules after starting
-  the generated project.
+- **Built-in welcome page**: View the selected stack, switch languages, and test a frontend-backend
+  request after starting the generated project.
 
 ### Quick Start
 
@@ -540,7 +542,8 @@ my-server/
 ├── .env.example
 ├── .gitignore
 ├── .nvmrc
-├── index.html
+├── web/
+│   └── index.html
 ├── Dockerfile
 ├── drizzle.config.ts
 ├── eslint.config.js
@@ -553,7 +556,8 @@ my-server/
 The exact output depends on the selected modules. Generated projects do not include a test
 framework, test scripts, or test files.
 After starting the development server, open
-[http://localhost:3000](http://localhost:3000) to view the welcome page. The service health status
+[http://localhost:3000](http://localhost:3000) to view the welcome page. It supports English/Chinese
+switching and can call `GET /api/hello` to display `Hello Node App`. The service health status
 remains available from `GET /health`.
 
 The selected runtime version is applied to:

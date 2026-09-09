@@ -333,7 +333,6 @@ interface TemplateMeta {
 | `dockerVariant`       | `node-typescript`  | Docker 条件分支         |
 | `extension`           | `ts`               | 入口文件扩展名          |
 | `database`            | `postgresql`       | Database 条件和动态配置 |
-| `selectedTemplates`   | `base/common / …`  | 欢迎页展示实际模板组合  |
 | `toolingDisplay`      | `ESLint, Prettier` | 欢迎页展示工程化配置    |
 
 Prisma 和 Drizzle 还会根据 Database 生成 provider、dialect、schema 和客户端代码。
@@ -370,11 +369,23 @@ eslint.config.js.template -> eslint.config.js
 _Dockerfile.template -> Dockerfile
 ```
 
-### 8.4 JavaScript 输出
+### 8.4 TypeScript 相对导入
+
+TypeScript 项目的相对导入使用 `.ts` 后缀，使 Node.js 22/24 和 Bun 能直接执行源码：
+
+```typescript
+import { app } from './app.ts'
+```
+
+`tsconfig.json` 启用 `rewriteRelativeImportExtensions`。执行 `tsc` 后，构建产物中的
+相对导入会自动改写为 `.js`，因此 `node dist/index.js` 仍使用标准 ESM 路径。
+
+### 8.5 JavaScript 输出
 
 模板源码主要以 TypeScript 编写。JavaScript 模式下：
 
 - `.ts`、`.mts`、`.cts` 分别映射为 `.js`、`.mjs`、`.cjs`。
+- `{{extension}}` 会渲染为 `js`，确保相对导入指向生成后的 JavaScript 文件。
 - 使用 esbuild 移除类型语法并输出 ESM。
 - 跳过 `tsconfig.json`。
 - 从依赖中移除 TypeScript 工具链和 `@types/*`。
@@ -608,22 +619,22 @@ Bun 没有正式 LTS 制度，代码、TUI 和文档中都应使用 `stable` 描
 
 ## 15. 输出职责
 
-| 输出                          | 主要负责模块      |
-| ----------------------------- | ----------------- |
-| `index.html`、`src/home.*`    | Base Common       |
-| `src/index.*`                 | Base 或 Framework |
-| `src/routes/*`                | Framework         |
-| `src/health.*` 和业务分层目录 | Architecture      |
-| `src/db/*`                    | Database 或 ORM   |
-| `prisma/schema.prisma`        | Prisma            |
-| `src/redis/client.*`          | Redis             |
-| `eslint.config.js`            | ESLint            |
-| `prettier.config.js`          | Prettier          |
-| `Dockerfile`                  | Docker            |
-| `.nvmrc` / `.bun-version`     | Runtime           |
-| `package.json`                | Package Generator |
-| `.env.example`                | Env Generator     |
-| `README.md`                   | README Generator  |
+| 输出                           | 主要负责模块      |
+| ------------------------------ | ----------------- |
+| `web/index.html`、`src/home.*` | Base Common       |
+| `src/index.*`                  | Base 或 Framework |
+| `src/routes/*`                 | Framework         |
+| `src/health.*` 和业务分层目录  | Architecture      |
+| `src/db/*`                     | Database 或 ORM   |
+| `prisma/schema.prisma`         | Prisma            |
+| `src/redis/client.*`           | Redis             |
+| `eslint.config.js`             | ESLint            |
+| `prettier.config.js`           | Prettier          |
+| `Dockerfile`                   | Docker            |
+| `.nvmrc` / `.bun-version`      | Runtime           |
+| `package.json`                 | Package Generator |
+| `.env.example`                 | Env Generator     |
+| `README.md`                    | README Generator  |
 
 这个表用于判断新文件应该归属哪个模板。Framework 不应生成 Repository，
 Architecture 不应写入 Framework 依赖。
@@ -631,7 +642,7 @@ Architecture 不应写入 Framework 依赖。
 欢迎页请求链路：
 
 ```text
-index.html
+web/index.html
     ^
     |
 src/home.*
@@ -641,8 +652,9 @@ GET /  <- Express / Elysia / Hono / Fastify / built-in HTTP server
 ```
 
 `base/common` 负责生成唯一的欢迎页和读取逻辑。Framework 模板只负责把 `/` 映射到
-该页面；选择 `framework=none` 时，Base 入口使用 Runtime 内置的 HTTP API 提供 `/`
-和 `/health`。这样页面内容与服务框架解耦，也不会在语言模板之间复制 HTML。
+该页面，并提供 `/api/hello` 示例接口；选择 `framework=none` 时，Base 入口使用
+Runtime 内置的 HTTP API 提供 `/`、`/api/hello` 和 `/health`。这样页面内容与服务
+框架解耦，也不会在语言模板之间复制 HTML。
 
 ## 16. 扩展方式
 

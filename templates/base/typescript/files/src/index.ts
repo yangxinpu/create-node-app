@@ -1,7 +1,7 @@
 import { createServer } from 'node:http'
 
-import { getHealthStatus } from './health.js'
-import { homePage } from './home.js'
+import { getHealthStatus } from './health.{{extension}}'
+import { homePage } from './home.{{extension}}'
 
 const port = Number(process.env.PORT ?? 3000)
 
@@ -17,6 +17,12 @@ export const server = createServer((request, response) => {
   if (pathname === '/health') {
     response.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
     response.end(JSON.stringify(getHealthStatus()))
+    return
+  }
+
+  if (pathname === '/api/hello') {
+    response.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
+    response.end(JSON.stringify({ message: 'Hello Node App' }))
     return
   }
 

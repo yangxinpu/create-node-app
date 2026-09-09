@@ -1,5 +1,4 @@
 import type { ProjectContext } from '../context/types.js'
-import { resolveTemplates } from '../resolver/template.js'
 
 /**
  * 模板变量表。模板文件中的 {{variable}} 占位符会被这里的值替换。
@@ -93,7 +92,6 @@ const DRIZZLE: Record<string, DrizzleProfile> = {
  * 从 ProjectContext 计算模板变量。
  */
 export function buildTemplateVariables(context: ProjectContext): TemplateVariables {
-  const selectedTemplates = resolveTemplates(context)
   const tooling = [
     context.eslint ? 'ESLint' : '',
     context.prettier ? 'Prettier' : '',
@@ -132,8 +130,6 @@ export function buildTemplateVariables(context: ProjectContext): TemplateVariabl
     architecture: context.architecture,
     architectureDisplay: getDisplayLabel(context.architecture),
     toolingDisplay: tooling.length > 0 ? tooling.join(', ') : 'None',
-    selectedTemplates: selectedTemplates.join(' / '),
-    templateCount: String(selectedTemplates.length),
   }
 
   if (context.database !== 'none') {

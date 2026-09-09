@@ -29,6 +29,7 @@ export async function generateReadme(context: ProjectContext): Promise<void> {
     '## Endpoints',
     '',
     '- `GET /` - generated stack overview',
+    '- `GET /api/hello` - frontend-backend request example',
     '- `GET /health` - service health status',
     '',
   ]

@@ -3,12 +3,13 @@ import { Hono } from 'hono'
 import { serve } from '@hono/node-server'
 {{/if}}
 
-import { homePage } from './home.js'
-import { health } from './routes/health.js'
+import { homePage } from './home.{{extension}}'
+import { health } from './routes/health.{{extension}}'
 
 export const app = new Hono()
 
 app.get('/', (context) => context.html(homePage))
+app.get('/api/hello', (context) => context.json({ message: 'Hello Node App' }))
 app.route('/', health)
 
 const port = Number(process.env.PORT ?? 3000)

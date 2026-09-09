@@ -1,12 +1,15 @@
 import Fastify from 'fastify'
 
-import { homePage } from './home.js'
-import { health } from './routes/health.js'
+import { homePage } from './home.{{extension}}'
+import { health } from './routes/health.{{extension}}'
 
 export const app = Fastify({ logger: false })
 
 app.get('/', async (_request, reply) => {
   return reply.type('text/html; charset=utf-8').send(homePage)
+})
+app.get('/api/hello', async () => {
+  return { message: 'Hello Node App' }
 })
 app.register(health)
 
