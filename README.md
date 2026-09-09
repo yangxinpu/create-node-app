@@ -1,1404 +1,609 @@
-create-node-app 项目方案
-一、项目定位
-1. 项目名称
+# create-node-app
 
-暂定名称：
+<p align="center">
+  <a href="#简体中文">简体中文</a> |
+  <a href="#english">English</a>
+</p>
 
-create-node-app
+<a id="简体中文"></a>
 
-使用方式：
+## 简体中文
 
+一个可组合的 Node.js 后端项目脚手架。通过交互式 TUI、命令行参数、Preset
+或配置文件，自由组合 Runtime、Framework、Database、ORM、Cache、Tooling
+和 Architecture，生成可以直接安装、运行和继续开发的项目。
+
+> 当前版本：`0.1.0`
+
+### 特性
+
+- **组合式模板**：按需组合独立模块，不维护大量预组合项目模板。
+- **双运行时**：支持 Node.js 24 / 22 LTS 和 Bun 1.4 / 1.3 稳定版本线。
+- **多种技术栈**：支持 Express、Elysia、Hono、Fastify，以及常用数据库和 ORM。
+- **三种项目结构**：提供 `minimal`、`api`、`layered` 三种代码组织方式。
+- **工程化配置**：可选 ESLint、Prettier、Docker、依赖安装和 Git 初始化。
+- **多种输入方式**：支持交互式 TUI、完整 CLI 参数、Preset 和配置文件。
+- **版本一致性**：运行时版本会同步到 engines、版本文件、类型依赖和 Docker 镜像。
+
+### 快速开始
+
+#### 交互式创建
+
+```bash
+npm create node-app@latest
+```
+
+也可以直接指定项目名称：
+
+```bash
 npm create node-app@latest my-server
+```
 
-或者：
-
-npm create node-app@latest
-
-第一种方式直接指定项目名称，第二种方式由 CLI 交互式询问。
-
-2. 项目目标
-
-create-node-app 是一个 Node.js 项目脚手架生成器（Project Generator）。
-
-它不是简单复制一个固定模板，而是根据用户选择的：
-
-Runtime
-Language
-Framework
-Database
-ORM
-Cache
-Tooling
-Architecture
-
-动态组合并生成完整项目。
-
-核心思想：
-
-              create-node-app
-                     │
-        ┌────────────┴────────────┐
-        │                         │
-   Interactive                Non-Interactive
-        │                         │
-    Prompts                    CLI Args
-        │                         │
-        └────────────┬────────────┘
-                     ↓
-              ProjectContext
-                     ↓
-          Compatibility Check
-                     ↓
-          Template Resolver
-                     ↓
-         Dependency Resolver
-                     ↓
-            File Generator
-                     ↓
-             File Merger
-                     ↓
-          Generated Project
-3. 核心原则
-
-整个项目遵循三个原则：
-
-组合，而不是堆积模板
-
-错误：
-
-templates/
-├── elysia-mysql-prisma
-├── elysia-mysql-drizzle
-├── hono-mysql-prisma
-├── hono-postgres-drizzle
-└── ...
-
-正确：
-
-Base
- +
-Framework
- +
-Database
- +
-ORM
- +
-Cache
- +
-Tooling
- ↓
-Generated Project
-
-这样可以避免模板组合爆炸。
-
-二、最终用户体验
-1. 交互式创建
-
-执行：
-
-npm create node-app@latest
-
-交互界面参考 Vite，使用连续的 Clack 流程：
+CLI 会通过接近 Vite 的连续式 TUI 引导完成配置：
 
 ```text
 ┌  create-node-app
 │
 ◇  Project name
-│  my-server
-│
 ◇  Runtime
-│  Node.js
-│
-◇  Node.js LTS version
-│  Node.js 24
-│
+◇  Node.js LTS version / Bun stable version
 ◇  Language
-│  TypeScript
-│
 ◇  Framework
-│  Express
-│
 ◇  Database
-│  None
-│
+◇  ORM
 ◇  Cache
-│  None
-│
 ◇  Project structure
-│  Minimal
-│
 ◇  Tooling
-│  ESLint, Prettier
-│
-◇  Project files generated
-│
-◆  Project created in /path/to/my-server
-│
-◇  Next steps
-│  cd my-server
-│  npm run dev
 │
 └  Done
 ```
 
-ORM 仅在选择数据库后询问；ESLint、Prettier 和 Docker 合并为一个多选步骤。
-各组技术选项使用不同字体颜色，便于在终端中快速辨识。
+未选择数据库时会跳过 ORM；ESLint、Prettier 和 Docker 会集中在 Tooling
+多选步骤中。
 
-运行时版本会贯穿生成结果：
+#### 使用默认配置
 
-- Node.js 提供 24、22 两个 LTS 分支。
-- Bun 没有正式 LTS 通道，因此提供 1.4、1.3 两个稳定版本线。
-- `package.json#engines`、`.nvmrc` / `.bun-version`、运行时类型依赖和
-  Docker 基础镜像会使用同一版本线。
+```bash
+npm create node-app@latest my-server -- --yes
+```
 
-三、非交互式 CLI
+默认生成以下组合：
 
-脚手架必须支持 CI/CD、自动化脚本和 AI Agent，因此不能只支持交互式模式。
+```text
+Node.js 24 LTS + TypeScript + Express + Minimal + ESLint + Prettier
+```
 
-例如：
+#### 完整参数创建
 
-npm create node-app@latest my-server \
+```bash
+npm create node-app@latest my-server -- \
   --runtime node \
   --runtime-version 24 \
   --language typescript \
-  --framework elysia \
-  --database mysql \
-  --orm prisma \
+  --framework express \
+  --database postgresql \
+  --orm drizzle \
   --cache redis \
+  --architecture api \
   --eslint \
-  --prettier
+  --prettier \
+  --docker
+```
 
-也支持：
+### 支持范围
 
-npm create node-app@latest my-server --yes
+| 类型            | 可选项                                         |
+| --------------- | ---------------------------------------------- |
+| Runtime         | `node`、`bun`                                  |
+| Runtime version | Node.js：`24`、`22`；Bun：`1.4`、`1.3`         |
+| Language        | `typescript`、`javascript`                     |
+| Framework       | `express`、`elysia`、`hono`、`fastify`、`none` |
+| Database        | `mysql`、`postgresql`、`mongodb`、`none`       |
+| ORM             | `prisma`、`drizzle`、`none`                    |
+| Cache           | `redis`、`none`                                |
+| Architecture    | `minimal`、`api`、`layered`                    |
+| Tooling         | ESLint、Prettier、Docker                       |
+| Package manager | `npm`、`pnpm`、`yarn`、`bun`                   |
 
---yes 表示使用默认配置。
+Bun 当前没有正式 LTS 通道，因此 CLI 将 Bun 版本标记为稳定版本线，而不是
+LTS。
 
-例如：
+### Architecture 选择
 
-npm create node-app@latest my-server --yes
+Architecture 只决定项目的代码组织方式，不绑定具体 Framework。
 
-等价于：
+| 选项      | 结构                                                        | 适用场景               |
+| --------- | ----------------------------------------------------------- | ---------------------- |
+| `minimal` | `health.ts`                                                 | Demo、小工具和简单服务 |
+| `api`     | `health.ts` + `services/` + `schemas/`                      | 常规后端 API           |
+| `layered` | `controllers/` + `services/` + `repositories/` + `schemas/` | 复杂业务和长期维护项目 |
 
-Node.js 24 LTS
-TypeScript
-Express
-None
-None
-None
-ESLint
-Prettier
-四、Preset 预设系统
+框架负责入口与路由，Architecture 负责业务代码分层，两者可以独立组合。详细设计见
+[Architecture.md](./Architecture.md)。
 
-这是对原方案的重要扩展。
+### Preset
 
-很多用户实际上不想一个一个选择，而是希望：
+Preset 是一份预设配置，仍然使用相同的生成流程。
 
-创建一个标准 API 项目
+```bash
+npm create node-app@latest blog-api -- --preset api
+```
 
-因此增加：
+| Preset         | Runtime    | Framework | Database   | ORM     | Cache | Architecture | Docker |
+| -------------- | ---------- | --------- | ---------- | ------- | ----- | ------------ | ------ |
+| `minimal`      | Node.js 24 | Express   | None       | None    | None  | Minimal      | No     |
+| `api`          | Node.js 24 | Elysia    | MySQL      | Prisma  | Redis | API          | Yes    |
+| `fullstack`    | Node.js 24 | Elysia    | PostgreSQL | Prisma  | Redis | Layered      | Yes    |
+| `microservice` | Node.js 24 | Fastify   | PostgreSQL | Drizzle | Redis | Layered      | Yes    |
 
---preset
+CLI 参数可以覆盖 Preset 中的字段：
 
-例如：
+```bash
+npm create node-app@latest my-api -- \
+  --preset api \
+  --database postgresql
+```
 
-npm create node-app@latest blog-api --preset api
+### 配置文件
 
-提供：
+项目支持 JavaScript 或 TypeScript 配置文件：
 
-presets/
-
-├── minimal
-├── api
-├── fullstack
-└── microservice
-
-例如 api：
-
-{
-  runtime: 'node',
-  runtimeVersion: '24',
-  language: 'typescript',
-  framework: 'elysia',
-  database: 'mysql',
-  orm: 'prisma',
-  cache: 'redis',
-  eslint: true,
-  prettier: true
-}
-Preset 的作用
-
-Preset 并不是另外一套生成逻辑。
-
-它只是：
-
-Preset
-   ↓
-ProjectContext
-
-最终仍然进入同一套 Generator。
-
-这样可以避免维护两套生成系统。
-
-五、配置文件系统
-
-除了 CLI 和交互式模式，还可以支持：
-
-node-app.config.ts
-
-例如：
-
+```typescript
+// node-app.config.ts
 export default {
   runtime: 'node',
   runtimeVersion: '24',
   language: 'typescript',
-  framework: 'elysia',
-  database: 'mysql',
-  orm: 'prisma',
+  framework: 'express',
+  database: 'postgresql',
+  orm: 'drizzle',
   cache: 'redis',
+  architecture: 'api',
   eslint: true,
   prettier: true,
-  docker: true
+  docker: true,
+  packageManager: 'pnpm',
 }
-
-然后：
-
-create-node-app my-server --config node-app.config.ts
-
-最终：
-
-Interactive
-CLI Args
-Preset
-Config
-       ↓
-Normalize
-       ↓
-ProjectContext
-
-这样整个系统的核心入口始终只有一个。
-
-六、ProjectContext
-
-ProjectContext 是整个系统最重要的数据结构。
-
-它保存一次项目生成过程中的完整配置。
-
-export interface ProjectContext {
-  projectName: string
-  projectPath: string
-
-  runtime:
-    | 'node'
-    | 'bun'
-
-  runtimeVersion:
-    | '24'
-    | '22'
-    | '1.4'
-    | '1.3'
-
-  language:
-    | 'typescript'
-    | 'javascript'
-
-  framework:
-    | 'express'
-    | 'elysia'
-    | 'hono'
-    | 'fastify'
-    | 'none'
-
-  database:
-    | 'mysql'
-    | 'postgresql'
-    | 'mongodb'
-    | 'none'
-
-  orm:
-    | 'prisma'
-    | 'drizzle'
-    | 'none'
-
-  cache:
-    | 'redis'
-    | 'none'
-
-  architecture:
-    | 'minimal'
-    | 'api'
-    | 'layered'
-
-  eslint: boolean
-  prettier: boolean
-  docker: boolean
-}
-为什么需要 Context？
-
-因为后面的模块都只读取 Context：
-
-CLI
- ↓
-ProjectContext
- ↓
-Validator
- ↓
-Resolver
- ↓
-Generator
-
-例如 Generator 不需要知道：
-
-用户是通过命令行选择的
-
-还是：
-
-用户是通过交互式 Prompt 选择的
-
-它只知道：
-
-context.framework === 'elysia'
-
-这就是解耦。
-
-七、Configuration Schema
-
-用户输入的数据不能直接使用。
-
-必须先：
-
-Raw Input
-   ↓
-Normalize
-   ↓
-Schema Validation
-   ↓
-ProjectContext
-
-例如：
-
-validateContext(context)
-
-检查：
-
-projectName 是否合法
-runtime 是否存在
-framework 是否存在
-database 是否存在
-orm 是否存在
-
-这样可以保证后面的 Generator 拿到的一定是合法 Context。
-
-八、Compatibility Rule Engine
-
-这是项目中非常重要的一层。
-
-不同技术之间可能存在兼容性关系：
-
-Runtime
-+
-Framework
-+
-ORM
-+
-Database
-
-所以需要：
-
-Compatibility Engine
-
-例如：
-
-interface CompatibilityRule {
-  name: string
-
-  condition:
-    (context: ProjectContext) => boolean
-
-  level:
-    'error' | 'warning'
-
-  message: string
-}
-
-例如：
-
-const rule = {
-  name: 'example-rule',
-
-  condition: ctx =>
-    ctx.runtime === 'bun' &&
-    ctx.orm === 'xxx',
-
-  level: 'warning',
-
-  message:
-    'xxx currently has limited Bun support'
-}
-
-系统可以输出：
-
-⚠ Compatibility warning
-
-Bun + xxx may have limited support.
-
-或者：
-
-✖ Configuration error
-
-This combination is not supported.
-为什么不能只写大量 if？
-
-因为未来组合会越来越多：
-
-Node + Elysia
-Node + Hono
-Bun + Elysia
-Bun + Hono
-Node + Prisma
-Bun + Prisma
-...
-
-规则系统可以独立扩展。
-
-九、Template Module System
-
-这是整个项目的核心。
-
-不要把模板理解成：
-
-一个目录
-
-而应该理解成：
-
-一个 Template Module
-
-例如：
-
-interface TemplateModule {
-  name: string
-
-  files?: TemplateFile[]
-
-  dependencies?: PackageDependencies
-
-  scripts?: Record<string, string>
-
-  env?: Record<string, string>
-
-  validate?:
-    (context: ProjectContext) => void
-
-  generate?:
-    (context: ProjectContext) => Promise<void>
-}
-
-一个模板模块可以拥有：
-
-文件
-依赖
-脚本
-环境变量
-校验逻辑
-动态生成逻辑
-
-这比简单 Copy 文件强很多。
-
-模板源文件可以使用 `.template` 后缀。生成器复制文件时会移除该后缀，例如
-`eslint.config.js.template` 会输出为 `eslint.config.js`，从而避免 IDE 在模板渲染前误加载配置文件。
-
-十、Template 分类
-
-推荐目录：
-
-templates/
-
-├── base/
-│   ├── typescript/
-│   └── javascript/
-│
-├── runtimes/
-│   ├── node/
-│   └── bun/
-│
-├── frameworks/
-│   ├── express/
-│   ├── elysia/
-│   ├── hono/
-│   └── fastify/
-│
-├── databases/
-│   ├── mysql/
-│   ├── postgresql/
-│   └── mongodb/
-│
-├── orm/
-│   ├── prisma/
-│   └── drizzle/
-│
-├── cache/
-│   └── redis/
-│
-├── tooling/
-│   ├── eslint/
-│   ├── prettier/
-│   └── docker/
-│
-└── architecture/
-    ├── minimal/
-    ├── api/
-    └── layered/
-十一、Template Resolver
-
-Resolver 根据 Context 决定需要哪些模块。
-
-例如：
-
-function resolveTemplates(
-  context: ProjectContext
-) {
-  const templates = []
-
-  templates.push(
-    `base/${context.language}`
-  )
-
-  templates.push(
-    `runtimes/${context.runtime}`
-  )
-
-  if (context.framework !== 'none') {
-    templates.push(
-      `frameworks/${context.framework}`
-    )
-  }
-
-  if (context.database !== 'none') {
-    templates.push(
-      `databases/${context.database}`
-    )
-  }
-
-  if (context.orm !== 'none') {
-    templates.push(
-      `orm/${context.orm}`
-    )
-  }
-
-  if (context.cache !== 'none') {
-    templates.push(
-      `cache/${context.cache}`
-    )
-  }
-
-  if (context.eslint) {
-    templates.push('tooling/eslint')
-  }
-
-  if (context.prettier) {
-    templates.push('tooling/prettier')
-  }
-
-  if (context.docker) {
-    templates.push('tooling/docker')
-  }
-
-  templates.push(
-    `architecture/${context.architecture}`
-  )
-
-  return templates
-}
-
-例如：
-
-Node
-TypeScript
-Elysia
-MySQL
-Prisma
-Redis
-ESLint
-Prettier
-
-得到：
-
-base/typescript
-runtimes/node
-frameworks/elysia
-databases/mysql
-orm/prisma
-cache/redis
-tooling/eslint
-tooling/prettier
-architecture/api
-十二、Dependency Resolver
-
-模板不应该把依赖直接塞进 Generator。
-
-每一个 Template Module 描述自己的依赖：
-
-const elysia = {
-  dependencies: {
-    elysia: '^1.3.0'
-  }
-}
-
-Prisma：
-
-const prisma = {
-  dependencies: {
-    '@prisma/client': '^6.0.0'
-  },
-
-  devDependencies: {
-    prisma: '^6.0.0'
-  }
-}
-
-Redis：
-
-const redis = {
-  dependencies: {
-    ioredis: '^5.0.0'
-  }
-}
-
-然后：
-
-Template Modules
-       ↓
-Dependency Resolver
-       ↓
-Dependency Graph
-       ↓
-package.json
-
-这样 Generator 本身不需要知道：
-
-Elysia 对应什么依赖
-Prisma 对应什么依赖
-Redis 对应什么依赖
-十三、Package.json Merge
-
-例如三个模块：
-
-Base
-Elysia
-Prisma
-
-分别提供：
-
-{
-  "scripts": {
-    "dev": "tsx watch src/index.ts"
-  }
-}
-{
-  "dependencies": {
-    "elysia": "^1.3.0"
-  }
-}
-{
-  "dependencies": {
-    "@prisma/client": "^6.0.0"
-  },
-  "devDependencies": {
-    "prisma": "^6.0.0"
-  }
-}
-
-最终合并为：
-
-{
-  "scripts": {
-    "dev": "tsx watch src/index.ts"
-  },
-  "dependencies": {
-    "elysia": "^1.3.0",
-    "@prisma/client": "^6.0.0"
-  },
-  "devDependencies": {
-    "prisma": "^6.0.0"
-  }
-}
-十四、File Merge Strategy
-
-这里不要只有：
-
-mergePackageJson()
-
-应该建立通用的：
-
-File Merge System
-
-例如：
-
-package.json
-→ JSON Merge
-
-tsconfig.json
-→ JSON Deep Merge
-
-.env.example
-→ Environment Merge
-
-README.md
-→ Template Rendering
-
-普通文件
-→ Copy
-
-设计：
-
-interface MergeStrategy {
-  canHandle(file: string): boolean
-
-  merge(
-    source: string,
-    target: string
-  ): Promise<void>
-}
-
-以后可以继续扩展：
-
-JSON
-ENV
-Markdown
-TypeScript
-YAML
-十五、Generator Pipeline
-
-完整生成流程：
-
-CLI
- │
- ↓
-Parse Arguments
- │
- ↓
-Interactive Prompts
- │
- ↓
-Normalize Input
- │
- ↓
-ProjectContext
- │
- ↓
-Schema Validation
- │
- ↓
-Compatibility Check
- │
- ↓
-Resolve Templates
- │
- ↓
-Resolve Dependencies
- │
- ↓
-Generate Files
- │
- ↓
-Merge Files
- │
- ↓
-Generate package.json
- │
- ↓
-Generate .env
- │
- ↓
-Generate README
- │
- ↓
-Install Dependencies
- │
- ↓
-Initialize Git
- │
- ↓
-Print Next Steps
-
-核心代码：
-
-async function createProject(
-  context: ProjectContext
-) {
-  await validateContext(context)
-
-  await validateCompatibility(context)
-
-  const templates =
-    resolveTemplates(context)
-
-  const dependencies =
-    resolveDependencies(templates)
-
-  await generateFiles(
-    context,
-    templates
-  )
-
-  await mergeFiles(
-    context,
-    templates
-  )
-
-  await generatePackageJson(
-    context,
-    dependencies
-  )
-
-  await generateReadme(context)
-
-  await installDependencies(context)
-
-  await initGit(context)
-
-  printNextSteps(context)
-}
-十六、生成项目结构
-
-例如用户选择：
-
-Node.js 24 LTS
-TypeScript
-Elysia
-MySQL
-Prisma
-Redis
-ESLint
-Prettier
-Docker
-
-最终：
-
-blog-api/
-
+```
+
+```bash
+npm create node-app@latest my-server -- --config node-app.config.ts
+```
+
+配置优先级：
+
+```text
+CLI 参数 > Config 文件 > Preset > 默认配置
+```
+
+### CLI 参数
+
+```text
+create-node-app <project-name> [options]
+
+Options:
+  --runtime <runtime>          node | bun
+  --runtime-version <version>  node: 24 | 22; bun: 1.4 | 1.3
+  --language <language>        typescript | javascript
+  --framework <framework>      express | elysia | hono | fastify | none
+  --database <database>        mysql | postgresql | mongodb | none
+  --orm <orm>                  prisma | drizzle | none
+  --cache <cache>              redis | none
+  --architecture <arch>        minimal | api | layered
+  --preset <preset>            minimal | api | fullstack | microservice
+  --config <path>              path to node-app.config.ts or .js
+  --eslint                     enable ESLint
+  --prettier                   enable Prettier
+  --docker                     enable Docker
+  --package-manager <manager>  npm | pnpm | yarn | bun
+  --no-install                 skip dependency installation
+  --no-git                     skip Git initialization
+  -y, --yes                    use default configuration
+```
+
+查看当前支持的全部选项：
+
+```bash
+npm create node-app@latest -- list
+```
+
+### 生成结果
+
+以 `api` 架构、PostgreSQL、Drizzle 和 Redis 为例：
+
+```text
+my-server/
 ├── src/
 │   ├── db/
 │   │   ├── client.ts
-│   │   └── prisma.ts
-│   │
+│   │   └── schema.ts
 │   ├── redis/
 │   │   └── client.ts
-│   │
 │   ├── routes/
 │   │   └── health.ts
-│   │
-│   ├── services/
-│   │   └── health.ts
-│   │
 │   ├── schemas/
 │   │   └── health.ts
-│   │
-│   ├── app.ts
+│   ├── services/
+│   │   └── health.ts
 │   ├── health.ts
 │   └── index.ts
-│
-├── prisma/
-│   └── schema.prisma
-│
 ├── .env.example
 ├── .gitignore
-├── .nvmrc # Bun 项目对应 .bun-version
+├── .nvmrc
 ├── Dockerfile
+├── drizzle.config.ts
 ├── eslint.config.js
 ├── prettier.config.js
 ├── tsconfig.json
 ├── package.json
 └── README.md
+```
 
-生成项目不包含测试框架、测试脚本或测试文件；仓库根目录的 Vitest 仅用于脚手架自身回归测试。
+实际文件由所选模块共同决定。生成项目不会附带测试框架、测试脚本或测试文件。
 
-需要注意：
+运行时版本会应用到：
 
-不是所有项目都生成这些目录。
+- `package.json#engines`
+- Node.js 项目的 `.nvmrc`
+- Bun 项目的 `.bun-version`
+- TypeScript 的 `@types/node` 或 `@types/bun`
+- Docker 基础镜像
 
-例如：
+### 兼容性规则
 
-Node + TypeScript + None
+生成前会执行配置校验和兼容性检查：
 
-只生成基础入口和 `health.ts`。
+| 组合                  | 结果       |
+| --------------------- | ---------- |
+| ORM + `database=none` | 阻止生成   |
+| Drizzle + MongoDB     | 阻止生成   |
+| Elysia + Node.js      | 警告并继续 |
+| Express + Bun         | 警告并继续 |
+| Fastify + Bun         | 警告并继续 |
 
-而：
+### 本地开发
 
-architecture/api
+环境要求：
 
-才生成：
-
-routes
-services
-schemas
-
-这样 Generator 才真正做到“按配置生成”。
-
-十七、README 自动生成
-
-README 不建议固定。
-
-应该根据 ProjectContext 动态生成。
-
-例如：
-
-# blog-api
-
-## Stack
-
-- Node.js 24 LTS
-- TypeScript
-- Elysia
-- MySQL
-- Prisma
-- Redis
-- ESLint
-- Prettier
-
-## Development
+- Node.js >= 18
+- pnpm
 
 ```bash
-npm install
-npm run dev
-Database
-npx prisma generate
-npx prisma migrate dev
-因此：
-
-```text
-ProjectContext
-      ↓
-README Generator
-      ↓
-README.md
-十八、Package Manager
-
-CLI 不应该强制写死：
-
-npm
-
-应该支持：
-
-npm
-pnpm
-yarn
-bun
-
-执行：
-
-create-node-app my-server
-
-CLI 会优先从启动命令的 user agent 识别包管理器；无法识别时再检测本机环境。
-例如通过 `pnpm create` 启动时，后续安装和提示命令会自动使用：
-
+git clone https://github.com/yangxinpu/create-node-app.git
+cd create-node-app
 pnpm install
+pnpm dev
+```
 
-也可以通过：
+常用命令：
 
---package-manager npm
+```bash
+pnpm build       # 构建 CLI
+pnpm test        # 运行测试
+pnpm test:watch  # 监听测试
+pnpm typecheck   # TypeScript 类型检查
+pnpm lint        # ESLint 检查
+pnpm format      # Prettier 格式化
+```
 
-显式指定。
+构建后也可以直接运行：
 
-核心：
+```bash
+node dist/index.js
+```
 
-type PackageManager =
-  | 'npm'
-  | 'pnpm'
-  | 'yarn'
-  | 'bun'
-十九、Git 初始化
+### 项目文档
 
-生成完成后：
+- [Architecture.md](./Architecture.md)：系统架构、模块职责、生成流水线和扩展方式。
+- [AGENTS.md](./AGENTS.md)：AI 编码助手使用的项目约束和开发规范。
+
+### License
+
+[MIT](./LICENSE)
+
+---
+
+<a id="english"></a>
+
+## English
+
+A composable backend project scaffolder for Node.js and Bun. Build a ready-to-run project by
+combining a runtime, framework, database, ORM, cache, tooling, and project architecture through an
+interactive TUI, CLI arguments, presets, or a configuration file.
+
+> Current version: `0.1.0`
+
+### Features
+
+- **Composable templates**: Combine independent modules instead of maintaining prebuilt template
+  permutations.
+- **Two runtimes**: Supports Node.js 24 / 22 LTS and Bun 1.4 / 1.3 stable release lines.
+- **Multiple stacks**: Supports Express, Elysia, Hono, Fastify, common databases, and ORMs.
+- **Three project structures**: Choose from `minimal`, `api`, and `layered`.
+- **Optional tooling**: Add ESLint, Prettier, Docker, dependency installation, and Git
+  initialization.
+- **Flexible configuration**: Use the interactive TUI, complete CLI arguments, presets, or a
+  configuration file.
+- **Consistent runtime versions**: Keeps engines, version files, runtime types, and Docker images
+  aligned.
+
+### Quick Start
+
+#### Interactive
+
+```bash
+npm create node-app@latest
+```
+
+You can also provide the project name directly:
+
+```bash
+npm create node-app@latest my-server
+```
+
+The Vite-inspired TUI guides you through the available options:
 
 ```text
-◇  Project files generated
-◇  Dependencies installed
-◇  Git repository initialized
-◆  Project created in /path/to/blog-api
+┌  create-node-app
 │
-◇  Next steps
-│  cd blog-api
-│  npm run dev
+◇  Project name
+◇  Runtime
+◇  Node.js LTS version / Bun stable version
+◇  Language
+◇  Framework
+◇  Database
+◇  ORM
+◇  Cache
+◇  Project structure
+◇  Tooling
 │
 └  Done
 ```
 
-Git 可以通过：
+The ORM prompt is skipped when no database is selected. ESLint, Prettier, and Docker are grouped
+into a single Tooling step.
 
---no-git
+#### Default Configuration
 
-关闭。
+```bash
+npm create node-app@latest my-server -- --yes
+```
 
-二十、CLI 参数设计
+This generates the following stack:
 
-最终：
+```text
+Node.js 24 LTS + TypeScript + Express + Minimal + ESLint + Prettier
+```
 
-create-node-app <project-name>
+#### Full CLI Configuration
 
-Options：
-
---runtime <runtime>
-
---runtime-version <version>
-
---language <language>
-
---framework <framework>
-
---database <database>
-
---orm <orm>
-
---cache <cache>
-
---architecture <architecture>
-
---preset <preset>
-
---config <path>
-
---eslint
-
---prettier
-
---docker
-
---package-manager <manager>
-
---no-install
-
---no-git
-
---yes
-二十一、CLI Commands
-
-V1：
-
-create-node-app
-create-node-app <project-name>
-
-V1.1：
-
-create-node-app list
-
-显示：
-
-Frameworks
-
-✓ Elysia
-✓ Hono
-✓ Express
-✓ Fastify
-
-Databases
-
-✓ MySQL
-✓ PostgreSQL
-✓ MongoDB
-
-ORM
-
-✓ Prisma
-✓ Drizzle
-
-以后再增加：
-
-create-node-app init
-create-node-app info
-create-node-app upgrade
-
-其中：
-
-upgrade
-
-建议放到后期，因为它实际上属于项目迁移系统，复杂度远高于项目初始化。
-
-二十二、项目目录
-
-当前 CLI 项目结构：
-
-create-node-app/
-├── src/
-│   ├── cli/
-│   │   ├── index.ts
-│   │   ├── commands/
-│   │   │   ├── create.ts
-│   │   │   └── list.ts
-│   │   └── prompts.ts
-│   ├── config/
-│   │   └── options.ts
-│   ├── context/
-│   │   ├── types.ts
-│   │   ├── defaults.ts
-│   │   └── normalize.ts
-│   ├── validation/
-│   │   ├── schema.ts
-│   │   └── compatibility.ts
-│   ├── resolver/
-│   │   ├── template.ts
-│   │   ├── dependency.ts
-│   │   └── preset.ts
-│   ├── generator/
-│   │   ├── generator.ts
-│   │   ├── files.ts
-│   │   ├── package.ts
-│   │   ├── readme.ts
-│   │   ├── env.ts
-│   │   ├── render.ts
-│   │   └── language.ts
-│   ├── merger/
-│   │   ├── index.ts
-│   │   ├── json.ts
-│   │   ├── env.ts
-│   │   ├── json-strategy.ts
-│   │   └── env-strategy.ts
-│   ├── runtime/
-│   │   ├── installer.ts
-│   │   ├── git.ts
-│   │   └── package-manager.ts
-│   ├── presets/
-│   │   └── index.ts
-│   └── utils/
-│       ├── logger.ts
-│       └── paths.ts
-├── templates/               # 八类可组合模板
-├── tests/                   # CLI 与核心模块测试
-├── package.json
-├── tsconfig.json
-├── tsdown.config.ts
-├── vitest.config.ts
-├── eslint.config.ts
-├── prettier.config.ts
-├── .gitignore
-└── README.md
-
-这里最重要的模块关系是：
-
-cli
- ↓
-context
- ↓
-validation
- ↓
-resolver
- ↓
-generator
- ↓
-merger
- ↓
-runtime
-
-而：
-
-templates
-config
-presets
-
-属于数据/配置层。
-
-二十三、核心架构关系
-
-整个系统最终可以理解成：
-
-                         create-node-app
-                                │
-                ┌───────────────┴───────────────┐
-                │                               │
-          Interactive                     Non-Interactive
-                │                               │
-             Prompts                         CLI Args
-                │                               │
-                └───────────────┬───────────────┘
-                                ↓
-                           Normalize
-                                ↓
-                        ProjectContext
-                                ↓
-                        Schema Validation
-                                ↓
-                     Compatibility Rule Engine
-                                ↓
-                       Template Resolver
-                                ↓
-                     Dependency Resolver
-                                ↓
-                         File Generator
-                                ↓
-                         File Merge System
-                                ↓
-                     package.json Generator
-                                ↓
-                         README Generator
-                                ↓
-                       Dependency Installer
-                                ↓
-                           Git Init
-                                ↓
-                           Finished
-二十四、技术栈
-
-CLI 本身：
-
-模块	技术	作用
-Language	TypeScript	CLI 开发
-Runtime	Node.js	CLI 运行
-CLI	Commander	参数解析
-Prompt	@clack/prompts	交互式终端界面
-Color	picocolors	终端样式
-File	fs-extra	文件操作
-Process	execa	执行外部命令
-Build	tsdown	CLI 构建
-Test	Vitest	测试
-Distribution	npm	发布
-
-当前使用 TypeScript + Commander + @clack/prompts + picocolors + fs-extra + execa + tsdown + Vitest。
-
-二十五、V1 开发阶段
-
-不要一次支持全部组合。
-
-Phase 1：CLI
-
-完成：
-
-npm create node-app@latest api
-
-实现：
-
-Commander
-Prompts
-Arguments
-Logger
-Phase 2：Context
-
-完成：
-
-ProjectContext
-Normalize
-Defaults
-Schema Validation
-Phase 3：Template Engine
-
-先只支持：
-
-TypeScript
-Node.js
-Elysia
-
-实现：
-
-Template Resolver
-File Generator
-package.json Generator
-
-最终：
-
-npm create node-app@latest api
-cd api
-npm run dev
-
-真正运行起来。
-
-Phase 4：Database
-
-加入：
-
-MySQL
-PostgreSQL
-MongoDB
-Phase 5：ORM
-
-加入：
-
-Prisma
-Drizzle
-
-并完成：
-
-Dependency Resolver
-File Merge System
-Phase 6：Redis
-
-加入：
-
-Redis
-
-生成：
-
-src/redis/client.ts
-.env.example
-Phase 7：Tooling
-
-加入：
-
-ESLint
-Prettier
-Docker
-Git
-Phase 8：Preset / Config
-
-加入：
-
-Preset
-Config File
-
-例如：
-
-create-node-app api --preset api
-Phase 9：Non-Interactive
-
-完善：
-
---runtime
---runtime-version
---framework
---database
---orm
---cache
---eslint
---prettier
---docker
---no-install
---no-git
---yes
-
-最终支持：
-
-create-node-app api \
+```bash
+npm create node-app@latest my-server -- \
   --runtime node \
   --runtime-version 24 \
   --language typescript \
-  --framework elysia \
-  --database mysql \
-  --orm prisma \
+  --framework express \
+  --database postgresql \
+  --orm drizzle \
   --cache redis \
+  --architecture api \
   --eslint \
-  --prettier
-二十六、V1 最终目标
+  --prettier \
+  --docker
+```
 
-V1 不追求：
+### Supported Options
 
-几十种 Framework
-几十种 ORM
-几百种模板
+| Category        | Options                                        |
+| --------------- | ---------------------------------------------- |
+| Runtime         | `node`, `bun`                                  |
+| Runtime version | Node.js: `24`, `22`; Bun: `1.4`, `1.3`         |
+| Language        | `typescript`, `javascript`                     |
+| Framework       | `express`, `elysia`, `hono`, `fastify`, `none` |
+| Database        | `mysql`, `postgresql`, `mongodb`, `none`       |
+| ORM             | `prisma`, `drizzle`, `none`                    |
+| Cache           | `redis`, `none`                                |
+| Architecture    | `minimal`, `api`, `layered`                    |
+| Tooling         | ESLint, Prettier, Docker                       |
+| Package manager | `npm`, `pnpm`, `yarn`, `bun`                   |
 
-而追求：
+Bun does not currently provide an official LTS channel, so the CLI describes Bun versions as
+stable release lines rather than LTS releases.
 
-生成的项目真的能够安装、启动和开发。
+### Architecture Options
 
-最终验证：
+Architecture controls how application code is organized and remains independent from the selected
+framework.
 
-npm create node-app@latest blog-api
+| Option    | Structure                                                   | Recommended for                      |
+| --------- | ----------------------------------------------------------- | ------------------------------------ |
+| `minimal` | `health.ts`                                                 | Demos, utilities, and small services |
+| `api`     | `health.ts` + `services/` + `schemas/`                      | Typical backend APIs                 |
+| `layered` | `controllers/` + `services/` + `repositories/` + `schemas/` | Complex, long-lived applications     |
 
-生成：
+Framework templates provide the application entry point and routes. Architecture templates provide
+the business-layer organization. See [Architecture.md](./Architecture.md) for the complete design.
 
-blog-api
+### Presets
 
-然后：
+A preset is a predefined configuration that uses the same generation pipeline as every other input
+method.
 
-cd blog-api
-npm install
-npm run dev
+```bash
+npm create node-app@latest blog-api -- --preset api
+```
 
-都能正常工作。
+| Preset         | Runtime    | Framework | Database   | ORM     | Cache | Architecture | Docker |
+| -------------- | ---------- | --------- | ---------- | ------- | ----- | ------------ | ------ |
+| `minimal`      | Node.js 24 | Express   | None       | None    | None  | Minimal      | No     |
+| `api`          | Node.js 24 | Elysia    | MySQL      | Prisma  | Redis | API          | Yes    |
+| `fullstack`    | Node.js 24 | Elysia    | PostgreSQL | Prisma  | Redis | Layered      | Yes    |
+| `microservice` | Node.js 24 | Fastify   | PostgreSQL | Drizzle | Redis | Layered      | Yes    |
+
+CLI arguments can override individual preset fields:
+
+```bash
+npm create node-app@latest my-api -- \
+  --preset api \
+  --database postgresql
+```
+
+### Configuration File
+
+JavaScript and TypeScript configuration files are supported:
+
+```typescript
+// node-app.config.ts
+export default {
+  runtime: 'node',
+  runtimeVersion: '24',
+  language: 'typescript',
+  framework: 'express',
+  database: 'postgresql',
+  orm: 'drizzle',
+  cache: 'redis',
+  architecture: 'api',
+  eslint: true,
+  prettier: true,
+  docker: true,
+  packageManager: 'pnpm',
+}
+```
+
+```bash
+npm create node-app@latest my-server -- --config node-app.config.ts
+```
+
+Configuration precedence:
+
+```text
+CLI arguments > Config file > Preset > Defaults
+```
+
+### CLI Reference
+
+```text
+create-node-app <project-name> [options]
+
+Options:
+  --runtime <runtime>          node | bun
+  --runtime-version <version>  node: 24 | 22; bun: 1.4 | 1.3
+  --language <language>        typescript | javascript
+  --framework <framework>      express | elysia | hono | fastify | none
+  --database <database>        mysql | postgresql | mongodb | none
+  --orm <orm>                  prisma | drizzle | none
+  --cache <cache>              redis | none
+  --architecture <arch>        minimal | api | layered
+  --preset <preset>            minimal | api | fullstack | microservice
+  --config <path>              path to node-app.config.ts or .js
+  --eslint                     enable ESLint
+  --prettier                   enable Prettier
+  --docker                     enable Docker
+  --package-manager <manager>  npm | pnpm | yarn | bun
+  --no-install                 skip dependency installation
+  --no-git                     skip Git initialization
+  -y, --yes                    use default configuration
+```
+
+List all currently supported options:
+
+```bash
+npm create node-app@latest -- list
+```
+
+### Generated Project
+
+For example, an API project using PostgreSQL, Drizzle, and Redis can contain:
+
+```text
+my-server/
+├── src/
+│   ├── db/
+│   │   ├── client.ts
+│   │   └── schema.ts
+│   ├── redis/
+│   │   └── client.ts
+│   ├── routes/
+│   │   └── health.ts
+│   ├── schemas/
+│   │   └── health.ts
+│   ├── services/
+│   │   └── health.ts
+│   ├── health.ts
+│   └── index.ts
+├── .env.example
+├── .gitignore
+├── .nvmrc
+├── Dockerfile
+├── drizzle.config.ts
+├── eslint.config.js
+├── prettier.config.js
+├── tsconfig.json
+├── package.json
+└── README.md
+```
+
+The exact output depends on the selected modules. Generated projects do not include a test
+framework, test scripts, or test files.
+
+The selected runtime version is applied to:
+
+- `package.json#engines`
+- `.nvmrc` for Node.js projects
+- `.bun-version` for Bun projects
+- `@types/node` or `@types/bun` for TypeScript projects
+- The Docker base image
+
+### Compatibility Rules
+
+Configuration and compatibility checks run before files are generated:
+
+| Combination           | Result                        |
+| --------------------- | ----------------------------- |
+| ORM + `database=none` | Generation is blocked         |
+| Drizzle + MongoDB     | Generation is blocked         |
+| Elysia + Node.js      | Warning; generation continues |
+| Express + Bun         | Warning; generation continues |
+| Fastify + Bun         | Warning; generation continues |
+
+### Local Development
+
+Requirements:
+
+- Node.js >= 18
+- pnpm
+
+```bash
+git clone https://github.com/yangxinpu/create-node-app.git
+cd create-node-app
+pnpm install
+pnpm dev
+```
+
+Common commands:
+
+```bash
+pnpm build       # Build the CLI
+pnpm test        # Run the test suite
+pnpm test:watch  # Run tests in watch mode
+pnpm typecheck   # Check TypeScript types
+pnpm lint        # Run ESLint
+pnpm format      # Format files with Prettier
+```
+
+After building, you can run the CLI directly:
+
+```bash
+node dist/index.js
+```
+
+### Documentation
+
+- [Architecture.md](./Architecture.md): System architecture, module responsibilities, generation
+  pipeline, and extension guidelines.
+- [AGENTS.md](./AGENTS.md): Project constraints and development guidelines for AI coding
+  assistants.
+
+### License
+
+[MIT](./LICENSE)

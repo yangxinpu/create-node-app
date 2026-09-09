@@ -29,7 +29,9 @@ export function assertOneOf<T extends string>(
   allowed: readonly T[],
 ): asserts value is T {
   if (!allowed.includes(value as T)) {
-    throw new ValidationError(`Invalid ${field} "${value}". Expected one of: ${allowed.join(', ')}`)
+    throw new ValidationError(
+      `Invalid ${field} "${value}". Expected one of: ${allowed.join(', ')}`,
+    )
   }
 }
 

@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  isTsOnlyPackage,
-  mapFileName,
-  shouldSkipFile,
-  stripTypes,
-} from '../../src/generator/language.js'
+import { isTsOnlyPackage, mapFileName, shouldSkipFile, stripTypes } from '../../src/generator/language.js'
 
 describe('isTsOnlyPackage', () => {
   it('identifies TS toolchain packages', () => {

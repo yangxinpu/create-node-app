@@ -27,15 +27,7 @@ export async function generateReadme(context: ProjectContext): Promise<void> {
   ]
 
   if (context.orm === 'prisma') {
-    lines.push(
-      '## Database',
-      '',
-      '```bash',
-      'npx prisma generate',
-      'npx prisma migrate dev',
-      '```',
-      '',
-    )
+    lines.push('## Database', '', '```bash', 'npx prisma generate', 'npx prisma migrate dev', '```', '')
   }
 
   await writeFile(path.join(context.projectPath, 'README.md'), lines.join('\n'))

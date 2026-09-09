@@ -14,7 +14,8 @@ export function normalizeContext(raw: RawContext): ProjectContext {
     Object.entries(raw).filter(([, value]) => value !== undefined),
   ) as RawContext
   const runtime = cleaned.runtime ?? DEFAULT_CONTEXT.runtime
-  const runtimeVersion = cleaned.runtimeVersion ?? getDefaultRuntimeVersion(runtime)
+  const runtimeVersion =
+    cleaned.runtimeVersion ?? getDefaultRuntimeVersion(runtime)
 
   return {
     ...DEFAULT_CONTEXT,

@@ -62,7 +62,8 @@ const DRIZZLE: Record<string, DrizzleProfile> = {
     tableFn: 'pgTable',
     idImport: 'serial',
     idColumn: "serial('id').primaryKey()",
-    clientImports: "import { drizzle } from 'drizzle-orm/node-postgres'\nimport { Pool } from 'pg'",
+    clientImports:
+      "import { drizzle } from 'drizzle-orm/node-postgres'\nimport { Pool } from 'pg'",
     clientInit:
       'const pool = new Pool({ connectionString: process.env.DATABASE_URL })\n\nexport const db = drizzle(pool, { schema })',
   },
@@ -120,7 +121,12 @@ export function buildTemplateVariables(context: ProjectContext): TemplateVariabl
  * 支持条件块：{{#if name=value}}...{{/if}}，仅当变量等于给定值时保留块内容。
  */
 export function renderContent(content: string, variables: TemplateVariables): string {
-  const renderConditional = (_match: string, key: string, value: string, block: string): string => {
+  const renderConditional = (
+    _match: string,
+    key: string,
+    value: string,
+    block: string,
+  ): string => {
     return variables[key] === value ? block : ''
   }
 

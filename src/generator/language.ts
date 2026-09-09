@@ -10,7 +10,12 @@ const TS_ONLY_FILES = new Set(['tsconfig.json'])
 /**
  * JS 模式下应从 devDependencies 中过滤掉的 TS 工具链依赖。
  */
-const TS_ONLY_PACKAGES = new Set(['typescript', 'tsx', 'tsdown', 'typescript-eslint'])
+const TS_ONLY_PACKAGES = new Set([
+  'typescript',
+  'tsx',
+  'tsdown',
+  'typescript-eslint',
+])
 
 /**
  * 判断某个包是否为 TS 专属依赖（JS 项目不需要）。
@@ -32,7 +37,9 @@ export function shouldSkipFile(fileName: string, language: ProjectContext['langu
  * JS 模式：.ts → .js（.mts → .mjs, .cts → .cjs）；TS 模式原样返回。
  */
 export function mapFileName(fileName: string, language: ProjectContext['language']): string {
-  const outputName = fileName.replace(/\.template$/, '').replace(/^_Dockerfile$/, 'Dockerfile')
+  const outputName = fileName
+    .replace(/\.template$/, '')
+    .replace(/^_Dockerfile$/, 'Dockerfile')
   if (language !== 'javascript') return outputName
   return outputName
     .replace(/\.mts$/, '.mjs')
