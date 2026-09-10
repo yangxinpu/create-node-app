@@ -8,6 +8,7 @@ import type { Language, Theme } from './types'
 function App() {
   const [language, setLanguage] = useState<Language>('zh')
   const [theme, setTheme] = useState<Theme>('dark')
+  const [copied, setCopied] = useState(false)
   const copy = content[language]
 
   function switchLanguage() {
@@ -18,8 +19,10 @@ function App() {
     setTheme((current) => (current === 'light' ? 'dark' : 'light'))
   }
 
-  async function copyCommand() {
-    await navigator.clipboard?.writeText(copy.home.install)
+  async function copyCommand(text: string) {
+    await navigator.clipboard?.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
@@ -32,8 +35,11 @@ function App() {
         onSwitchTheme={switchTheme}
       />
       <main>
-        <HomePage copy={copy} onCopyCommand={copyCommand} />
+        <HomePage copy={copy} onCopyCommand={copyCommand} copied={copied} />
       </main>
+      <div className={`toast-notification ${copied ? 'show' : ''}`}>
+        {copy.home.copied}
+      </div>
     </div>
   )
 }

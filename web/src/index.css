@@ -14,7 +14,8 @@
   --accent-border: rgba(20, 199, 181, 0.28);
   --accent-ring: rgba(20, 199, 181, 0.18);
   --hero-tint: rgba(20, 199, 181, 0.13);
-  --topbar: #050607;
+  --topbar: rgba(5, 6, 7, 0.75);
+  --hover-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
   --topbar-text: #f6f8fa;
   --topbar-muted: #9aa7a6;
   --topbar-field: #101817;
@@ -57,7 +58,8 @@
   --accent-border: rgba(24, 211, 192, 0.3);
   --accent-ring: rgba(24, 211, 192, 0.18);
   --hero-tint: rgba(24, 211, 192, 0.11);
-  --topbar: #000000;
+  --topbar: rgba(0, 0, 0, 0.75);
+  --hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
   --topbar-text: #f0f6fc;
   --topbar-muted: #829492;
   --topbar-field: #07110f;

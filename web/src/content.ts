@@ -14,6 +14,7 @@ export const content: Record<Language, Content> = {
         '通过可组合模板快速生成 Node.js 后端项目。选择运行时、框架、数据库、ORM、缓存、工程化和目录结构，即可得到可以安装、启动和继续开发的项目。',
       install: 'npm create node-web@latest my-server',
       copy: '复制命令',
+      copied: '已复制到剪贴板',
       meta: ['Node.js 24 / 22', 'Bun 1.4 / 1.3', 'RESTful API', 'Docker Ready'],
       highlights: [
         {
@@ -30,8 +31,8 @@ export const content: Record<Language, Content> = {
         },
       ],
       stackTitle: '支持范围',
-      stackText: 'Node.js / Bun、TypeScript / JavaScript、Express / Elysia / Hono / Fastify。',
-      stackItems: ['Runtime', 'Framework', 'Database', 'ORM', 'Cache', 'Tooling'],
+      stackText: '我们支持主流的 Node.js 与 Bun 运行时，以及各种流行框架与工具链：',
+      stackItems: ['Node.js', 'Bun', 'TypeScript', 'Express', 'Elysia', 'Hono', 'Fastify', 'Docker'],
     },
     usage: {
       title: '使用方法',
@@ -41,19 +42,34 @@ export const content: Record<Language, Content> = {
           id: 'interactive',
           title: '交互式创建',
           body: '不传完整参数时，CLI 会依次询问项目名、运行时、框架、数据库和工程化选项。',
-          code: 'npm create node-web@latest',
+          code: {
+            npm: 'npm create node-web@latest',
+            pnpm: 'pnpm create node-web@latest',
+            yarn: 'yarn create node-web',
+            bun: 'bun create node-web@latest'
+          }
         },
         {
           id: 'quick-start',
           title: '创建并启动',
           body: '生成项目后进入目录，安装依赖并启动开发服务器。',
-          code: 'npm create node-web@latest my-server\ncd my-server\nnpm install\nnpm run dev',
+          code: {
+            npm: 'npm create node-web@latest my-server\ncd my-server\nnpm install\nnpm run dev',
+            pnpm: 'pnpm create node-web@latest my-server\ncd my-server\npnpm install\npnpm run dev',
+            yarn: 'yarn create node-web my-server\ncd my-server\nyarn install\nyarn dev',
+            bun: 'bun create node-web@latest my-server\ncd my-server\nbun install\nbun run dev'
+          }
         },
         {
           id: 'non-interactive',
           title: '非交互式创建',
           body: '在脚本或 CI/CD 中通过 CLI 参数一次性指定技术栈。',
-          code: 'npm create node-web@latest my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
+          code: {
+            npm: 'npm create node-web@latest my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
+            pnpm: 'pnpm create node-web@latest my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
+            yarn: 'yarn create node-web my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
+            bun: 'bun create node-web@latest my-server -- \\\n  --runtime bun \\\n  --language typescript \\\n  --framework elysia \\\n  --architecture api \\\n  --eslint \\\n  --prettier'
+          }
         },
       ],
     },
@@ -71,6 +87,7 @@ export const content: Record<Language, Content> = {
         'Generate Node.js backend projects from composable templates. Choose runtime, framework, database, ORM, cache, tooling, and structure to get a project that can install, run, and grow.',
       install: 'npm create node-web@latest my-server',
       copy: 'Copy command',
+      copied: 'Copied to clipboard',
       meta: ['Node.js 24 / 22', 'Bun 1.4 / 1.3', 'RESTful API', 'Docker Ready'],
       highlights: [
         {
@@ -87,8 +104,8 @@ export const content: Record<Language, Content> = {
         },
       ],
       stackTitle: 'Supported stack',
-      stackText: 'Node.js / Bun, TypeScript / JavaScript, Express / Elysia / Hono / Fastify.',
-      stackItems: ['Runtime', 'Framework', 'Database', 'ORM', 'Cache', 'Tooling'],
+      stackText: 'We support mainstream Node.js and Bun runtimes, as well as various popular frameworks and toolchains:',
+      stackItems: ['Node.js', 'Bun', 'TypeScript', 'Express', 'Elysia', 'Hono', 'Fastify', 'Docker'],
     },
     usage: {
       title: 'Usage',
@@ -98,19 +115,34 @@ export const content: Record<Language, Content> = {
           id: 'interactive',
           title: 'Interactive creation',
           body: 'Without full flags, the CLI prompts for project name, runtime, framework, database, and tooling.',
-          code: 'npm create node-web@latest',
+          code: {
+            npm: 'npm create node-web@latest',
+            pnpm: 'pnpm create node-web@latest',
+            yarn: 'yarn create node-web',
+            bun: 'bun create node-web@latest'
+          }
         },
         {
           id: 'quick-start',
           title: 'Create and run',
           body: 'After generation, enter the project, install dependencies, and start the dev server.',
-          code: 'npm create node-web@latest my-server\ncd my-server\nnpm install\nnpm run dev',
+          code: {
+            npm: 'npm create node-web@latest my-server\ncd my-server\nnpm install\nnpm run dev',
+            pnpm: 'pnpm create node-web@latest my-server\ncd my-server\npnpm install\npnpm run dev',
+            yarn: 'yarn create node-web my-server\ncd my-server\nyarn install\nyarn dev',
+            bun: 'bun create node-web@latest my-server\ncd my-server\nbun install\nbun run dev'
+          }
         },
         {
           id: 'non-interactive',
           title: 'Non-interactive creation',
           body: 'Use explicit flags in scripts or CI/CD workflows.',
-          code: 'npm create node-web@latest my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
+          code: {
+            npm: 'npm create node-web@latest my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
+            pnpm: 'pnpm create node-web@latest my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
+            yarn: 'yarn create node-web my-server -- \\\n  --runtime node \\\n  --runtime-version 24 \\\n  --language typescript \\\n  --framework express \\\n  --architecture api \\\n  --eslint \\\n  --prettier',
+            bun: 'bun create node-web@latest my-server -- \\\n  --runtime bun \\\n  --language typescript \\\n  --framework elysia \\\n  --architecture api \\\n  --eslint \\\n  --prettier'
+          }
         },
       ],
     },

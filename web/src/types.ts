@@ -1,11 +1,12 @@
 export type Language = 'zh' | 'en'
 export type Theme = 'light' | 'dark'
+export type PackageManager = 'npm' | 'pnpm' | 'yarn' | 'bun'
 
 export interface Section {
   id: string
   title: string
   body: string
-  code?: string
+  code?: Record<PackageManager, string>
 }
 
 export interface Content {
@@ -20,6 +21,7 @@ export interface Content {
     intro: string
     install: string
     copy: string
+    copied: string
     meta: string[]
     highlights: Array<{ title: string; text: string }>
     stackTitle: string
