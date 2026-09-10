@@ -1,0 +1,17 @@
+{
+  "name": "node-web",
+  "short_name": "node-web",
+  "description": "Composable Node.js and Bun backend project generator",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050607",
+  "theme_color": "#14c7b5",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "500x500",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

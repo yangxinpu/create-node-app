@@ -22,13 +22,22 @@ const PM_LOGOS: Record<PackageManager, React.ReactNode> = {
   bun: <BunLogo />
 }
 
-function PkgTabs({ pkgManager, setPkgManager }: { pkgManager: PackageManager, setPkgManager: (pm: PackageManager) => void }) {
+function PkgTabs({
+  label,
+  pkgManager,
+  setPkgManager,
+}: {
+  label: string
+  pkgManager: PackageManager
+  setPkgManager: (pm: PackageManager) => void
+}) {
   return (
-    <div className="pkg-tabs">
+    <div className="pkg-tabs" role="group" aria-label={label}>
       {(['npm', 'pnpm', 'yarn', 'bun'] as PackageManager[]).map((pm) => (
         <button
           key={pm}
           className={`pkg-tab ${pkgManager === pm ? 'active' : ''} ${pm}`}
+          aria-pressed={pkgManager === pm}
           onClick={() => setPkgManager(pm)}
           type="button"
         >
@@ -61,13 +70,13 @@ function HeroSection({ copy, onCopyCommand, copied, pkgManager, setPkgManager }:
   const command = COMMANDS[pkgManager]
 
   return (
-    <section className="hero">
+    <section id="top" className="hero" aria-labelledby="hero-title">
       <div className="hero-copy">
         <p className="eyebrow">
           <span></span>
           {copy.home.eyebrow}
         </p>
-        <h1>{copy.home.title}</h1>
+        <h1 id="hero-title">{copy.home.title}</h1>
         <p className="lead">{copy.home.intro}</p>
         <div className="hero-meta" aria-label={copy.home.stackTitle}>
           {copy.home.meta.map((item) => (
@@ -81,7 +90,11 @@ function HeroSection({ copy, onCopyCommand, copied, pkgManager, setPkgManager }:
               <span className="dot yellow"></span>
               <span className="dot green"></span>
             </div>
-            <PkgTabs pkgManager={pkgManager} setPkgManager={setPkgManager} />
+            <PkgTabs
+              label={copy.usage.packageManagerLabel}
+              pkgManager={pkgManager}
+              setPkgManager={setPkgManager}
+            />
           </div>
           <div className="command-line">
             <code>{command}</code>
@@ -93,7 +106,7 @@ function HeroSection({ copy, onCopyCommand, copied, pkgManager, setPkgManager }:
       </div>
       <aside className="runtime-card" aria-label={copy.home.stackTitle}>
         <div className="runtime-card-header">
-          <span>{copy.home.stackTitle}</span>
+          <h2>{copy.home.stackTitle}</h2>
         </div>
         <p>{copy.home.stackText}</p>
         <div className="stack-tags">
@@ -113,7 +126,11 @@ function UsageSection({ copy, pkgManager, setPkgManager }: { copy: Content, pkgM
         <h2 id="usage-title">{copy.usage.title}</h2>
         <p>{copy.usage.intro}</p>
         <div className="usage-tabs-container">
-          <PkgTabs pkgManager={pkgManager} setPkgManager={setPkgManager} />
+          <PkgTabs
+            label={copy.usage.packageManagerLabel}
+            pkgManager={pkgManager}
+            setPkgManager={setPkgManager}
+          />
         </div>
       </div>
       <div className="usage-list">
@@ -130,7 +147,7 @@ function UsageSection({ copy, pkgManager, setPkgManager }: { copy: Content, pkgM
                     <span className="dot green"></span>
                   </div>
                 </div>
-                <pre>{step.code[pkgManager]}</pre>
+                <pre><code>{step.code[pkgManager]}</code></pre>
               </div>
             ) : null}
           </article>
@@ -142,10 +159,11 @@ function UsageSection({ copy, pkgManager, setPkgManager }: { copy: Content, pkgM
 
 function HighlightsSection({ copy }: { copy: Content }) {
   return (
-    <section className="highlight-grid">
+    <section className="highlight-grid" aria-labelledby="features-title">
+      <h2 id="features-title" className="sr-only">{copy.home.highlightsTitle}</h2>
       {copy.home.highlights.map((item) => (
         <article key={item.title}>
-          <h2>{item.title}</h2>
+          <h3>{item.title}</h3>
           <p>{item.text}</p>
         </article>
       ))}

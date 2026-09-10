@@ -2,10 +2,19 @@ import type { Content, Language } from './types'
 
 export const content: Record<Language, Content> = {
   zh: {
+    seo: {
+      title: 'node-web：可组合的 Node.js / Bun 后端项目脚手架',
+      description:
+        'node-web 是可组合的 Node.js 与 Bun 后端项目脚手架，支持 Express、Elysia、Hono、Fastify、数据库、ORM、缓存、Docker 和多种工程化配置。',
+      keywords:
+        'node-web, Node.js 脚手架, Bun, TypeScript, Express, Elysia, Hono, Fastify, 后端项目生成器, create-node-web',
+      imageAlt: 'node-web 项目标志',
+    },
     nav: {
       language: '语言',
       theme: '切换主题',
       github: 'GitHub',
+      skipToContent: '跳转到主要内容',
     },
     home: {
       eyebrow: 'Node.js 后端脚手架生成器',
@@ -33,10 +42,12 @@ export const content: Record<Language, Content> = {
       stackTitle: '支持范围',
       stackText: '我们支持主流的 Node.js 与 Bun 运行时，以及各种流行框架与工具链：',
       stackItems: ['Node.js', 'Bun', 'TypeScript', 'Express', 'Elysia', 'Hono', 'Fastify', 'Docker'],
+      highlightsTitle: '核心特性',
     },
     usage: {
       title: '使用方法',
       intro: '首页直接展示最常用的创建方式，复制后即可在终端运行。',
+      packageManagerLabel: '选择包管理器',
       steps: [
         {
           id: 'interactive',
@@ -75,10 +86,19 @@ export const content: Record<Language, Content> = {
     },
   },
   en: {
+    seo: {
+      title: 'node-web - Composable Node.js & Bun Backend Generator',
+      description:
+        'Generate ready-to-run Node.js and Bun backend projects with composable runtimes, frameworks, databases, ORMs, caches, Docker, and developer tooling.',
+      keywords:
+        'node-web, Node.js scaffolding, Bun, TypeScript, Express, Elysia, Hono, Fastify, backend generator, create-node-web',
+      imageAlt: 'node-web project logo',
+    },
     nav: {
       language: 'Language',
       theme: 'Toggle theme',
       github: 'GitHub',
+      skipToContent: 'Skip to main content',
     },
     home: {
       eyebrow: 'Node.js backend project generator',
@@ -106,10 +126,12 @@ export const content: Record<Language, Content> = {
       stackTitle: 'Supported stack',
       stackText: 'We support mainstream Node.js and Bun runtimes, as well as various popular frameworks and toolchains:',
       stackItems: ['Node.js', 'Bun', 'TypeScript', 'Express', 'Elysia', 'Hono', 'Fastify', 'Docker'],
+      highlightsTitle: 'Key features',
     },
     usage: {
       title: 'Usage',
       intro: 'The most common commands are shown directly on the homepage.',
+      packageManagerLabel: 'Select a package manager',
       steps: [
         {
           id: 'interactive',

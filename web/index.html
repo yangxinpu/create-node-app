@@ -1,13 +1,102 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/src/assets/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>node-web</title>
+    <meta
+      name="description"
+      content="node-web 是可组合的 Node.js 与 Bun 后端项目脚手架，支持 Express、Elysia、Hono、Fastify、数据库、ORM、缓存、Docker 和多种工程化配置。"
+    />
+    <meta
+      name="keywords"
+      content="node-web, Node.js 脚手架, Bun, TypeScript, Express, Elysia, Hono, Fastify, 后端项目生成器, create-node-web"
+    />
+    <meta name="author" content="create-node-web contributors" />
+    <meta name="application-name" content="node-web" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#050607" />
+    <meta name="color-scheme" content="dark light" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="node-web" />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta
+      property="og:title"
+      content="node-web：可组合的 Node.js / Bun 后端项目脚手架"
+    />
+    <meta
+      property="og:description"
+      content="通过交互式 TUI、CLI 参数、Preset 或配置文件，自由组合运行时、框架、数据库、ORM、缓存和工程化工具。"
+    />
+    <meta property="og:image" content="__SEO_IMAGE__" />
+    <meta property="og:image:alt" content="node-web 项目标志" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="node-web：可组合的 Node.js / Bun 后端项目脚手架"
+    />
+    <meta
+      name="twitter:description"
+      content="快速生成可安装、可运行、可持续开发的 Node.js 与 Bun 后端项目。"
+    />
+    <meta name="twitter:image" content="__SEO_IMAGE__" />
+    <meta name="twitter:image:alt" content="node-web 项目标志" />
+
+    <!-- seo:canonical -->
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <title>node-web：可组合的 Node.js / Bun 后端项目脚手架</title>
+    <script id="structured-data" type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "node-web",
+            "url": "__SITE_URL__/",
+            "description": "可组合的 Node.js 与 Bun 后端项目脚手架",
+            "inLanguage": "zh-CN"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "node-web",
+            "url": "__SITE_URL__/",
+            "image": "__SEO_IMAGE__",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Windows, macOS, Linux",
+            "description": "通过可组合模板生成 Node.js 与 Bun 后端项目，支持多种框架、数据库、ORM、缓存和工程化工具。",
+            "softwareRequirements": "Node.js 18 or later",
+            "isAccessibleForFree": true,
+            "license": "https://opensource.org/licenses/MIT",
+            "codeRepository": "https://github.com/yangxinpu/create-node-web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <main>
+        <h1>node-web</h1>
+        <p>
+          可组合的 Node.js 与 Bun 后端项目脚手架，支持 Express、Elysia、Hono、
+          Fastify、数据库、ORM、缓存和 Docker。
+        </p>
+        <p><code>npm create node-web@latest</code></p>
+        <a href="https://github.com/yangxinpu/create-node-web">查看 GitHub 项目</a>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

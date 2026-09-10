@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { Header } from './components/Header'
 import { HomePage } from './components/HomePage'
 import { content } from './content'
+import { updateSeo } from './seo'
 import type { Language, Theme } from './types'
 
 function App() {
@@ -10,6 +11,10 @@ function App() {
   const [theme, setTheme] = useState<Theme>('dark')
   const [copied, setCopied] = useState(false)
   const copy = content[language]
+
+  useEffect(() => {
+    updateSeo(copy, language, theme)
+  }, [copy, language, theme])
 
   function switchLanguage() {
     setLanguage((current) => (current === 'zh' ? 'en' : 'zh'))
@@ -34,10 +39,14 @@ function App() {
         onSwitchLanguage={switchLanguage}
         onSwitchTheme={switchTheme}
       />
-      <main>
+      <main id="main-content">
         <HomePage copy={copy} onCopyCommand={copyCommand} copied={copied} />
       </main>
-      <div className={`toast-notification ${copied ? 'show' : ''}`}>
+      <div
+        className={`toast-notification ${copied ? 'show' : ''}`}
+        role="status"
+        aria-live="polite"
+      >
         {copy.home.copied}
       </div>
     </div>

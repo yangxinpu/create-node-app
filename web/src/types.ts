@@ -10,10 +10,17 @@ export interface Section {
 }
 
 export interface Content {
+  seo: {
+    title: string
+    description: string
+    keywords: string
+    imageAlt: string
+  }
   nav: {
     language: string
     theme: string
     github: string
+    skipToContent: string
   }
   home: {
     eyebrow: string
@@ -27,10 +34,12 @@ export interface Content {
     stackTitle: string
     stackText: string
     stackItems: string[]
+    highlightsTitle: string
   }
   usage: {
     title: string
     intro: string
+    packageManagerLabel: string
     steps: Section[]
   }
 }

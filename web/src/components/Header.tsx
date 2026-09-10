@@ -13,8 +13,11 @@ interface HeaderProps {
 export function Header({ copy, language, theme, onSwitchLanguage, onSwitchTheme }: HeaderProps) {
   return (
     <header className="topbar">
-      <a className="brand" href="#" aria-label="node-web">
-        <img src={logo} alt="" />
+      <a className="skip-link" href="#main-content">
+        {copy.nav.skipToContent}
+      </a>
+      <a className="brand" href="#top" aria-label="node-web">
+        <img src={logo} alt="node-web" />
         <span>node-web</span>
       </a>
 
@@ -45,7 +48,7 @@ export function Header({ copy, language, theme, onSwitchLanguage, onSwitchTheme 
           className="icon-button"
           href="https://github.com/yangxinpu/create-node-web"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           aria-label={copy.nav.github}
           title={copy.nav.github}
         >
